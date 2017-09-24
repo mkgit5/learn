@@ -1,2 +1,2 @@
-# JavaIQ
-Project to learn java features
+# learn
+Project to learn java technologies
