@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context
+	       http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	       http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"
+	default-autowire="byName">
+
+	<!-- Short cut for below bean definition -->
+	<context:annotation-config />
+
+	<!-- Required for dependency injection -->
+	<!-- <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" 
+		/> -->
+
+	<!-- Define all the classes under the package as Spring beans -->
+	<context:component-scan base-package="com.learn.spring" />
+
+	<!-- Custom bean post processor -->
+	<!-- <bean class="com.learn.spring.postprocessor.DisplayNameBeanPostProcessor" 
+		/> <bean class="com.learn.spring.postprocessor.MyBeanFactoryPostProcessor" 
+		/> -->
+
+	<!-- Read the values from the properties files -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="com/learn/spring/resource/application.properties" />
+	</bean>
+
+	<!-- Config to read localized values from properties -->
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="com/learn/spring/resource/message" />
+	</bean>
+
+	<!-- DTOs config -->
+	<bean id="circle" class="com.learn.spring.dto.Circle" name="circle" scope="singleton" autowire="byName">
+		<property name="id" value="${circle.id}" />
+		<property name="name" value="${circle.name}" />
+	</bean>
+
+	<!-- Services config -->
+	<bean id="learnSpringService" class="com.learn.spring.service.impl.LearnSpringServiceImpl" />
+
+	<!-- DAO config -->
+	<!-- <bean id="hibernateDaoImpl" class="com.learn.spring.dao.impl.HibernateDaoImpl" /> -->
+
+	<!-- Aspect config -->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+	<bean id="loggingAspect" class="com.learn.spring.aspect.LoggingAspect" />
+
+	<!-- Hibernate config -->
+	<!-- <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="com.mysql.jdbc.Driver" />
+		<property name="jdbcUrl"
+			value="jdbc:mysql://127.0.0.1:3306/learndb?useSSL=false" />
+		<property name="user" value="root" />
+		<property name="password" value="MyNewPass" />
+		<property name="initialPoolSize" value="5" />
+		<property name="minPoolSize" value="2" />
+		<property name="maxPoolSize" value="5" />
+		<property name="maxIdleTime" value="60" />
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+			</props>
+		</property>
+		<property name="packagesToScan" value="com.learn.spring.domain" />
+		<property name="annotatedPackages" value="com.learn.spring.domain" 
+			/>
+	</bean> -->
+
+</beans>

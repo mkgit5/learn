@@ -1,0 +1,118 @@
+Arjun
+-----------------------------------------------------------------------------------------------------------------------------
+Algorithms:
+https://www.youtube.com/watch?v=YIFWCpquoS8&list=PLUX6FBiUa2g4YWs6HkkCpXL6ru02i7y3Q
+
+Algorithm related questions:
+https://github.com/mission-peace/interview/wiki
+(This has questions with youtube link for explanation)
+
+Java:
+http://howtodoinjava.com (Have all framework related stuff also with good interview questions)
+http://www.javamadesoeasy.com (Lots of interview questions with answers)
+
+Search algorithms:
+-----------------------------------------------------------------------------------------------------------------------------
+1. Binary Search
+	a. Iterative method
+	
+	public int binarySearch(int[] arr, int searchKey) {
+		int start = 0;
+		int end = arr.length;
+		while (start <= end) {
+			int mid = (start + end) / 2;
+			if (arr[mid] == searchKey) {
+				return mid;
+			} else if (searchKey <= arr[mid]) {
+				end = mid - 1;
+			} else {
+				start = mid + 1;
+			}
+		}
+		return -1;
+	}
+	
+	b. Recursive method
+	
+	public int recursiveBinarySearch(int arr[], int key, int start, int end) {
+		int mid = (start + end) / 2;
+		if (arr[mid] == key) {
+			return mid;
+		} else if (key < arr[mid]) {
+			return recursiveBinarySearch(arr, start, mid - 1, key);
+		} else {
+			return recursiveBinarySearch(arr, mid + 1, end, key);
+		}
+	}
+	
+	c. Recursive method (with validations)
+
+	int recursiveBinarySearch(int[] array, int key, int start, int end) throws BSException {
+		int mid, range;
+		range = end - start;
+		if (range < 0) {
+			throw new BSException("Limits reversed");
+		} else if (range == 0 && array[start] != key) {
+			throw new BSException("Element not in array");
+		}
+		if (array[start] > array[end]) {
+			throw new BSException("Array not sorted");
+		}
+		mid = ((range) / 2) + start;
+		if (key == array[mid]) {
+			return mid;
+		} else if (key < array[mid]) {
+			return binarySearch(array, key, start, mid - 1);
+		} else {
+			return binarySearch(array, key, mid + 1, end);
+		}
+	}
+
+Sorting Algorithms:
+-----------------------------------------------------------------------------------------------------------------------------
+1. Selection sort
+2. Insertion sort
+3. Bubble sort
+4. Quick sort
+5. Merge sort
+6. Heap sort
+7. Bucket sort
+
+Recursions & Iterations:
+-----------------------------------------------------------------------------------------------------------------------------
+1. Recursive algorithms have two cases: recursive cases and base cases.
+	n! (pronounced “n factorial”) is the product of all integers between n and 1. 
+	For example, 4! = 4 × 3 × 2 × 1 = 24. n! can be more formally de ned as follows:
+	n! = n (n – 1)! 
+	0! = 1! = 1
+	
+	int factorial(int n){
+		if (n > 1) { /* Recursive case */
+			return factorial(n-1) * n; 
+		} else { /* Base case */
+			return 1; 
+		}
+	}
+	
+2. Iterative solutions are usually more efficient than recursive solutions
+	int factorial(int n) { 
+		int i, val = 1;
+		for(i = n; i > 1; i--) { 
+			val *= i;
+		}
+		return val; 
+	}
+	/* n = 0 or 1 falls through */
+
+
+	
+-----------------------------------------------------------------------------------------------------------------------------
+1. Find the first nonrepeated character
+2. Remove specified characters
+3. Reverse words
+	Write a function that reverses the order of the words in a string. 
+	For example, your function should transform the string "Do or do not, there is no try." to "try. no is there not, do or Do". 
+	Assume that all words are space delimited and treat punctuation the same as letters.
+4. integer/string conversions
+5. Permutations of a string (abcd)
+6. combinations of a string (abcd)

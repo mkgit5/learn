@@ -1,0 +1,384 @@
+-----------------------------------------------------------------------------------------------------------------------------
+Solr
+-----------------------------------------------------------------------------------------------------------------------------
+http://www.solrtutorial.com/basic-solr-concepts.html
+http://solr-vs-elasticsearch.com
+
+-----------------------------------------------------------------------------------------------------------------------------
+Concepts
+-----------------------------------------------------------------------------------------------------------------------------
+1. Indexing
+	Solr searches an index, instead of searching the text directly
+	Solr stores the index in a directory called 'index' in the data directory.
+	This is like retrieving pages in a book related to a keyword by scanning the index at the back of a book, 
+		as opposed to searching every word of every page of the book.
+	This type of index is called an inverted index, because it inverts a page-centric data structure (page->words) 
+		to a keyword-centric data structure (word->pages).
+
+2. Document
+	In Solr, a 'Document' is the unit of search and index.
+	An index consists of one or more Documents, and a Document consists of one or more Fields.
+	In database terminology, a Document corresponds to a table row, and a Field corresponds to a table column.
+
+3. Schema.xml
+	Before adding documents to Solr, you need to specify the schema, represented in a file called schema.xml.
+	It is not advisable to change the schema after documents have been added to the index.
+	The schema declares:
+		1. what kinds of fields there are
+		2. which field should be used as the unique/primary key
+		3. which fields are required
+		4. how to index and search each field
+
+4. Field Types
+	- In Solr, every field has a type. Solr expands the variety of field types available in Lucene.
+	- Field types available in Solr are:
+		1. float
+		2. long
+		3. double
+		4. date
+		5. text
+	- Solr also allows you to define new field types, by combining filters and tokenizers, for example
+		<fieldtype name="phonetic" stored="false" indexed="true" class="solr.TextField" >
+		  <analyzer>
+		    <tokenizer class="solr.StandardTokenizerFactory"/>
+		    <filter class="solr.DoubleMetaphoneFilterFactory" inject="false"/>
+		  </analyzer>
+		</fieldtype>
+		- Here's what a field declaration looks like:
+		 	1. name: Name of the field
+			2. type: Field type
+			3. indexed: Should this field be added to the inverted index?
+			4. stored: Should the original value of this field be stored?
+			5. multiValued: Can this field have multiple values?
+
+5. Analysis
+	- When data is added to Solr, it goes through a series of transformations before being added to the index. 
+		This is called the analysis phase. 
+	- Examples of transformations include lower-casing, removing word stems etc.
+	- The end result of the analysis are a series of tokens which are then added to the index. 
+	- Tokens, not the original text, are what are searched when you perform a search query.
+	- Indexed fields are fields which undergo an analysis phase, and are added to the index.
+
+6. Term Storage
+	- When we are displaying search results to users, they generally expect to see the original document, 
+		not the machine-processed tokens (which may bear very little resemblance to the source text).
+	- That's the purpose of the stored attribute: to tell Solr to store the original text in the index somewhere.
+	- Sometimes, there are fields which aren't searched, but need to be displayed in the search results.
+	- You accomplish that by setting the field attributes to stored=true and indexed=false.
+
+7. Why wouldn't you store all the fields all the time?
+	- Because storing fields increases the size of the index, and the larger the index, the slower the search.
+	- In terms of physical computing, we'd say that a larger index requires more disk seeks to get to the same amount of data.
+
+8. Lucene
+	- Solr is powered by Lucene, a powerful open-source full-text search library, under the hood.
+	- The relationship between Solr and Lucene, is like that of the relationship between a car and its engine.
+
+9. Lucene Query Syntax
+	---------------------------------------------------------
+	Keyword matching
+	---------------------------------------------------------
+	- Search for word "foo" in the title field.
+		title:foo
+
+	- Search for phrase "foo bar" in the title field.
+		title:"foo bar"
+	
+	- Search for phrase "foo bar" in the title field AND the phrase "quick fox" in the body field.
+		title:"foo bar" AND body:"quick fox"
+	
+	- Search for either the phrase "foo bar" in the title field AND the phrase "quick fox" in the body field, or the word "fox" in the title field.
+		(title:"foo bar" AND body:"quick fox") OR title:fox
+	
+	- Search for word "foo" and not "bar" in the title field.
+		title:foo -title:bar
+	
+	---------------------------------------------------------
+	Wildcard matching
+	---------------------------------------------------------
+	- Search for any word that starts with "foo" in the title field.
+		title:foo*
+	
+	- Search for any word that starts with "foo" and ends with bar in the title field.
+		title:foo*bar
+	
+	Note:  Lucene doesn't support using a * symbol as the first character of a search.
+	
+	---------------------------------------------------------
+	Proximity matching
+	---------------------------------------------------------
+	- Lucene supports finding words which are within a specific distance away.
+	- Search for "foo bar" within 4 words from each other.
+		"foo bar"~4
+	- Trade-off is that the proximity query is slower to perform and requires more CPU.
+	
+	---------------------------------------------------------
+	Range searches
+	---------------------------------------------------------
+	- Range Queries allow one to match documents whose field(s) values are between the lower and upper bound specified by the Range Query.
+	- Range Queries can be inclusive or exclusive of the upper and lower bounds. Sorting is done lexicographically.
+		mod_date:[20020101 TO 20030101]
+	
+	---------------------------------------------------------
+	Boosts
+	---------------------------------------------------------
+	- Query-time boosts allow one to specify which terms/clauses are "more important". 
+	- The higher the boost factor, the more relevant the term will be, and therefore the higher the corresponding document scores.
+	- A typical boosting technique is assigning higher boosts to title matches than to body content matches:
+		(title:foo OR title:bar)^1.5 (body:foo OR body:bar)
+	- You should carefully examine 'explain' output to determine the appropriate boost weights
+	
+10. Solr-specific query syntax
+
+	- Range queries [a TO z], prefix queries a*, and wildcard queries a*b are constant-scoring (all matching documents get an equal score). 
+	  The scoring factors tf, idf, index boost, and coord are not used. 
+	  There is no limitation on the number of terms that match (as there was in past versions of Lucene).
+		- Lucene 2.1 has also switched to use ConstantScoreRangeQuery for its range queries.
+
+	- A * may be used for either or both endpoints to specify an open-ended range query.
+		field:[* TO 100] 	finds all field values less than or equal to 100
+		field:[100 TO *] 	finds all field values greater than or equal to 100
+		field:[* TO *] 		finds all documents with the field
+
+	- Pure negative queries (all clauses prohibited) are allowed.
+		-inStock:false 		finds all field values where inStock is not false
+		-field:[* TO *] 	finds all documents without a value for field
+
+	- A hook into FunctionQuery syntax. Quotes will be necessary to encapsulate the function when it includes parentheses.
+		_val_:myfield
+		_val_:"recip(rord(myfield),1,2,3)"
+
+	- Nested query support for any type of query parser (via QParserPlugin). 
+	  Quotes will often be necessary to encapsulate the nested query if it contains reserved characters.
+		_query_:"{!dismax qf=myfield}how now brown cow"
+
+-----------------------------------------------------------------------------------------------------------------------------
+Configuring Solr
+-----------------------------------------------------------------------------------------------------------------------------
+- A Solr installation comprises 3 parts:
+	1. Server-related files, e.g. start.jar (Jetty), or Tomcat
+	2. Solr webapp as a .war
+	3. Solr Home which comprises configuration files and the data directory
+
+- Solr Home
+	Here's a directory layout of a typical Solr Home directory.
+		| + conf
+		|     - schema.xml
+		|     - solrconfig.xml
+		|     - stopwords.txt etc
+		| + data
+		|     - index
+		|     - spelllchecker
+
+- The 2 most important files in the Solr configuration are:
+	1. schema.xml
+	2. solrconfig.xml
+
+- Backup
+	- When configuring your backup scripts, the Solr Home directory is definitely what you want to backup.
+	- You can also consider adding the 'conf' directory to version control, rather than the whole of Solr Home 
+	  (which also contains the binary index files).
+
+-----------------------------------------------------------------------------------------------------------------------------
+schema.xml
+-----------------------------------------------------------------------------------------------------------------------------
+- schema.xml is usually the first file you configure when setting up a new Solr installation.
+- The XML consists of a number of parts. We'll look at these in turn:
+	1. Field Types
+	2. Fields
+	3. Misc
+	
+	------------------------------------
+	1. Field Types
+	------------------------------------
+		<types>
+			<fieldType name="int" class="solr.TrieIntField" precisionStep="0" omitNorms="true" positionIncrementGap="0"/>
+			...
+		</types>
+		
+		The commonly used ones are:
+			1. text		- A generically useful text field.
+			2. string	- Useful when you have a text field which you don't want tokenized, like IDs. 
+			3. date
+			4. float
+			5. int
+
+		The example Solr schema.xml comes with a number of pre-defined field types, and they're quite well-documented. 
+		You can also use them as templates for creating new field types.
+	
+	------------------------------------
+	2. Field
+	------------------------------------
+		<fields>
+		  	<field name="id" type="string" indexed="true" stored="true" required="true" /> 
+		  	<field name="name" type="textgen" indexed="true" stored="true"/>
+			...
+		</fields>
+		
+		The documentation provides a list of valid attributes:
+			1. name			- mandatory - the name for the field
+			2. type			- mandatory - the name of a previously defined type from the <types> section
+			3. indexed		- true if this field should be indexed (searchable or sortable)
+			4. stored		- true if this field should be retrievable
+			5. compressed	- [false] if this field should be stored using gzip compression (this will only apply if the field type is compressable; among the standard field types, only TextField and StrField are)
+			6. multiValued	- true if this field may contain multiple values per document
+			7. omitNorms	- (expert) set to true to omit the norms associated with this field (this disables length normalization and index-time boosting for the field, and saves some memory). Only full-text fields or fields that need an index-time boost need norms.
+			8. termVectors	- [false] set to true to store the term vector for a given field. When using MoreLikeThis, fields used for similarity should be stored for best performance.
+			9. termPositions- Store position information with the term vector. This will increase storage costs.
+			10. termOffsets	- Store offset information with the term vector. This will increase storage costs.
+			11. default		- a value that should be used if no value is specified when adding a document.
+
+	------------------------------------
+	3. Misc
+	------------------------------------
+		1. <uniqueKey>id</uniqueKey>
+			- Equivalent to the primary key of the document.
+		
+		2. <defaultSearchField>aggregate_text</defaultSearchField>
+			- Field for the QueryParser to use when an explicit fieldname is absent
+
+		3. <solrQueryParser defaultOperator="OR"/>
+			- Used for determining if multiple terms are ANDed or ORed together by default.
+
+-----------------------------------------------------------------------------------------------------------------------------
+solrconfig.xml
+-----------------------------------------------------------------------------------------------------------------------------
+- solrconfig.xml is usually the second file you configure when setting up a new Solr installation, after schema.xml.
+- The more commonly-used elements in solrconfig.xml are:
+	1. data directory location
+	2. cache parameters
+	3. request handlers
+	4. search components
+
+	1. Data directory
+		<!-- 
+			Used to specify an alternate directory to hold all index data other than the default ./data under the Solr home.
+			If replication is in use, this should match the replication configuration. 
+		-->
+		<dataDir>${solr.data.dir:./solr/data}</dataDir>
+
+	2. Query cache parameters
+		<!-- 
+			There are two implementations of cache available for Solr, 
+				LRUCache, based on a synchronized LinkedHashMap, and
+        		FastLRUCache, based on a ConcurrentHashMap.  
+        	FastLRUCache has faster gets and slower puts in single threaded operation and thus is generally faster
+        	than LRUCache when the hit ratio of the cache is high (> 75%), and may be faster under other scenarios on multi-cpu systems. 
+        -->
+
+	    <!-- 
+	    	Cache used by SolrIndexSearcher for filters (DocSets), unordered sets of *all* documents that match a query.
+	        When a new searcher is opened, its caches may be prepopulated or "autowarmed" using data from caches in the old searcher.
+	        'autowarmCount' is the number of items to prepopulate.  
+	        For LRUCache, the autowarmed items will be the most recently accessed items.
+	     	
+	     	Parameters:
+	        class 			- the SolrCache implementation LRUCache or FastLRUCache
+	        size 			- the maximum number of entries in the cache
+	        initialSize		- the initial capacity (number of entries) of the cache.  (seel java.util.HashMap)
+	        autowarmCount 	- the number of entries to prepopulate from and old cache.
+	    -->
+	    
+	    <filterCache class="solr.FastLRUCache" size="512" initialSize="512" autowarmCount="0"/>
+	
+	    <!-- 
+	    	Cache used to hold field values that are quickly accessible by document id.  
+	    	The fieldValueCache is created by default even if not configured here.
+	    	<fieldValueCache class="solr.FastLRUCache" size="512" autowarmCount="128" showItems="32" />
+	   	-->
+	
+	   	<!-- 
+	   		queryResultCache caches results of searches 
+	   		- ordered lists of document ids (DocList) based on a query, a sort, and the range of documents requested. 
+	   	-->
+	    <queryResultCache class="solr.LRUCache" size="512" initialSize="512" autowarmCount="0"/>
+	
+	  	<!-- 
+	  		documentCache caches Lucene Document objects (the stored fields for each document).
+	      Since Lucene internal document ids are transient, this cache will not be autowarmed.  
+	    -->
+	    <documentCache class="solr.LRUCache" size="512" initialSize="512" autowarmCount="0"/>
+	    
+	3. Request handlers
+		- Request handlers are responsble for accepting HTTP requests, performing searches, then returning the results.
+		- The default request handler that comes configured with the example webapp, also known as the standard request handler, looks like this:
+		 	<requestHandler name="standard" class="solr.SearchHandler" default="true">
+			   <lst name="defaults">
+			     <str name="echoParams">explicit</str>
+			     <!--
+			    	<int name="rows">10</int>
+			    	<str name="fl">*</str>
+			    	<str name="version">2.1</str>
+			     -->
+			   </lst>
+			</requestHandler>
+
+	4. Search components
+		- Search components extend the abstract class SearchComponent and are responsible for performing the actual searches.
+		- By default, the following components are available:
+			<searchComponent name="query"     class="org.apache.solr.handler.component.QueryComponent" />
+			<searchComponent name="facet"     class="org.apache.solr.handler.component.FacetComponent" />
+			<searchComponent name="mlt"       class="org.apache.solr.handler.component.MoreLikeThisComponent" />
+			<searchComponent name="highlight" class="org.apache.solr.handler.component.HighlightComponent" />
+			<searchComponent name="stats"     class="org.apache.solr.handler.component.StatsComponent" />
+			<searchComponent name="debug"     class="org.apache.solr.handler.component.DebugComponent" />
+			
+-----------------------------------------------------------------------------------------------------------------------------
+SolrJ Tutorial
+-----------------------------------------------------------------------------------------------------------------------------
+- Setting up the classpath
+	From /dist
+		apache-solr-solrj-*.jar
+	From /dist/solrj-lib
+		commons-codec-1.3.jar
+		commons-httpclient-3.1.jar
+		commons-io-1.4.jar
+		jcl-over-slf4j-1.5.5.jar
+		slf4j-api-1.5.5.jar
+	From /lib
+		slf4j-jdk14-1.5.5.jar
+
+- Add documents using SolrJ
+	public class SolrjPopulator {
+
+		public static void main(String[] args) throws IOException, SolrServerException {
+	    	SolrClient client = new HttpSolrClient.Builder("http://localhost:8983/solr/collection1").build();
+	    	
+	    	for(int i=0;i<1000;++i) {
+				SolrInputDocument doc = new SolrInputDocument();
+	      		doc.addField("cat", "book");
+	      		doc.addField("id", "book-" + i);
+	      		doc.addField("name", "The Legend of the Hobbit part " + i);
+	      		client.add(doc);
+	      		if(i%100==0) 
+	      			client.commit();  // periodically flush
+	    	}
+			client.commit(); 
+	  	}
+	  	
+	}
+
+- Search using SolrJ
+	public class SolrJSearcher {
+
+	    public static void main(String[] args) throws IOException, SolrServerException {
+	        SolrClient client = new HttpSolrClient.Builder("http://localhost:8983/solr/collection1").build();
+	
+	        SolrQuery query = new SolrQuery();
+	        query.setQuery("sony digital camera");
+	        query.addFilterQuery("cat:electronics","store:amazon.com");
+	        query.setFields("id","price","merchant","cat","store");
+	        query.setStart(0);
+	        query.set("defType", "edismax");
+	
+	        QueryResponse response = client.query(query);
+	        SolrDocumentList results = response.getResults();
+	        for (int i = 0; i < results.size(); ++i) {
+	            System.out.println(results.get(i));
+	        }
+	    }
+	    
+	}
+	
+
+

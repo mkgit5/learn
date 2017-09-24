@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd"> -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<!-- Short cut for defining a bean using <bean /> tag -->
+	<context:component-scan base-package="com.test.spring.dto" />
+	
+	<!-- Short cut for all annotation related config as shown below -->
+	<context:annotation-config />
+
+	<!-- Define post processor -->
+	<!-- <bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor" 
+		/> <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" 
+		/> -->
+
+	<!-- Custom Post Processor -->
+	<!-- <bean class="com.test.spring.DisplayNameBeanPostProcessor" /> -->
+	<!-- <bean class="com.test.spring.MyBeanFactoryPostProcessor" /> -->
+
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>
+	com.test.spring.resources.mymessages</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:application.properties" />
+	</bean>
+
+	<bean id="triangle" class="com.test.spring.dto.Triangle">
+		<property name="pointA" ref="pointA" />
+		<property name="pointB" ref="pointB" />
+		<property name="pointC" ref="pointC" />
+	</bean>
+	<bean id="pointA" class="com.test.spring.dto.Point" name="center">
+		<qualifier value="circleRelated" />
+		<property name="x" value="${x}" />
+		<property name="y" value="${y}" />
+	</bean>
+	<bean id="pointB" class="com.test.spring.dto.Point">
+		<property name="x" value="-20" />
+		<property name="y" value="0" />
+	</bean>
+	<bean id="pointC" class="com.test.spring.dto.Point">
+		<property name="x" value="20" />
+		<property name="y" value="0" />
+	</bean>
+
+	<!-- <bean id="circle" class="com.test.spring.dto.Circle"> <property name="center" 
+		ref="pointA" /> </bean> -->
+
+</beans>
