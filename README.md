@@ -9,13 +9,18 @@ Git commands to set up the project
 
 Git commands to pull the latest code
 ------------------------------------------------------
-git pull
-git fetch origin
+1. git pull
+2. git fetch origin
 
 Git command to untrack the add files or folders:
 ------------------------------------------------------
-git rm -r --cached <File to remove from tracking>
+1. git rm -r --cached
+2. git rm -r --cached <file>
 
 Git command to untrack the add files or folders:
 ------------------------------------------------------
-git reset --soft HEAD
+1. git reset --hard
+2. git reset --soft HEAD
+3. git reset --soft HEAD~2
+
+Note: "reset --hard" will remove your local (uncommitted) modifications
