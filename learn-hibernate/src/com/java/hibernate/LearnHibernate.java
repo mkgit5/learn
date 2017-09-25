@@ -10,6 +10,7 @@ import com.java.hibernate.domain.UserDetail;
 import com.java.hibernate.domain.Vehicle;
 import com.java.hibernate.domain.VehicleDetail;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -24,7 +25,8 @@ import org.hibernate.criterion.Restrictions;
 
 public class LearnHibernate {
 
-	private static SessionFactory SESSION_FACTORY = new Configuration().configure("hibernate-cfg.xml").buildSessionFactory();
+	private static File configFile = new File("hibernate-cfg.xml");
+	private static SessionFactory SESSION_FACTORY = new Configuration().configure(configFile).buildSessionFactory();
 
 	public static void main(String[] args) {
 		// insert();
@@ -375,7 +377,8 @@ public class LearnHibernate {
 		// }
 
 		// session = SESSION_FACTORY.openSession();
-		// final Query hqlQuery = session.createQuery("from UserDetail where id = ?");
+		// final Query hqlQuery = session.createQuery("from UserDetail where id
+		// = ?");
 		// hqlQuery.setLong(0, Long.valueOf(userID.toString()));
 		// userDetail = null;
 		// userDetail = (UserDetail) hqlQuery.uniqueResult();
@@ -383,7 +386,8 @@ public class LearnHibernate {
 
 		// // Named parameter
 		// session = SESSION_FACTORY.openSession();
-		// final Query hqlQuery2 = session.createQuery("from UserDetail where id = :userId");
+		// final Query hqlQuery2 = session.createQuery("from UserDetail where id
+		// = :userId");
 		// hqlQuery2.setParameter("userId", userID);
 		// // hqlQuery2.setLong("userId", Long.parseLong(userID.toString()));
 		// userDetail = null;
@@ -448,11 +452,17 @@ public class LearnHibernate {
 		createCriteria.add(Restrictions.eq("id", Long.parseLong(userID.toString())));
 
 		/*
-		 * Disjunction or = Restrictions.disjunction(); or.add(Restrictions.like("firstName", "%an%")); or.add(Restrictions.like("lastName", "%ko%")); createCriteria.add(or);
+		 * Disjunction or = Restrictions.disjunction();
+		 * or.add(Restrictions.like("firstName", "%an%"));
+		 * or.add(Restrictions.like("lastName", "%ko%"));
+		 * createCriteria.add(or);
 		 */
 
 		/*
-		 * Conjunction and = Restrictions.conjunction(); and.add(Restrictions.like("firstName", "%an%")).add(Restrictions.like("lastName", "%ko%")); createCriteria.add(and);
+		 * Conjunction and = Restrictions.conjunction();
+		 * and.add(Restrictions.like("firstName",
+		 * "%an%")).add(Restrictions.like("lastName", "%ko%"));
+		 * createCriteria.add(and);
 		 */
 
 		userDetail2 = (UserDetail) createCriteria.uniqueResult();

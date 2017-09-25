@@ -1,11 +1,11 @@
 package com.java.spring.dao.impl;
 
-import com.java.spring.dao.HibernateDao;
-
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.classic.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.java.spring.dao.HibernateDao;
 
 public class HibernateDaoImpl implements HibernateDao {
 
