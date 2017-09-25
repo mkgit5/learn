@@ -11,7 +11,7 @@ import java.util.Scanner;
 import java.util.Set;
 
 /*
- Find first non-repeated character
+ Find first non-repeated character in a string
 
  Ways:
  1. HashMap<Character, Integer>

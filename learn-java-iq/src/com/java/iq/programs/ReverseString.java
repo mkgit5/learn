@@ -15,7 +15,7 @@ public class ReverseString {
 	public static void main(String[] args) {
 		// String str = "Hello world";
 		// String str = "Do or do not, there is no try.";
-		String str = "HOW";
+		String str = "HOWD";
 		System.out.println("String before reversing - " + str);
 		System.out.println("String after reversal - " + reverseString1(str));
 		System.out.println("String after reversal - " + reverseString2(str));
@@ -24,6 +24,10 @@ public class ReverseString {
 
 	}
 
+	/*
+	 * 1. Convert String to char array
+	 * 2. Iterate backwards
+	 */
 	private static String reverseString1(String str) {
 		char[] charArray = str.toCharArray();
 		char[] temp = new char[charArray.length];
@@ -35,6 +39,10 @@ public class ReverseString {
 		return new String(temp);
 	}
 
+	/*
+	 * 1. Convert String to char array
+	 * 2. Binary search logic and swap values
+	 */
 	private static String reverseString2(String str) {
 		char[] charArray = str.toCharArray();
 		char temp;
@@ -53,6 +61,9 @@ public class ReverseString {
 		return new String(charArray);
 	}
 
+	/*
+	 * 1. Recursively invoke String's substring() and append charAt()
+	 */
 	private static String recursivelyReverse(String str) {
 		if (str.length() < 2) {
 			return str;
@@ -61,6 +72,9 @@ public class ReverseString {
 		return recursivelyReverse(str.substring(1)) + str.charAt(0);
 	}
 
+	/*
+	 * 1. Use StringBuilder and swap values in place
+	 */
 	private static String reverseStringInPlace(String str) {
 		int j = str.length() - 1;
 		StringBuilder sb = new StringBuilder(str);

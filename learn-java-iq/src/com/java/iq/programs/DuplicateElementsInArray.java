@@ -8,7 +8,7 @@ import java.util.Map.Entry;
  Find the duplicate elements in an array and print them.
 
  Ways:
- HashMap<Character Integer> or LinkedHashMap
+ HashMap<Character, Integer> or LinkedHashMap
 
  Input:
  12344

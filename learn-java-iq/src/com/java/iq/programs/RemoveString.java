@@ -6,7 +6,7 @@ package com.java.iq.programs;
  where any character existing in remove must be deleted from str. 
  For example, given str of "Battle of the Vowels: Hawaii vs. Grozny" and a remove of "aeiou",
  the function should transform str to “Bttl f th Vwls: Hw vs. Grzny”. 
- Justify any design decisions you make, and discuss the ef ciency of your solution.
+ Justify any design decisions you make, and discuss the efficiency of your solution.
  */
 public class RemoveString {
 
@@ -19,20 +19,23 @@ public class RemoveString {
 	public static String removeChars(String str, String remove) {
 		char[] s = str.toCharArray();
 		char[] r = remove.toCharArray();
-		int src, dst = 0;
-		// flags automatically initialized to false, size of 128 assumes ASCII
+
+		// Flags automatically initialized to false, size of 128 assumes ASCII
 		boolean[] flags = new boolean[128];
+
 		// Set flags for characters to be removed
-		for (src = 0; src < r.length; ++src) {
-			flags[r[src]] = true;
+		for (int i = 0; i < r.length; ++i) {
+			flags[r[i]] = true;
 		}
-		// Now loop through all the characters, // copying only if they aren’t flagged
-		for (src = 0; src < s.length; ++src) {
-			if (!flags[s[src]]) {
-				s[dst++] = s[src];
+
+		// Now loop through all the characters, copying only if they aren’t flagged
+		int j = 0;
+		for (int i = 0; i < s.length; ++i) {
+			if (!flags[s[i]]) {
+				s[j++] = s[i];
 			}
 		}
-		return new String(s, 0, dst);
+		return new String(s, 0, j);
 	}
 
 }

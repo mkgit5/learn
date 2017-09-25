@@ -31,11 +31,11 @@ public class CountDigitsInString {
 		String line = reader.readLine();
 		for (int i = 0; i < line.length(); i++) {
 			int j = Integer.parseInt(String.valueOf(line.charAt(i)));
-			count[j] = ++count[j];
+			count[j]++;
 		}
 		for (int i = 0; i < count.length; i++) {
 			System.out.println(i + "  " + count[i]);
 		}
-
+		reader.close();
 	}
 }

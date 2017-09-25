@@ -8,7 +8,7 @@ import java.util.Scanner;
  Find the duplicate characters and print them.
 
  Ways:
- HashMap<Character Integer> or LinkedHashMap
+ HashMap<Character, Integer> or LinkedHashMap
 
  Input:
  Hello

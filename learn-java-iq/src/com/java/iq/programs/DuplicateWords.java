@@ -9,6 +9,9 @@ import java.util.Set;
 
  Ways:
  Using Set<String> (2 set variables: set and duplicates)
+ 
+ Input:
+ This sentence contains two words, one and two
 
  */
 public class DuplicateWords {

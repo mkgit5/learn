@@ -12,7 +12,6 @@ public class RemoveDuplicateCharacters {
 		System.out.println(removeDuplicates(str));
 		System.out.println(removeDuplicates2(str));
 		// removeDuplicatesFromString(str);
-
 	}
 
 	public static String removeDuplicates(String str) {

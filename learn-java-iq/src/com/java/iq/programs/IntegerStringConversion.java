@@ -15,13 +15,14 @@ public class IntegerStringConversion {
 	}
 
 	public static int stringToint(String str) {
-		int i = 0, number = 0;
 		boolean isNegative = false;
 		int len = str.length();
+		int i = 0;
 		if (str.charAt(0) == '-') {
 			isNegative = true;
 			i = 1;
 		}
+		int number = 0;
 		while (i < len) {
 			number *= 10;
 			number += (str.charAt(i) - '0');

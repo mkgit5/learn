@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 
  Condition:
  First line indicates number of test cases
- Second line has two numbers separated by space.
+ Second line has two numbers separated by space
 
  Input: 
  1
