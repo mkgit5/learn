@@ -11,11 +11,11 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "VEHICLE")
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-// @Inheritance(strategy = InheritanceType.JOINED)
-// @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-// @DiscriminatorColumn(name = "VEHICLE_TYPE", discriminatorType = DiscriminatorType.STRING)
-// @DiscriminatorValue("VEHICLE")
+//@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // Least normalized
+//@DiscriminatorColumn(name = "VEHICLE_TYPE", discriminatorType = DiscriminatorType.STRING)
+//@DiscriminatorValue("VEHICLE")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) // Slightly more normalized
+// @Inheritance(strategy = InheritanceType.JOINED) // Highly normalized but performance is not good
 public class Vehicle {
 
 	private long id;

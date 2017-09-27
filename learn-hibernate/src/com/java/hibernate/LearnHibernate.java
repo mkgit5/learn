@@ -29,13 +29,13 @@ public class LearnHibernate {
 	private static SessionFactory SESSION_FACTORY = new Configuration().configure(configFile).buildSessionFactory();
 
 	public static void main(String[] args) {
-		// insert();
+		insert();
 		// insertGeneratedPrimaryKey();
 		// insertEmbedded();
 		// insertElementCollections();
 		// fetchByGet();
 		// fetchByLoad();
-		saveOneToOneMapping();
+		// saveOneToOneMapping();
 		// saveOneToManyMapping();
 		// saveManyToManyMapping();
 		// inheritanceSingleTableStrategy();
@@ -269,6 +269,9 @@ public class LearnHibernate {
 		session.close();
 	}
 
+	/**
+	 * SINGLE_TABLE - Only one table will be created with a 'DISCRIMINATOR' column to differentiate the records
+	 */
 	private static void inheritanceSingleTableStrategy() {
 		Vehicle vehicle = new Vehicle();
 		vehicle.setName("Car");
@@ -291,6 +294,9 @@ public class LearnHibernate {
 
 	}
 
+	/**
+	 * TABLE_PER_CLASS - Separate tables will be created for each class with all the columns/fields from parent table as well.
+	 */
 	private static void inheritanceTablePerClassStrategy() {
 		Vehicle vehicle = new Vehicle();
 		vehicle.setName("Car");
@@ -313,6 +319,9 @@ public class LearnHibernate {
 
 	}
 
+	/**
+	 * JOINED - Same as TABLE_PER_CLASS but the difference is common fields/columns are not created in the child tables.
+	 */
 	private static void inheritanceJoinStrategy() {
 		Vehicle vehicle = new Vehicle();
 		vehicle.setName("Car");
@@ -335,6 +344,9 @@ public class LearnHibernate {
 
 	}
 
+	/**
+	 * save() - returns primary key or generated identifier persist() - returns void
+	 */
 	private static void saveOrPersist() {
 		Vehicle vehicle = new Vehicle();
 		vehicle.setName("Car");
@@ -344,7 +356,7 @@ public class LearnHibernate {
 		// Serializable serializable = session.save(vehicle);
 		// System.out.println("After save");
 		session.persist(vehicle);
-		System.out.println("After persist");
+		System.out.println("After persist - " + vehicle.getId());
 		session.getTransaction().commit();
 		session.close();
 	}
@@ -377,8 +389,7 @@ public class LearnHibernate {
 		// }
 
 		// session = SESSION_FACTORY.openSession();
-		// final Query hqlQuery = session.createQuery("from UserDetail where id
-		// = ?");
+		// final Query hqlQuery = session.createQuery("from UserDetail where id = ?");
 		// hqlQuery.setLong(0, Long.valueOf(userID.toString()));
 		// userDetail = null;
 		// userDetail = (UserDetail) hqlQuery.uniqueResult();
@@ -386,8 +397,7 @@ public class LearnHibernate {
 
 		// // Named parameter
 		// session = SESSION_FACTORY.openSession();
-		// final Query hqlQuery2 = session.createQuery("from UserDetail where id
-		// = :userId");
+		// final Query hqlQuery2 = session.createQuery("from UserDetail where id = :userId");
 		// hqlQuery2.setParameter("userId", userID);
 		// // hqlQuery2.setLong("userId", Long.parseLong(userID.toString()));
 		// userDetail = null;
@@ -451,19 +461,17 @@ public class LearnHibernate {
 		Criteria createCriteria = session.createCriteria(UserDetail.class);
 		createCriteria.add(Restrictions.eq("id", Long.parseLong(userID.toString())));
 
-		/*
-		 * Disjunction or = Restrictions.disjunction();
-		 * or.add(Restrictions.like("firstName", "%an%"));
-		 * or.add(Restrictions.like("lastName", "%ko%"));
-		 * createCriteria.add(or);
-		 */
+		// Disjunction - Used for grouping OR conditions
+		// Disjunction or = Restrictions.disjunction();
+		// or.add(Restrictions.like("firstName", "%an%"));
+		// or.add(Restrictions.like("lastName", "%ko%"));
+		// createCriteria.add(or);
 
-		/*
-		 * Conjunction and = Restrictions.conjunction();
-		 * and.add(Restrictions.like("firstName",
-		 * "%an%")).add(Restrictions.like("lastName", "%ko%"));
-		 * createCriteria.add(and);
-		 */
+		// Conjunction - Used for grouping AND conditions
+		// Conjunction and = Restrictions.conjunction();
+		// and.add(Restrictions.like("firstName", "%an%"));
+		// and.add(Restrictions.like("lastName", "%ko%"));
+		// createCriteria.add(and);
 
 		userDetail2 = (UserDetail) createCriteria.uniqueResult();
 		System.out.println(userDetail2.getFirstName());
@@ -478,12 +486,14 @@ public class LearnHibernate {
 		userDetail.setLastName("Kogunde");
 		userDetail.setLastLoginDate(new Date());
 
+		// save data
 		Session session = SESSION_FACTORY.openSession();
 		session.beginTransaction();
 		final Serializable userID = session.save(userDetail);
 		session.getTransaction().commit();
 		session.close();
 
+		// get data
 		session = SESSION_FACTORY.openSession();
 		session.beginTransaction();
 		UserDetail userDetail1 = (UserDetail) session.get(UserDetail.class, Long.parseLong(userID.toString()));
@@ -491,6 +501,7 @@ public class LearnHibernate {
 		session.getTransaction().commit();
 		session.close();
 
+		// get data, this time from 2nd level cache
 		session = SESSION_FACTORY.openSession();
 		session.beginTransaction();
 		UserDetail userDetail2 = (UserDetail) session.get(UserDetail.class, Long.parseLong(userID.toString()));
@@ -506,12 +517,14 @@ public class LearnHibernate {
 		userDetail.setLastName("Kogunde");
 		userDetail.setLastLoginDate(new Date());
 
+		// save data
 		Session session = SESSION_FACTORY.openSession();
 		session.beginTransaction();
 		final Serializable userID = session.save(userDetail);
 		session.getTransaction().commit();
 		session.close();
 
+		// fetch by HQL and set query cache, this time it fetches from database and caches the result in the query cache
 		session = SESSION_FACTORY.openSession();
 		session.beginTransaction();
 		Query query = session.createQuery("from UserDetail ud where ud.id = ?");
@@ -522,6 +535,7 @@ public class LearnHibernate {
 		session.getTransaction().commit();
 		session.close();
 
+		// fetch by HQL and set query cache, this time it from query cache
 		session = SESSION_FACTORY.openSession();
 		session.beginTransaction();
 		Query query2 = session.createQuery("from UserDetail ud where ud.id = ?");

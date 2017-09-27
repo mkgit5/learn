@@ -16,6 +16,7 @@
 		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
 		<property name="show_sql">true</property>
 		<property name="hbm2ddl.auto">create</property>
+		<property name="com"></property>
 
 		<!-- 2.1 Cache properties -->
 		<property name="cache.use_second_level_cache">true</property>

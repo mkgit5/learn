@@ -33,6 +33,15 @@ import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
+/*
+ * @Entity(name = "USER_DETAIL") => this name will be used to name Entity
+ * 
+ * @Table(name = "USER_DETAIL") => this name will be used to name a table in DB
+ * @Entity is object-oriented, used as the entity name in the HQL (Hibernate Query Language) to query objects.
+ * @Table is relation-oriented, used as the table name in the native SQL
+ * 
+ */
+
 @Entity
 @Table(name = "USER_DETAIL")
 // @NamedQuery(name = "UserDetail.byID", query = "from UserDetail where id = ?")
@@ -133,7 +142,8 @@ public class UserDetail {
 	}
 
 	@Embedded
-	@AttributeOverrides({ @AttributeOverride(name = "phoneCountryCode", column = @Column(name = "PHONE_COUNTRY_CODE")), @AttributeOverride(name = "phoneAreaCode", column = @Column(name = "PHONE_AREA_CODE")), @AttributeOverride(name = "phoneNumber", column = @Column(name = "PHONE_NUMBER")) })
+	@AttributeOverrides({ @AttributeOverride(name = "phoneCountryCode", column = @Column(name = "PHONE_COUNTRY_CODE")), @AttributeOverride(name = "phoneAreaCode", column = @Column(name = "PHONE_AREA_CODE")),
+			@AttributeOverride(name = "phoneNumber", column = @Column(name = "PHONE_NUMBER")) })
 	public PhoneDetail getPhoneDetail() {
 		return phoneDetail;
 	}
@@ -143,7 +153,8 @@ public class UserDetail {
 	}
 
 	@Embedded
-	@AttributeOverrides({ @AttributeOverride(name = "phoneCountryCode", column = @Column(name = "O_PHONE_COUNTRY_CODE")), @AttributeOverride(name = "phoneAreaCode", column = @Column(name = "O_PHONE_AREA_CODE")), @AttributeOverride(name = "phoneNumber", column = @Column(name = "O_PHONE_NUMBER")) })
+	@AttributeOverrides({ @AttributeOverride(name = "phoneCountryCode", column = @Column(name = "O_PHONE_COUNTRY_CODE")), @AttributeOverride(name = "phoneAreaCode", column = @Column(name = "O_PHONE_AREA_CODE")),
+			@AttributeOverride(name = "phoneNumber", column = @Column(name = "O_PHONE_NUMBER")) })
 	public PhoneDetail getOfficePhoneDetail() {
 		return officePhoneDetail;
 	}
@@ -166,7 +177,8 @@ public class UserDetail {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	// @OneToMany
 	// @JoinColumn(name = "VEHICLE_ID")
-	// @JoinTable(name = "USER_VEHICLE", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "VEHICLE_ID"))
+	// @JoinTable(name = "USER_VEHICLE", joinColumns = @JoinColumn(name =
+	// "USER_ID"), inverseJoinColumns = @JoinColumn(name = "VEHICLE_ID"))
 	public Set<VehicleDetail> getVehicleDetails() {
 		return vehicleDetails;
 	}
