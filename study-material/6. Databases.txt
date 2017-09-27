@@ -1,6 +1,24 @@
 Databases:
 -----------------------------------------------------------------------------------------------------------------------------
 -----------------------------------
+Set up MySql Database
+-----------------------------------
+1. Install MySql database server
+2. Install MySql Workbench client software
+3. Stop database (if it is running)
+	sudo /usr/local/mysql/support-files/mysql.server stop
+4. Start database in safe mode
+	sudo mysqld_safe --skip-grant-tables
+5. Login as 'root' user and change the password using below commands
+	mysql -u root
+	FLUSH PRIVILEGES;
+	ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass';
+6. Start database server
+	sudo /usr/local/mysql/support-files/mysql.server start
+
+7. Connect to database from MySql Workbench using above credentials.
+
+-----------------------------------
 ACID
 -----------------------------------
 1. Atomicity 
