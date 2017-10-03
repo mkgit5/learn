@@ -1,8 +1,8 @@
 Databases:
 -----------------------------------------------------------------------------------------------------------------------------
------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------
 Set up MySql Database
------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------
 1. Install MySql database server
 2. Install MySql Workbench client software
 3. Stop database (if it is running)
@@ -18,9 +18,9 @@ Set up MySql Database
 
 7. Connect to database from MySql Workbench using above credentials.
 
------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------
 ACID
------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------
 1. Atomicity 
 	The database system guarantees that either all operations within the transaction succeed or else they all fail.
 2. Consistency 
@@ -31,4 +31,74 @@ ACID
 4. Durability 
 	When committed, changes made in a transaction are permanent. 
 	The database system must have some way to recover from crashes and other problems so that the current state of the database is never lost.
+
+-----------------------------------------------------------------------------------------------------------------------------
+Tips for writing more efficient SQL
+-----------------------------------------------------------------------------------------------------------------------------
+http://www.dba-oracle.com/art_sql_tune.htm
+
+1. Rewrite complex subqueries with temporary tables
+2. Use minus instead of EXISTS subqueries
+3. Re-write NOT EXISTS and NOT EXISTS subqueries as outer joins
+4. Index your NULL values
+5. Leave column names alone
+6. Avoid the use of NOT IN or HAVING
+7. Avoid the LIKE predicate
+8. Never mix data types
+9. Use decode and case
+10. Use SQL analytic functions
+11. Don't fear full-table scans
+12. Use those aliases - Always use table aliases when referencing columns.
+
+-----------------------------------------------------------------------------------------------------------------------------
+Performance Tuning
+-----------------------------------------------------------------------------------------------------------------------------
+
+1. Hints for Join Orders (EG: ORDERED)
+------------------------------------------------------------------------------------------
+
+	Avoid cartesian join by replacing below query with the one having HINTs as shown below.
 	
+	SELECT AUD.AUDIENCE_ID BULK COLLECT
+	INTO V_AUDIENCE_ID
+	FROM AUDIENCE AUD
+	WHERE AUD.RETIRED    ='N'
+	AND AUD.AUDIENCE_ID IN
+	  (SELECT DISTINCT AAM.AUDIENCE_ID
+	  FROM AUDIENCE_APPLICATION_MAPPING AAM
+	  WHERE AAM.APPLICATION_ID=P_APP_ID
+	  AND AAM.RETIRED         ='N'
+	  AND EXISTS
+	    (SELECT 1
+	    FROM TABLE(P_AUDIENCE_ID)
+	    WHERE TO_CHAR(AAM.AUDIENCE_ID) LIKE column_value
+	    )
+	  );
+	
+	With
+	
+	SELECT
+	  /*+ ordered */
+	  DISTINCT AUD.AUDIENCE_ID BULK COLLECT
+	INTO V_AUDIENCE_ID
+	FROM AUDIENCE AUD,
+	  AUDIENCE_APPLICATION_MAPPING APP_MAPPING,
+	  (SELECT COLUMN_VALUE SEARCH_ID FROM TABLE(P_AUDIENCE_ID)
+	  ) SEARCH_IDS
+	WHERE AUD.AUDIENCE_ID         = APP_MAPPING.AUDIENCE_ID
+	AND AUD.RETIRED               ='N'
+	AND APP_MAPPING.RETIRED       ='N'
+	AND APP_MAPPING.APPLICATION_ID=P_APP_ID
+	AND TO_CHAR(AUD.AUDIENCE_ID) LIKE SEARCH_IDS.SEARCH_ID;	
+
+2. Hints for Parallel Execution (EG: PARALLEL)
+------------------------------------------------------------------------------------------
+
+	UPDATE /*+ PARALLEL(8) */ AUDIENCE_TEMP
+	SET (TITLE) = (SELECT /*+ PARALLEL(8) */ STRING_VALUE
+					  FROM ASWCONTENT_P_MUNGO
+					  WHERE AUDIENCE_ID = AUDIENCE_TEMP.AUDIENCE_ASW_ID
+					  AND UPPER(ATTR_NAME) LIKE UPPER('%AudienceProfileName%')
+				  )
+	WHERE AUDIENCE_ASW_ID IN (SELECT AUDIENCE_ID FROM ASWCONTENT_P_MUNGO);
+
