@@ -1,0 +1,38 @@
+------------------------------------------------------------------------------------------
+JMeter
+------------------------------------------------------------------------------------------
+https://www.tutorialspoint.com/jmeter/jmeter_overview.htm
+
+Execution Order of Test Elements
+------------------------------------------------------------------------------------------
+Configuration elements
+Pre-Processors
+Timers
+Sampler
+Post-Processors (unless SampleResult is null)
+Assertions (unless SampleResult is null)
+Listeners (unless SampleResult is null)
+
+
+Steps to create a test plan
+------------------------------------------------------------------------------------------
+A. Add a "Test Plan" and define "User Defined Variables"
+	For eg: URL = ma-pimit.corp.apple.com/pimservices
+	
+	1. Add a Threads -> Thread Group and configure below items
+		a. Number of threads
+		b. Ramp-up Period
+		c. Loop Count
+	2. Add a (Sampler -> Http Request) inside the Thread Group, and configure below items
+		a. Protocol = https
+		b. Server Name = ${URL}
+		c. Port Number
+		d. Method = GET
+		e. Path = /audiences
+		f. Parameters
+			i.  fields=id,title,description
+			ii. offset=0
+			iii.limit=100
+	3. Add Listener -> View Results Tree
+		   Listener -> Aggregate Report
+

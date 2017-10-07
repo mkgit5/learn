@@ -1,0 +1,25 @@
+------------------------------------------------------------------------------------------
+PMD and Checkstyle
+------------------------------------------------------------------------------------------
+
+These tools are not competing but are complementary and should be used simultaneously.
+
+The convention type (Checkstyle) is the glue that enables people to work together and 
+to free up their creativity instead of spending time and energy at understanding inconsistent code.
+
+Checkstyle examples
+------------------------------------------------------------------------------------------
+
+- Is there javadoc on public methods?
+- Is the project following Sun naming conventions?
+- Is the code written with a consistent format?
+
+PMD reminds you bad practices
+------------------------------------------------------------------------------------------
+https://dl.bintray.com/pmd/pmd-eclipse-plugin/updates/
+
+- Catching an exception without doing anything
+- Having dead code
+- Too many complex methods
+- Direct use of implementations instead of interfaces
+- Implementing the hashcode() method without the not equals(Object object) method
