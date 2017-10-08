@@ -100,3 +100,62 @@ public class App {
 	}
   }
 }
+
+-----------------------------------------------------------------------------------------------------------------------------
+Determine whether a list of parentheses "[()]{}...etc" are  balanced or unbalanced
+-----------------------------------------------------------------------------------------------------------------------------
+A stack helps with the problem. 
+While traversing the input, put all of the open parenthesis into the stack, 
+pops an open parenthesis when a matching close parenthesis shows up.
+Otherwise if they fail to match, return invalid as the result.
+
+public boolean isValid(String s) {
+      Stack stack = new Stack();
+      for(char c: s.toCharArray()) {
+           if(c == '{' || c == '(' || c == '[') {
+                  stack.push(c);
+           } else if(stack.isEmpty() || stack.pop() != getMatchingParenthesis(c)) {
+                  return false;
+           }
+      }
+       return stack.isEmpty() ? true: false;
+}
+
+private char getMatchingParenthesis(char c) {
+       if(c == '}') return '{';
+       if(c == ']') return '[';
+       return '(';
+}
+
+
+EBay interview Questions
+
+Interview Questions
+1st round:
+1. How to uniquely identify the repeating strings from the array.
+2. How to search in Skiplist
+
+2nd round:
+1. BinarySearch
+2. How to write Customized Comparator
+3. Anagrams
+
+3rd round:
+Lunch with tech manager and find maximum sub array
+
+4th round:
+1. Binary Search in sorted matrix
+2. Different ways of writing Singleton pattern
+3. Resume go through
+
+5th round:
+1. How HashMap works
+2. Get sum using minimum combination of numbers provided
+
+6th round:
+1. Singleton
+2. Tree traversal
+3. How to mirror the tree
+4. Stack implementation
+5. Queue using stack
+6. Reverse the sentence  
