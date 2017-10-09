@@ -11,17 +11,14 @@ import java.util.Properties;
 public class ReadWriteFile {
 
 	public static void main(String[] args) {
-		// readFromPropertiesFile();
-		// writeToPropertiesFile();
+		writeToPropertiesFile();
+		readFromPropertiesFile();
 		deleteFile();
 	}
 
 	private static void readFromPropertiesFile() {
-		Properties prop = new Properties();
 		InputStream input = null;
-
 		try {
-
 			input = new FileInputStream("config.properties");
 
 			// Read file from classpath
@@ -32,6 +29,7 @@ public class ReadWriteFile {
 			// }
 
 			// load a properties file
+			final Properties prop = new Properties();
 			prop.load(input);
 
 			// get the property value and print it out
@@ -53,11 +51,10 @@ public class ReadWriteFile {
 	}
 
 	private static void writeToPropertiesFile() {
-		Properties prop = new Properties();
 		OutputStream output = null;
 		try {
 			output = new FileOutputStream("config.properties", true);
-
+			final Properties prop = new Properties();
 			// set the properties value
 			prop.setProperty("database", "localhost");
 			prop.setProperty("dbuser", "mkyong");
