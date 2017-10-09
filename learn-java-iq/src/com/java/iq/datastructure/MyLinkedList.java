@@ -15,12 +15,12 @@ public class MyLinkedList {
 		if (item != null) {
 			MyNode temp = first;
 			unlink(item, temp);
-			// for (MyNode x = first; x != null; x = x.next) {
-			// unlink(item, x);
-			// return true;
-			// }
 		}
 		return false;
+	}
+
+	public int size() {
+		return size;
 	}
 
 	public void display() {
@@ -98,14 +98,19 @@ public class MyLinkedList {
 		linkedList.add("b");
 		linkedList.add("c");
 		linkedList.add("d");
-		System.out.println("My Linked List: ");
+		System.out.print("My Linked List: ");
 		linkedList.display();
 
-		System.out.println("Removing item: a");
+		System.out.println("\nMy Linked List Size: " + linkedList.size());
+
+		System.out.println("\nRemoving item: a");
 		linkedList.remove("a");
 
-		System.out.println("My Linked List: ");
+		System.out.println("\nMy Linked List Size: " + linkedList.size());
+
+		System.out.print("\nMy Linked List: ");
 		linkedList.display();
+
 	}
 
 }
