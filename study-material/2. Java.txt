@@ -1,3 +1,18 @@
+-----------------------------------------------------------------------------------------------------------------------------
+Index
+-----------------------------------------------------------------------------------------------------------------------------
+1. OOPs concepts
+2. JDK
+3. Exception Handling
+4. Volatile, AtomicInteger and Types of References
+5. String
+6. JVM Options
+7. Garbage Collection
+8. Collections
+9. Nested Classes
+10. IO (Input / Output)
+
+-----------------------------------------------------------------------------------------------------------------------------
 Java
 -----------------------------------------------------------------------------------------------------------------------------
 http://www.geeksforgeeks.org/java/
@@ -104,7 +119,6 @@ JVM
 Does JVM create an object of class Main?
 	- No, the reason for main() static in Java is to make sure that the main() can be called without any instance
 
-
 Is main method compulsory in Java?
 	- Prior to JDK 5, main method was not mandatory in a java program
     	You could write your full code under static block and it ran normally
@@ -148,7 +162,7 @@ Difference between a runtime (unchecked) exception and a declared (checked) exce
 
 Eg:
 Checked		: FileNotFoundException
-Unchecked	: NPE, ArithmeticException, ArrayIndexOutOfBoundsExceptionexception
+Unchecked	: NPE, ArithmeticException, ArrayIndexOutOfBoundsException
 							
 When would you return an error code instead of throwing an exception?
 
@@ -587,31 +601,30 @@ What is the difference between Collection and Collections ?
                                                          Collection(I)
                 _____________________________________________|_____________________________________________
                |                                             |                                             |
-                Set(I)                                     List(I)                                       Queue(I)
+             Set(I)                                       List(I)                                       Queue(I)
     ___________|___________                                  |                                 ____________|____________
    |                       |                            AbstractList                          |                         |
-AbstractSet            SortedSet(I)               ___________|___________        		    Deque(I)               AbstractQueue    
+AbstractSet            SortedSet(I)               ___________|___________        		    Deque(I)               	AbstractQueue    
    |                       |                     |           |           |              	  |                         |
-HashSet                  NavigableSet(I)      ArrayList    Vector     LinkedList 	AbstractSequentialList     	   PriorityQueue
+HashSet                NavigableSet(I)      ArrayList      Vector     LinkedList 	AbstractSequentialList     		PriorityQueue
    |                       |                                 |                
-LinkedHashSet            TreeSet                           Stack
+LinkedHashSet          TreeSet                             Stack
 
 ______________________________________________________________________________________________________________________________________
 
 
 Dictionary                                                     	 Map(I)
   |     ___________________________________________________________|___________________________________________________________
-  |    |                                          |                                                  |                         |
-Hashtable                                    AbstractMap                                        ConcurrentMap(I)          SortedMap(I)                                
+  |    |                                      |                                                  	 |                         |
+Hashtable                                 AbstractMap                                        ConcurrentMap(I)          		SortedMap(I)                                
     |                _________________________|______________________________                        |                         |
-Properties          |             |           |                 |            |             ConcurrentNavigableMap(I)     NavigableMap(I)
+Properties          |             |           |                 |            |             	ConcurrentNavigableMap(I)     	NavigableMap(I)
                   HashMap    WeakHashMap    EnumMap   IdentityHashMap   ConcurrentHashMap                                      |                               
                     |                                                                                                       TreeMap   
                LinkedHashMap                                                                     
    
 
 ***************************************************************************************************************************************
-
 
 Which collection classes are synchronized or thread-safe ?
 	- Stack, Properties, Vector and Hashtable
@@ -636,7 +649,7 @@ What is an iterator?
 What is the difference between Iterator and Enumeration?
 	- Iterator has remove() method
 	  Enumeration doesn't
-	- Iterator we can manipulate objects by adding and removing the objects from the collections
+	- Iterator can manipulate objects by adding and removing the objects from the collections
 	  Enumeration acts as Read-only interface
 	- Iterator is more secure and safe as compared to Enumeration 
 	  because it does not allow other thread to modify the collection object while some thread is iterating over it
@@ -892,7 +905,7 @@ Have you involved in design activities? What is the difference between associati
                    For example: Organization has Person as employees, the relationship between them is Aggregation.
                    Here is how they look like in terms of Java classes
                    
-                       public class Organization {
+                    public class Organization {
                         private List employees;
                     }
                     
@@ -980,11 +993,11 @@ Static Nested Class
 	            // Can access static member of outer class
 	            System.out.println("outer_x = " + outer_x);
 	             
-	            // can access display private static member of outer class
+	            // can access private static member of outer class
 	            System.out.println("outer_private = " + outer_private);
 	             
 	            // The following statement will give compilation error
-	            // as static nested class cannot directly access non-static membera
+	            // as static nested class cannot directly access non-static member
 	            // System.out.println("outer_y = " + outer_y);
 	         
 	        }
@@ -1167,11 +1180,11 @@ Anonymous Inner Class
 		class AnonymousDemo {
 		
 		    public static void main(String[] args) {
-		        // An inner class of Age interface, whose name is not written but an object to it is create
+		        // An inner class of Age interface, whose name is not written but an object to it is created
 		        Age age = new Age() {
 		            @Override
 		            public void getAge() {
-		                System.out.print("Age is "+x);
+		                System.out.print("Age is " + x);
 		            }
 		        };
 		        age.getAge();

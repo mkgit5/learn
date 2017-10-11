@@ -16,6 +16,33 @@ public class ReadWriteFile {
 		deleteFile();
 	}
 
+	private static void writeToPropertiesFile() {
+		OutputStream output = null;
+		try {
+			output = new FileOutputStream("config.properties", true);
+			final Properties prop = new Properties();
+			// set the properties value
+			prop.setProperty("database", "localhost");
+			prop.setProperty("dbuser", "mkyong");
+			prop.setProperty("dbpassword", "password");
+
+			// save properties to project root folder
+			prop.store(output, null);
+
+		} catch (IOException io) {
+			io.printStackTrace();
+		} finally {
+			if (output != null) {
+				try {
+					output.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
+	}
+
 	private static void readFromPropertiesFile() {
 		InputStream input = null;
 		try {
@@ -47,33 +74,6 @@ public class ReadWriteFile {
 					e.printStackTrace();
 				}
 			}
-		}
-	}
-
-	private static void writeToPropertiesFile() {
-		OutputStream output = null;
-		try {
-			output = new FileOutputStream("config.properties", true);
-			final Properties prop = new Properties();
-			// set the properties value
-			prop.setProperty("database", "localhost");
-			prop.setProperty("dbuser", "mkyong");
-			prop.setProperty("dbpassword", "password");
-
-			// save properties to project root folder
-			prop.store(output, null);
-
-		} catch (IOException io) {
-			io.printStackTrace();
-		} finally {
-			if (output != null) {
-				try {
-					output.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-
 		}
 	}
 
