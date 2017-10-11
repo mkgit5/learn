@@ -615,7 +615,7 @@ https://www.dineshonjava.com/spring-security-interview-questions-and-answers/
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     
-    - For servlet 3, we can define AbstractSecurityWebApplicationInitializer as follows. 
+    - For servlet 3, we can define AbstractSecurityWebApplicationInitializer. 
     ------------------------
     security-context.xml
     ------------------------
@@ -923,7 +923,6 @@ Spring Data
 Spring Data vs Spring DAO vs Spring ORM vs Spring JDBC
 ------------------------------------------------------------------------------------------
 https://stackoverflow.com/questions/24990400/spring-dao-vs-spring-orm-vs-spring-jdbc
-
 
 
 What are the annotations I should be using for REST service development in Spring?
