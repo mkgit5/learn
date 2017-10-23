@@ -343,14 +343,14 @@ What are the types of Sequence Generator?
 	|-------------------------------------------------------------------------------------------------------|
 	|@Entity																								|
 	|@Where(clause = "retired = 'N'")																		|
-	|@Table(name = "USI_USER_DETAIL")																		|
-	|@SequenceGenerator(name = "USI_USER_DET_SEQ", sequenceName = "USI_USER_DET_SEQ", allocationSize = 1)	|
+	|@Table(name = "TEST_USER_DETAIL")																		|
+	|@SequenceGenerator(name = "TEST_USER_DET_SEQ", sequenceName = "TEST_USER_DET_SEQ", allocationSize = 1)	|
 	|public class UserDetail extends BaseDomain {															|
 	|																										|
 	|	private Integer id;																					|
 	|																										|
 	|	@Id																									|
-	|	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USI_USER_DET_SEQ")					|
+	|	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TEST_USER_DET_SEQ")					|
 	|	@Column(name = "USER_ID")																			|
 	|	public Integer getId() {																			|
 	|		return id;																						|

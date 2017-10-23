@@ -169,8 +169,8 @@ Can you inject null and empty string values in Spring?
 	- Yes
 
 Spring configurations:
-    1. <context:component-scan base-package="com.apple.ist.pim" />
-       <context:component-scan base-package="com.apple.ist.usi" />
+    1. <context:component-scan base-package="com.java.test.domain" />
+       <context:component-scan base-package="com.java.test.dto" />
         - To scan the classes for dependency injection
         
     2. <context:spring-configured />
@@ -188,17 +188,17 @@ Spring configurations:
     Note: This tag does not activate processing of Spring's @Transactional or EJB3's @TransactionAttribute annotation. 
     Consider the use of the <tx:annotation-driven> tag for that purpose.
 
-    4. <tx:annotation-driven transaction-manager="usiTransactionManager" mode="aspectj"/>
+    4. <tx:annotation-driven transaction-manager="testTransactionManager" mode="aspectj"/>
         - Configures @Transactional
 
     5. <aop:aspectj-autoproxy proxy-target-class="true" />
         - Enables the use of the @AspectJ style of Spring AOP.
         
-    6. <task:annotation-driven executor="asTaskExecutor" />
+    6. <task:annotation-driven executor="testTaskExecutor" />
         - Enables the detection of @Async and @Scheduled annotations on any Spring-managed object. 
         - If present, a proxy will be generated for executing the annotated methods asynchronously. 
 
-    7. <task:executor id="asTaskExecutor" pool-size="25"/>
+    7. <task:executor id="testTaskExecutor" pool-size="25"/>
         - Defines a ThreadPoolTaskExecutor instance with configurable pool size, queue-capacity, keep-alive and rejection-policy values
 
     8. <mvc:annotation-driven />
@@ -313,7 +313,7 @@ What are the different points where weaving can be applied?
 		/**
 		 * All public methods
 		 */
-		@Pointcut("execution(public * com.apple..*(..))")
+		@Pointcut("execution(public * com.java..*(..))")
 		public void allMethodsPointcut() {}
 	
 		// =================================================
@@ -623,8 +623,8 @@ https://www.dineshonjava.com/spring-security-interview-questions-and-answers/
 		<constructor-arg>
 			<list>
 				<sec:filter-chain pattern="/**/jsondoc**" filters="none" />
-				<sec:filter-chain pattern="/services/usi/user" filters="requestLogFilter,authenticationFilter,provisionResponseLogFilter" />
-				<sec:filter-chain pattern="/hqids/verifications**" filters="requestLogFilter,a3ValidationFilter" />
+				<sec:filter-chain pattern="/services/test/user" filters="testLogFilter,authenticationFilter" />
+				<sec:filter-chain pattern="/services/verifications**" filters="requestLogFilter" />
 			</list>
 		</constructor-arg>
 	</bean>
@@ -791,7 +791,7 @@ data access object (DAO) implementations, and transaction strategies.
         ---------------------------------------
         	<!-- JNDI Data Source -->
 			<bean id="usiDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-				<property name="jndiName" value="jdbc/USIDatasource" />
+				<property name="jndiName" value="jdbc/TestDatasource" />
 				<property name="resourceRef" value="true" />
 			</bean>
         
@@ -799,8 +799,8 @@ data access object (DAO) implementations, and transaction strategies.
         b. Configure Hibernate SessionFactory
         ---------------------------------------
         	<!-- Session Factory -->
-        	<bean id="usiSessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean" lazy-init="false">
-				<property name="dataSource" ref="usiDataSource" />
+        	<bean id="testSessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean" lazy-init="false">
+				<property name="dataSource" ref="testDataSource" />
 				<property name="hibernateProperties">
 					<props>
 						<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
@@ -817,12 +817,12 @@ data access object (DAO) implementations, and transaction strategies.
 				</property>
 				<property name="packagesToScan">
 					<list>
-						<value>com.apple.ist.pim</value>
+						<value>com.java.test.domain</value>
 					</list>
 				</property>
 				<property name="annotatedPackages">
 					<list>
-						<value>com.apple.ist.pim</value>
+						<value>com.java.test.domain</value>
 					</list>
 				</property>
 			</bean>
@@ -831,11 +831,11 @@ data access object (DAO) implementations, and transaction strategies.
         c. Configure transaction with AOP
         ---------------------------------------
         	<!-- Enable @Transaction annotation -->
-			<tx:annotation-driven transaction-manager="usiTransactionManager" mode="aspectj"/>
+			<tx:annotation-driven transaction-manager="testTransactionManager" mode="aspectj"/>
 			
         	<!-- Transaction Manager Configuration -->
-			<bean id="usiTransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager" autowire-candidate="true">
-				<property name="sessionFactory" ref="usiSessionFactory" />
+			<bean id="testTransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager" autowire-candidate="true">
+				<property name="sessionFactory" ref="testSessionFactory" />
 			</bean>
         
         ---------------------------------------
@@ -845,7 +845,7 @@ data access object (DAO) implementations, and transaction strategies.
         	@Repository
 			public class BaseDaoImpl implements BaseDao {
 			
-				@Resource(name = "usiSessionFactory")
+				@Resource(name = "testSessionFactory")
 				private SessionFactory sessionFactory;
 			
 				@Override

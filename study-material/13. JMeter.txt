@@ -17,7 +17,7 @@ Listeners (unless SampleResult is null)
 Steps to create a test plan
 ------------------------------------------------------------------------------------------
 A. Add a "Test Plan" and define "User Defined Variables"
-	For eg: URL = ma-pimit.corp.apple.com/pimservices
+	For eg: URL = mydomain.com/services
 	
 	1. Add a Threads -> Thread Group and configure below items
 		a. Number of threads
