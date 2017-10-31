@@ -14,9 +14,11 @@
 		<module>learn-java-iq</module>
 		<module>learn-hibernate</module>
 		<module>learn-spring</module>
+		<module>learn-spring-boot</module>
 		<module>learn-maven</module>
 		<module>my-maven-project</module>
 		<module>learn-jax-rs</module>
+		<module>study-material</module>
 	</modules>
 
 </project>
