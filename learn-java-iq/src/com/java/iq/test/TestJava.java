@@ -1,23 +1,13 @@
 package com.java.iq.test;
 
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.Arrays;
 
 public class TestJava {
 
 	public static void main(String[] args) {
-		Test t = new Test();
-		Map<String, Integer> map = new TreeMap<>();
-
+		int[] i = new int[10];
+		Arrays.fill(i, -1);
+		System.out.println(Arrays.toString(i));
 	}
 
-	public void test(Test t1) {
-		t1.s = "pqr";
-		System.out.println("2 - " + t1.s);
-	}
-
-}
-
-class Test {
-	public String s = "abc";
 }

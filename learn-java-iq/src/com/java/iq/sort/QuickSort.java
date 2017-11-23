@@ -48,16 +48,16 @@ public class QuickSort {
 	 * @param low start index of the array
 	 * @param high end index of the array
 	 */
-	public void recursiveQuickSort(int[] array, int low, int high) {
+	public void recursiveQuickSort(int[] array, int low, int high) { // 12
 		int idx = partition(array, low, high);
 
 		// Recursively call quick sort with left part of the partitioned array
 		if (low < idx - 1) {
-			recursiveQuickSort(array, low, idx - 1);
+			recursiveQuickSort(array, low, idx - 1); // 6 // 3 // 1
 		}
 
 		// Recursively call quick sort with right part of the partitioned array
-		if (high > idx) {
+		if (high > idx) { // 6 // 3 // 1
 			recursiveQuickSort(array, idx, high);
 		}
 	}
