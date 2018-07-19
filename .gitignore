@@ -2,6 +2,8 @@
 /bin
 /target
 /.settings
+.settings
+target
 
 # ignore below files
 .class
