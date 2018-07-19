@@ -1,0 +1,8 @@
+Hibernate Envers:
+1. http://ignaciosuay.com/how-to-use-hibernate-envers-to-audit-data-including-username/
+2. https://vladmihalcea.com/the-best-way-to-implement-an-audit-log-using-hibernate-envers/
+3. https://docs.jboss.org/envers/docs/#example
+4. http://docs.jboss.org/envers/docs/#revisionlog
+5. https://dzone.com/articles/jpa-auditing-automatically-persisting-audit-logs
+	https://github.com/njnareshjoshi/articles/blob/master/spring-data-jpa-auditing/src/main/java/org/programming/mitra/Auditable.java
+

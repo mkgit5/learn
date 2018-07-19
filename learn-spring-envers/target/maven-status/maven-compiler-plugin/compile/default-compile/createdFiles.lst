@@ -1,0 +1,8 @@
+com/java/spring/envers/domain/UserDetailsAudit.class
+com/java/spring/envers/dao/UserDetailsDao.class
+com/java/spring/envers/App.class
+com/java/spring/envers/controllers/UserController.class
+com/java/spring/envers/dao/BaseDao.class
+com/java/spring/envers/dao/UserDetailsAudDao.class
+com/java/spring/envers/domain/UserDetails.class
+com/java/spring/envers/services/UserService.class

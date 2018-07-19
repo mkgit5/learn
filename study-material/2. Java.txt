@@ -10,7 +10,8 @@ Index
 7. Garbage Collection
 8. Collections
 9. Nested Classes
-10. IO (Input / Output)
+10. Generics
+11. IO (Input / Output)
 
 -----------------------------------------------------------------------------------------------------------------------------
 Java
@@ -289,7 +290,7 @@ public class Singleton{
 	}
 }
 
-When is volatile Enough?
+When is volatile enough?
 	- If two threads are both reading and writing to a shared variable, then using the volatile keyword for that is not enough. 
 	- You need to use a synchronized in that case, to guarantee that the reading and writing of the variable is atomic.
 	- As an alternative to a synchronized block you could also use one of the many atomic data types 
@@ -352,8 +353,8 @@ Have you heard of weak/strong references in java? Can you explain?
 			A a = new A(); //Strong Reference
  			a = null;
 		At this point of time, this object can’t be garbage collected as it has strong reference.
-		If you make reference ‘a’ to point to null, 
-		then bject to which ‘a’ is pointing earlier will become eligible for garbage collection.
+		If you make reference 'a' to point to null, 
+		then object to which 'a' was pointing earlier will become eligible for garbage collection.
 		
 	2. Soft Reference
 		Objects which are softly referenced will not be garbage collected until JVM badly needs memory. 
@@ -426,7 +427,7 @@ What is the difference between String class and string literal?
 		Creating too many String literals can cause java.lang.OutOfMemory: permgen space.
 
 How to make a class immutable?
-    1. Don't allow subclasses to override methods. The simplest way to do this is to declare the class as final. 
+    1. Declare the class as final - Don't allow subclasses to override methods
     2. Make all fields final and private.
     3. Don't provide "setter" methods — methods that modify fields or objects referred to by fields.
     4. A more sophisticated approach is to make the constructor private and construct instances in factory methods.
@@ -516,7 +517,7 @@ How do you monitor garbage collection activities?
     - We can monitor garbage collection activities either offline or real-time
     
     - Real time analysis
-         - Use tools like JConsole and VisualVM to monitor real time garbage collection activities and memory status of JVM 
+        - Use tools like JConsole and VisualVM to monitor real time garbage collection activities and memory status of JVM 
         - We can enable GC options like (it doesn't impact application performance)
             -XX:+PrintGCDetails 
             -verbose:gc
@@ -627,7 +628,7 @@ Properties          |             |           |                 |            |  
 ***************************************************************************************************************************************
 
 Which collection classes are synchronized or thread-safe ?
-	- Stack, Properties, Vector and Hashtable
+	- Vector, Stack, Hashtable and Properties
 
 What is the difference between List and Set?
 	- Set contain only unique elements
@@ -861,17 +862,21 @@ deep copy and shallow copy?
 
 What is the difference between Synchronized Map and Concurrent Map?
 How a ConcurrentHashMap works?
+What is a difference between a tree and a graph?
+What is the order of look-up and insertion in a hash table, binary tree, linked list?
+Name as many sorting algorithms as you can and briefly characterize their performance characteristics.
+Why would you use a link list rather than an array? Discuss the tradeoffs.
 
 What are Comparable and Comparator interfaces ? List the difference between them ?
-	- Comparable interface is used to implement natural ordering of object
-	  Comparator interface is which is used to impose (customised) ordering on some collection of objects
+	- Comparable interface is used to implement natural ordering of objects
+	  Comparator interface is used to implement customised ordering of objects
 	- Comparable interface has method 'public int compareTo(Object o)'
 	  Comparator interface has method 'public int compare (Object o1, Object o2)'
 
 Have you involved in design activities? What is the difference between association, aggregation and composition?
     - http://javarevisited.blogspot.com/2014/02/ifference-between-association-vs-composition-vs-aggregation.html#ixzz4sItVca2Z
     
-    - All three denotes relationship between object and only differ in their strength.
+    - All three denotes relationship between objects and only differ in their strength.
       Composition represents strongest form of relationship and association being the most general form
     - Another interesting word, to understand difference between Composition and Aggregation in software design is "part-of" and "has"
       If one object is-part-of another object e.g. Engine is part of Car, then association or relationship between them is Composition
@@ -879,7 +884,7 @@ Have you involved in design activities? What is the difference between associati
 
     - Association: One object is related to other to use functionality and service provided by that object
                      This relationship between two objects is known as the Association
-                     Both Composition and Aggregation are the form of association between two objects
+                     Both Composition and Aggregation are the forms of association between two objects
 
     - Composition: Association between two objects is referred as Composition, 
                    when one class owns other class and other class can not meaningfully exist, when it's owner is destroyed
@@ -929,16 +934,6 @@ Difference between Integer.valueOf() vs. Integer.parseInt()
 	- Integer.valueOf() returns a new Integer object
 	- Integer.parseInt() returns a primitive int
 
-Code to read input from keyboard?
-	- BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-      String line = reader.readLine();
-      System.out.println(line);
-      
-    - Scanner scanner = new Scanner(System.in);
-      String str = scanner.nextLine();
-      System.out.println(str);
-	  scanner.close();
-
 -----------------------------------------------------------------------------------------------------------------------------
 Nested Classes in Java
 -----------------------------------------------------------------------------------------------------------------------------
@@ -968,7 +963,7 @@ Static Nested Class
 ----------------------------------------
 	- Static nested class cannot refer directly to instance variables or methods defined in its enclosing class
 	- It can use them only through an object reference
-	- They are accessed using the enclosing class name
+	- Static nested classes are accessed using the enclosing class name
 	- To create an object for the static nested class, use this syntax
 		OuterClass.StaticNestedClass nestedObject = new OuterClass.StaticNestedClass();
 	- Java program to demonstrate accessing a static nested class
@@ -1192,20 +1187,230 @@ Anonymous Inner Class
 		}
 
 -----------------------------------------------------------------------------------------------------------------------------
+Generics
+-----------------------------------------------------------------------------------------------------------------------------
+https://www.javatpoint.com/generics-in-java
+
+----------------------------------------
+Before Java 5:
+----------------------------------------
+	// list can hold any Оbject
+	List list = new ArrayList();
+	 
+	// String is Object
+	list.add( "text" ); 
+	 
+	// Integer is also Object
+	list.add( new Integer( 123 ) );
+	 
+	// Needs cast, but perfectly legal
+	String text = (String) list.get( 0 ); 
+ 
+	String moreText = (String) list.get( 1 ); // Run-Time:ClassCastException: Integer cannot be cast to String
+	
+In this example, Generics will help not only eliminate the Run-Time:ClassCastException, but It will also save you the trouble of casting to String.
+
+----------------------------------------
+After Java 5:
+----------------------------------------
+	// compiler will make sure the "list" reference can insert only Strings into its collection
+	List<String> list = new ArrayList<String>(); 
+	 
+	// Perfectly legal
+	list.add( "text" );
+	 
+	list.add( new Integer( 123 ) ); // Compile-Time:The method add(String) ... is not applicable for ... (Integer)
+	
+----------------------------------------
+Type Parameters:
+----------------------------------------
+The common type parameters are as follows:
+	T - Type
+	E - Element
+	K - Key
+	N - Number
+	V - Value
+
+----------------------------------------
+Creating generic class:
+----------------------------------------
+	public class MyGen<T>{  
+
+		T obj;
+		
+		void add(T obj) {
+			this.obj=obj;
+		}
+
+		T get() {
+			return obj;
+		}
+		
+	}
+
+----------------------------------------
+Using generic class:
+----------------------------------------
+	class TestGenerics3 {
+	
+		public static void main(String args[]) {
+			MyGen<Integer> m=new MyGen<Integer>();
+			m.add(2);
+			//m.add("vivek"); //Compile time error
+			System.out.println(m.get());
+		}
+		
+	}
+
+----------------------------------------
+Generic methods/functions:
+----------------------------------------
+public class Test
+{
+    // A Generic method example
+    public static <T> void genericDisplay (T element) {
+        System.out.println(element.getClass().getName() + " = " + element);
+    }
+  
+    // Driver method
+    public static void main(String[] args) {
+         // Calling generic method with Integer argument
+        genericDisplay(11);
+  
+        // Calling generic method with String argument
+        genericDisplay("GeeksForGeeks");
+  
+        // Calling generic method with double argument
+        genericDisplay(1.0);
+    }
+}
+
+----------------------------------------
+Advantages:
+----------------------------------------
+	- Type-safety
+		- We can hold only a single type of objects in generics. It doesn’t allow to store other objects.
+	- Type casting is not required
+		- There is no need to typecast the object.
+	- Compile-Time checking
+		- It is checked at compile time so problem will not occur at runtime. 
+		- The good programming strategy says it is far better to handle the problem at compile time than runtime.
+
+----------------------------------------
+Disadvantages
+----------------------------------------
+- Still not 100% TypeSafe
+	The funny thing is that the below code will actually compile successfully giving the developer a false sense of 
+	security that wouldn’t last long, because the last line will fail at 
+	Run-Time producing: java.lang.ClassCastException: java.lang.Object cannot be cast to java.lang.String.
+
+	// create a Vector that will allow only String
+	Vector<String> strings = new Vector<String>();
+	 
+	// perfectly legal
+	strings.add( "a string" );
+	 
+	// cast the Vector to a generic Vector, by default generic vector allows Object
+	Vector objects = strings;
+	 
+	// insert an Object into the Vector
+	objects.add( new Object() );
+	 
+	// fetch an Object from the Vector of strings
+	Object anObject = strings.get( 0 );
+	 
+	// fetch a String from the Vector of strings
+	String aString = strings.get( 0 );
+	
+	
+- Generics apply Type-Erasure internally. 
+	- It basically takes all Generics declarations and replaces them with appropriate types.
+
+For bounded types:
+----------------------------------------
+
+	public class Node<T> extends Comparable<T> {
+	 
+	    private T data;
+	    private Node<T> next;
+	 
+	    public Node(T data, Node<T> next) {
+	        this.data = data;
+	        this.next = next;
+	    }
+	 
+	    public T getData() { return data; }
+	    // ...
+	}
+
+The Java compiler replaces the bounded type parameter “T” with the first bound class, Comparable:
+
+	public class Node {
+	 
+	    private Comparable data;
+	    private Node next;
+	 
+	    public Node(Comparable data, Node next) {
+	        this.data = data;
+	        this.next = next;
+	    }
+	 
+	    public Comparable getData() { return data; }
+	    // ...
+	}
+	
+For unbounded types:
+----------------------------------------
+
+	public class Node<T> {
+	 
+	    private T data;
+	    private Node<T> next;
+	 
+	    public Node(T data, Node<T> next) }
+	        this.data = data;
+	        this.next = next;
+	    }
+	 
+	    public T getData() { return data; }
+	    // ...
+	}
+
+Because the type parameter “T” is unbounded, the Java compiler replaces it with Object:
+
+	public class Node {
+	 
+	    private Object data;
+	    private Node next;
+	 
+	    public Node(Object data, Node next) {
+	        this.data = data;
+	        this.next = next;
+	    }
+	 
+	    public Object getData() { return data; }
+	    // ...
+	}
+
+-----------------------------------------------------------------------------------------------------------------------------
 Input / Output
 -----------------------------------------------------------------------------------------------------------------------------
+Code to read input from keyboard?
+	- BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+      String line = reader.readLine();
+      System.out.println(line);
+      
+    - Scanner scanner = new Scanner(System.in);
+      String str = scanner.nextLine();
+      System.out.println(str);
+	  scanner.close();
+
 BufferedReader vs Scanner
 	1. BufferedReader is synchronous while Scanner is not
 	2. BufferedReader should be used if we are working with multiple threads
     3. BufferedReader (8KB char buffer) has significantly larger buffer memory than Scanner (1KB char buffer)
     4. BufferedReader is a bit faster as compared to scanner 
        because scanner does parsing of input data and BufferedReader simply reads sequence of characters
-
-
-What is a difference between a tree and a graph?
-What is the order of look-up and insertion in a hash table, binary tree, linked list?
-Name as many sorting algorithms as you can and briefly characterize their performance characteristics.
-Why would you use a link list rather than an array? Discuss the tradeoffs.
 
 -----------------------------------------------------------------------------------------------------------------------------
 # Threading:
@@ -1261,27 +1466,45 @@ What is the importance of exclamation important in css?
 What is the difference between an ID selector and CLASS?
 What are pseudo classes?
 
-JavaScript
------------------------------------------------------------------------------------------------------------------------------
-What is the difference between undefined and null?
-What is JavaScript’s this keyword?
-Can you explain how inheritance works in JavaScript?
-What are closure functions ib javascript?
-What is name spacing in javascript?
-2. How does variable scope work in JavaScript?
-
 Ajax
 -----------------------------------------------------------------------------------------------------------------------------
 What is the difference between synchronous and asynchronous requests?
 How do you upload a file using ajax?
 How many types of ready states in Ajax?
 
-JQuery
+jQuery
 -----------------------------------------------------------------------------------------------------------------------------
-What is the different between jQuery and dollar sign?
+What is the difference between jQuery and dollar sign?
+	- '$' symbol is just an alias to "jQuery"
+	- $(selector).action();
+		- $ 		->	Sign denotes jQuery funciton
+		- selector 	-> 	Select the HTML element
+		- action()	-> 	Perform action on selected element
+	- Eg:
+		jQuery("p").hide();
+		$("p").hide();
+
 What is jQuery.noConflict()?
+	- This method releases jQuery's control of the $ variable. 
+	- This method can also be used to specify a new custom name for the jQuery variable. 
+	- Tip: This method is useful when other JavaScript libraries use the $ for their functions.
+	
 Is window.onload is different from document.ready()?
+	- window.onload is the built-in JavaScript event, but as its implementation had subtle quirks across browsers
+	- jQuery provides document.ready, fires as soon as the page's DOM is ready (doesn't wait for images, etc.)
+	- The ready event occurs after the HTML document has been loaded, 
+	  while the onload event occurs later, when all content (e.g. images) also has been loaded.
+
 What is the difference between jQuery empty() vs remove()? 
+	- .empty(): 
+		This method removes all the child element of the matched element.
+	- .remove(): 
+		This method takes elements out of the DOM. 
+		Use .remove() when you want to remove the element itself, as well as everything inside it.
+		In addition to the elements themselves, all bound events and jQuery data associated with the elements are removed. 
+	- .detach(): 
+		This method is the same as .remove(), except that .detach() keeps all jQuery data associated with the removed elements. 
+		This method is useful when removed elements are to be reinserted into the DOM at a later time.
 
 Code
 -----------------------------------------------------------------------------------------------------------------------------
@@ -1310,3 +1533,10 @@ Use cases
 Have you ever involved in debugging of a Java EE application?
 The application is performing good, but most of the times it experiences splices in CPU and RAM usage; what could be the reason? how do you want to debug?
 How do you write a thread-safe java class?
+
+
+COBRA - 800-307-4830
+
+Cigna	- 1400 - 150
+Kaiser	- 
+

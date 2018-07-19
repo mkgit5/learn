@@ -28,7 +28,7 @@ What are the advantages of Hibernate over JDBC?
     - Hibernate removes a lot of boiler-plate code that comes with JDBC API, the code looks more cleaner and readable
     - Hibernate supports inheritance, associations and collections
         These features are not present with JDBC API
-    - Hibernate provides transaction management, in fact most of the queries can’t be executed outside transaction 
+    - Hibernate provides transaction management, in fact most of the queries can't be executed outside transaction 
         In JDBC API, we need to write code for transaction management using commit and rollback
     - Hibernate wraps JDBC exceptions and throw JDBCException/HibernateException (un-checked exception), so we don’t need to write try-catch blocks.
         JDBC API throws SQLException that is a checked exception, so we need to write a lot of try-catch block code
@@ -79,7 +79,7 @@ What is hibernate mapping file?
     - A file is used to define the entity bean fields and database table column mappings
 
 Is SessionFactory thread-safe in Hibernate?
-    - SessionFactory is both Immutable and thread-safe and it has just one single instance in Hibernate application. 
+    - SessionFactory is both Immutable and thread-safe and it has just one instance in Hibernate application. 
 
 What is difference between getCurrentSession() and openSession() in Hibernate?
     - openSession()         - always create new Session object
@@ -166,10 +166,10 @@ What is the difference between the transient, persistent and detached state in H
     Similarly, you can re-attach a detached object to hibernate sessions by calling either update() or saveOrUpdate() or merge() method.
 
 What is the difference between get() vs load() method in Hibernate?
-    - load() will throw an exception if an object with id passed to them is not found
-      get() will return null
     - load can return proxy without hitting the database unless required
       get() always go to the database
+    - load() will throw an exception if an object with id passed to them is not found
+      get() will return null
     - Sometimes using load() can be faster than the get()
 
 What is the difference between save() and persist() method?
@@ -210,8 +210,8 @@ What is difference between lock() and update() method?
     - It is the best practice to use either session.update(..) or session.saveOrUpdate(). 
 
 What is the difference between sorted and ordered collection in Hibernate?
-    - Sorted collection sort the data Java's collection framework sorting methods, in JVM's heap memory
-      Ordered collection is sorted using 'order by' clause in the database itself
+    - Sorted collection sort the data using Java's collection framework sorting methods, in JVM's heap memory
+      Ordered collection sorts the data using 'order by' clause in the database itself
     - Sorted collection is more suited for small data set
       Ordered collection is for a large data set, to avoid OutOfMemoryError in Java application
 
@@ -266,18 +266,18 @@ What are the benefits of Named SQL Query?
 
 What is Hibernate Criteria API?
     - Criteria API is a object oriented query API to fetch the data from the database
-    - It’s only used to fetch the results from the database
-    - We can’t use Criteria to run update or delete queries or any DDL statements
-    	Criteria createCriteria = session.createCriteria(UserDetail.class);
-		createCriteria.add(Restrictions.eq("id", Long.parseLong(userID.toString())));
-		UserDetail userDetail = (UserDetail) createCriteria.uniqueResult();
+    - It's only used to fetch the results from the database
+    - We can't use Criteria to run update or delete queries or any DDL statements
+    	Criteria criteria = session.createCriteria(UserDetail.class);
+		criteria.add(Restrictions.eq("id", Long.parseLong(userID.toString())));
+		UserDetail userDetail = (UserDetail) criteria.uniqueResult();
 
 What is the benefit of Hibernate Criteria API?
     - Criteria API provides Projection (that we can use for aggregate functions such as sum(), min(), max() etc)
     - Criteria API can be used with ProjectionList (to fetch selected columns only)
     - Criteria API can be used for join queries (by joining multiple tables, useful methods are createAlias(), setFetchMode() and setProjection())
     - Criteria API can be used for fetching results with conditions (useful methods are add() where we can add Restrictions)
-    - Criteria API provides addOrder() method that we can use for ordering the results
+    - Criteria API provides addOrder() method that can be used for ordering the results
     
 What is Hibernate Proxy and how it helps in lazy loading?
     - Hibernate uses proxy object to support lazy loading
@@ -324,7 +324,7 @@ How to integrate Hibernate and Spring frameworks?
     3. If you are using Hibernate 3, you need to configure org.springframework.orm.hibernate3.LocalSessionFactoryBean 
         or org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean in Spring Bean configuration file
     4. For Hibernate 4, there is single class org.springframework.orm.hibernate4.LocalSessionFactoryBean that should be configured.
-    5. Note that we don’t need to use Hibernate Transaction Management,
+    5. Note that we don't need to use Hibernate Transaction Management,
         we can leave it to Spring declarative transaction management using @Transactional annotation
 
 What is HibernateTemplate class?

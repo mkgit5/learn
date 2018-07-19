@@ -22,8 +22,6 @@ What is Spring?
 	- Spring is an open source development framework for enterprise Java.
 
 What are benefits of using spring?
-	Following is the list of few of the great benefits of using Spring Framework:
-
 	1. Lightweight: 
 		Spring is lightweight when it comes to size and transparency. The basic version of spring framework is around 2MB.
 	2. Inversion of control (IOC): 
@@ -89,7 +87,7 @@ What is Bean Factory?
     Is the one which manages the life cycle of beans (including dependency injection) for standalone applications.
 
 What is Application Context?
-    It is same as a bean factory, but it also provides additional functionalities like:
+    It is same as a bean factory, but it provides additional functionalities like:
         a. A means for resolving text messages, including support for internationalization.
         b. A generic way to load file resources.
         c. Publish events to beans that are registered as listeners.
@@ -161,7 +159,7 @@ What are different Modes of auto wiring?
 	2. byName: Autowiring by property name. 
 	3. byType: Autowiring by property datatype. If more than one such beans exist, a fatal exception is thrown.
 	4. constructor: Similar to byType, but type applies to constructor arguments. 
-	                If there is no exactly one bean of the constructor argument type in the container, a fatal error is raised.
+	                If there is no bean of the constructor argument type in the container, a fatal error is raised.
 	5. autodetect: Spring first tries to wire using autowire by constructor.
 	               If it does not work, Spring tries to autowire by byType.
 
@@ -230,7 +228,7 @@ Describe some of the standard Spring events.
 Spring AOP
 ------------------------------------------------------------------------------------------
 What is AOP?
-    AOP is a programming technique that allows programmers to modularize cross-cutting concerns
+    AOP is a programming technique that allows programmers to address cross-cutting concerns
      across the application, such as logging and transaction management.
      
 What is Aspect?
@@ -704,10 +702,10 @@ https://www.dineshonjava.com/spring-security-interview-questions-and-answers/
     }
     
 10. What is authentication and authorization? Which must come first?
-    Authentication – Checks whether user’s credentials are valid
+    Authentication – Checks whether user's credentials are valid
     Authorization – Checks if the user is allowed to perform an action
     
-    Authentication comes first before Authorization (because authorization process needs princial object)
+    Authentication comes first before Authorization (because authorization process needs principal object)
 
 ------------------------------------------------------------------------------------------
 Spring Transaction
@@ -761,7 +759,8 @@ You should need to annotate them with @Repository
 
 2. What are the exceptions thrown by the Spring DAO classes?
     Spring DAO classes throw exceptions which are subclasses of DataAccessException(org.springframework.dao.DataAccessException).
-    Spring provides a translation from technology-specific exceptions like SQLException to its own exception class hierarchy with the DataAccessException as the root exception. 
+    Spring provides a translation from technology-specific exceptions like SQLException to its own exception class hierarchy 
+    with the DataAccessException as the root exception. 
     These exceptions wrap the original exception.
 
 ------------------------------------------------------------------------------------------
@@ -771,9 +770,9 @@ The Spring Framework supports integration with Hibernate, JPA and Java Data Obje
 data access object (DAO) implementations, and transaction strategies.
 
 1. What are the ORM’s Spring supports?
+    JPA (Java Persistence API)
     Hibernate
     iBatis
-    JPA (Java Persistence API)
     TopLink
     JDO (Java Data Objects)
     OJB
@@ -784,7 +783,7 @@ data access object (DAO) implementations, and transaction strategies.
         b. Extending HibernateDaoSupport and applying an AOP Interceptor 
 
 3. How to integrate Spring and Hibernate using HibernateDaoSupport?
-    Spring and Hibernate can integrate using Spring’s SessionFactory called LocalSessionFactory. 
+    Spring and Hibernate can integrate using Spring's SessionFactory called LocalSessionFactory. 
     The integration process is of 3 steps.
 	    ---------------------------------------
         a. Configure datasource

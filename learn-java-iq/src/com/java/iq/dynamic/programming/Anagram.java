@@ -25,7 +25,8 @@ public class Anagram {
 			// Setting status as false if copyOfs1 and copyOfs2 doesn't have same length
 			status = false;
 		} else {
-			// Changing the case of characters of both copyOfs1 and copyOfs2 and converting them to char array
+			// Changing the case of characters of both copyOfs1 and copyOfs2 and converting
+			// them to char array
 			char[] s1Array = copyOfs1.toLowerCase().toCharArray();
 			char[] s2Array = copyOfs2.toLowerCase().toCharArray();
 
@@ -43,6 +44,14 @@ public class Anagram {
 		} else {
 			System.out.println(s1 + " and " + s2 + " are not anagrams");
 		}
+	}
+
+	public void isAnagram2(String s1, String s2) {
+		char[] c1 = s1.replaceAll("\\s", "").toLowerCase().toCharArray();
+		char[] c2 = s2.replaceAll("\\s", "").toLowerCase().toCharArray();
+		Arrays.sort(c1);
+		Arrays.sort(c2);
+		System.out.println("Is Anagram? " + Arrays.equals(c1, c2));
 	}
 
 	public static void main(String[] args) {

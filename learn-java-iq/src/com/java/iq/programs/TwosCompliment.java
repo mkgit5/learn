@@ -1,11 +1,14 @@
 package com.java.iq.programs;
 
+/*
+  1s complement of 10000000 is 01111111
+  2s complement of 10000000 is 10000000
+ */
 public class TwosCompliment {
 
 	public static void main(String[] args) {
 		TwosCompliment twosCompliment = new TwosCompliment();
-		twosCompliment.twosCompliment("00000000");
-
+		twosCompliment.twosCompliment("10000000");
 	}
 
 	public String onesCompliment(String bin) {
@@ -21,7 +24,7 @@ public class TwosCompliment {
 		String ones = onesCompliment(bin);
 		StringBuilder builder = new StringBuilder(ones);
 		boolean b = false;
-		for (int i = ones.length() - 1; i > 0; i--) {
+		for (int i = ones.length() - 1; i >= 0; i--) {
 			if (ones.charAt(i) == '1') {
 				builder.setCharAt(i, '0');
 			} else {
@@ -30,8 +33,6 @@ public class TwosCompliment {
 				break;
 			}
 		}
-		if (!b)
-			builder.append("1", 0, 7);
 
 		twos = builder.toString();
 

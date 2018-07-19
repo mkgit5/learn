@@ -1,27 +1,32 @@
 package com.java.hibernate;
 
+import java.io.File;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.SQLQuery;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.classic.Session;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
+import org.hibernate.type.LongType;
+
 import com.java.hibernate.domain.AddressDetail;
 import com.java.hibernate.domain.FourWheelerVehicle;
 import com.java.hibernate.domain.Hotel;
 import com.java.hibernate.domain.PhoneDetail;
 import com.java.hibernate.domain.Qualification;
 import com.java.hibernate.domain.TwoWheelerVehicle;
+import com.java.hibernate.domain.UserDTO;
 import com.java.hibernate.domain.UserDetail;
 import com.java.hibernate.domain.Vehicle;
 import com.java.hibernate.domain.VehicleDetail;
-
-import java.io.File;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.hibernate.Criteria;
-import org.hibernate.Query;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.classic.Session;
-import org.hibernate.criterion.Restrictions;
 
 public class LearnHibernate {
 
@@ -35,6 +40,7 @@ public class LearnHibernate {
 		// insertElementCollections();
 		// fetchByGet();
 		// fetchByLoad();
+		fetchFilteredDetails();
 		// saveOneToOneMapping();
 		// saveOneToManyMapping();
 		// saveManyToManyMapping();
@@ -49,6 +55,23 @@ public class LearnHibernate {
 		// fetchFromQueryCache();
 		SESSION_FACTORY.close();
 		System.exit(0);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static void fetchFilteredDetails() {
+		Session session = SESSION_FACTORY.openSession();
+		session.beginTransaction();
+		SQLQuery sqlQuery = session.createSQLQuery(
+				"SELECT USER_ID as userId, FIRST_NAME as firstName, LAST_NAME as lastName FROM USER_DETAIL WHERE USER_ID = 1");
+		sqlQuery.setResultTransformer(Transformers.aliasToBean(UserDTO.class));
+		sqlQuery.addScalar("userId", LongType.INSTANCE)
+				.addScalar("firstName")
+				.addScalar("lastName");
+		List<UserDTO> users = sqlQuery.list();
+		for (UserDTO userDTO : users) {
+			System.out.println(userDTO.getUserId() + " " + userDTO.getFirstName() + " " + userDTO.getLastName());
+		}
+		session.getTransaction().commit();
 	}
 
 	private static void insert() {
@@ -270,7 +293,8 @@ public class LearnHibernate {
 	}
 
 	/**
-	 * SINGLE_TABLE - Only one table will be created with a 'DISCRIMINATOR' column to differentiate the records
+	 * SINGLE_TABLE - Only one table will be created with a 'DISCRIMINATOR' column
+	 * to differentiate the records
 	 */
 	private static void inheritanceSingleTableStrategy() {
 		Vehicle vehicle = new Vehicle();
@@ -295,7 +319,8 @@ public class LearnHibernate {
 	}
 
 	/**
-	 * TABLE_PER_CLASS - Separate tables will be created for each class with all the columns/fields from parent table as well.
+	 * TABLE_PER_CLASS - Separate tables will be created for each class with all the
+	 * columns/fields from parent table as well.
 	 */
 	private static void inheritanceTablePerClassStrategy() {
 		Vehicle vehicle = new Vehicle();
@@ -320,7 +345,8 @@ public class LearnHibernate {
 	}
 
 	/**
-	 * JOINED - Same as TABLE_PER_CLASS but the difference is common fields/columns are not created in the child tables.
+	 * JOINED - Same as TABLE_PER_CLASS but the difference is common fields/columns
+	 * are not created in the child tables.
 	 */
 	private static void inheritanceJoinStrategy() {
 		Vehicle vehicle = new Vehicle();
@@ -397,7 +423,8 @@ public class LearnHibernate {
 
 		// // Named parameter
 		// session = SESSION_FACTORY.openSession();
-		// final Query hqlQuery2 = session.createQuery("from UserDetail where id = :userId");
+		// final Query hqlQuery2 = session.createQuery("from UserDetail where id =
+		// :userId");
 		// hqlQuery2.setParameter("userId", userID);
 		// // hqlQuery2.setLong("userId", Long.parseLong(userID.toString()));
 		// userDetail = null;
@@ -524,7 +551,8 @@ public class LearnHibernate {
 		session.getTransaction().commit();
 		session.close();
 
-		// fetch by HQL and set query cache, this time it fetches from database and caches the result in the query cache
+		// fetch by HQL and set query cache, this time it fetches from database and
+		// caches the result in the query cache
 		session = SESSION_FACTORY.openSession();
 		session.beginTransaction();
 		Query query = session.createQuery("from UserDetail ud where ud.id = ?");

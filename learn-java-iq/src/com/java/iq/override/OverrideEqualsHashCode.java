@@ -44,6 +44,7 @@ public class OverrideEqualsHashCode {
 		code1.name = Arrays.asList("Manju", "Kogunde");
 
 		System.out.println(code.hashCode());
+		System.out.println(code1.hashCode());
 		System.out.println(code.equals(code1));
 
 	}

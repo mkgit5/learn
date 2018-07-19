@@ -1,0 +1,8 @@
+/Users/manju_kogunde/Work/git/learn/learn-spring-envers/src/main/java/com/java/spring/envers/controllers/UserController.java
+/Users/manju_kogunde/Work/git/learn/learn-spring-envers/src/main/java/com/java/spring/envers/dao/BaseDao.java
+/Users/manju_kogunde/Work/git/learn/learn-spring-envers/src/main/java/com/java/spring/envers/App.java
+/Users/manju_kogunde/Work/git/learn/learn-spring-envers/src/main/java/com/java/spring/envers/dao/UserDetailsAudDao.java
+/Users/manju_kogunde/Work/git/learn/learn-spring-envers/src/main/java/com/java/spring/envers/domain/UserDetailsAudit.java
+/Users/manju_kogunde/Work/git/learn/learn-spring-envers/src/main/java/com/java/spring/envers/dao/UserDetailsDao.java
+/Users/manju_kogunde/Work/git/learn/learn-spring-envers/src/main/java/com/java/spring/envers/domain/UserDetails.java
+/Users/manju_kogunde/Work/git/learn/learn-spring-envers/src/main/java/com/java/spring/envers/services/UserService.java
