@@ -82,7 +82,7 @@ Recursions & Iterations:
 -----------------------------------------------------------------------------------------------------------------------------
 1. Recursive algorithms have two cases: recursive cases and base cases.
 	n! (pronounced “n factorial”) is the product of all integers between n and 1. 
-	For example, 4! = 4 × 3 × 2 × 1 = 24. n! can be more formally de ned as follows:
+	For example, 4! = 4 × 3 × 2 × 1 = 24. n! can be more formally defined as follows:
 	n! = n (n – 1)! 
 	0! = 1! = 1
 	

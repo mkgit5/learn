@@ -21,6 +21,44 @@ public class BinarySearchTree {
 		insert(root, value);
 	}
 
+	public void delete(int value) {
+		root = delete(root, value);
+	}
+
+	private Node delete(Node root, int value) {
+		if (root == null) {
+			return root;
+		}
+		if (value < root.value) {
+			root.left = delete(root.left, value);
+		} else if (value > root.value) {
+			root.right = delete(root.right, value);
+		} else {
+			if (root.left == null) {
+				return root.right;
+			} else if (root.right == null) {
+				return root.left;
+			} else {
+				// Find the smallest node in right subtree and assign it to the node identified
+				// for deletion
+				root.value = minValue(root.right, value);
+
+				// Delete the inorder successor of the right subtree
+				root.right = delete(root.right, root.value);
+			}
+		}
+		return root;
+	}
+
+	private int minValue(Node root, int value) {
+		int minValue = root.value;
+		while (root.left != null) {
+			minValue = root.left.value;
+			root = root.left;
+		}
+		return minValue;
+	}
+
 	public int minValue() {
 		return minValue(root);
 	}
@@ -44,11 +82,14 @@ public class BinarySearchTree {
 	/*
 	 * Performance: O(log n)
 	 * 
-	 * 1. Start at the root node as current node. 2. If the search key’s value matches the current node’s key then found a match
+	 * 1. Start at the root node as current node. 2. If the search key’s value
+	 * matches the current node’s key then found a match
 	 * 
-	 * 3. If search key’s value is greater than current node’s a. If the current node has a right child, search right b. Else, no matching node in the tree
+	 * 3. If search key’s value is greater than current node’s a. If the current
+	 * node has a right child, search right b. Else, no matching node in the tree
 	 * 
-	 * 4. If search key is less than the current node’s a. If the current node has a left child, search b. Else, no matching node in the tree
+	 * 4. If search key is less than the current node’s a. If the current node has a
+	 * left child, search b. Else, no matching node in the tree
 	 */
 	private void search(Node n, int value) {
 		if (n != null) {
@@ -70,9 +111,11 @@ public class BinarySearchTree {
 	 * 
 	 * 2. Start at root node as current node
 	 * 
-	 * 3. If new node’s key < current’s key a. If current node has a left child, search left b. Else add new node as current’s left child
+	 * 3. If new node’s key < current’s key a. If current node has a left child,
+	 * search left b. Else add new node as current’s left child
 	 * 
-	 * 4. If new node’s key > current’s key a. If current node has a right child, search right b. Else add new node as current’s right child
+	 * 4. If new node’s key > current’s key a. If current node has a right child,
+	 * search right b. Else add new node as current’s right child
 	 */
 	private void insert(Node n, int value) {
 		if (n != null) {
@@ -83,8 +126,7 @@ public class BinarySearchTree {
 					Node newNode = new Node(value);
 					n.left = newNode;
 				}
-			}
-			if (value > n.value) {
+			} else if (value > n.value) {
 				if (n.right != null) {
 					insert(n.right, value);
 				} else {
@@ -120,9 +162,11 @@ public class BinarySearchTree {
 	}
 
 	/*
-	 * Pre-order: Below process is applied recursively to all the node in the tree, until either the left sub tree is empty or the right sub tree is empty.
+	 * Pre-order: Below process is applied recursively to all the node in the tree,
+	 * until either the left sub tree is empty or the right sub tree is empty.
 	 * 
-	 * 1. Value at the given node is printed first 2. Left sub tree of the given node is visited 3. Right sub tree of the given node is visited
+	 * 1. Value at the given node is printed first 2. Left sub tree of the given
+	 * node is visited 3. Right sub tree of the given node is visited
 	 *
 	 * 1 2 3
 	 */
@@ -136,9 +180,11 @@ public class BinarySearchTree {
 	}
 
 	/*
-	 * In-order: Below process is applied recursively to all the node in the tree, until either the left sub tree is empty or the right sub tree is empty.
+	 * In-order: Below process is applied recursively to all the node in the tree,
+	 * until either the left sub tree is empty or the right sub tree is empty.
 	 * 
-	 * 1. Left sub tree of the given node is visited first 2. Value at the given node is printed 3. Right sub tree of the given node is visited
+	 * 1. Left sub tree of the given node is visited first 2. Value at the given
+	 * node is printed 3. Right sub tree of the given node is visited
 	 * 
 	 * 2 1 3
 	 */
@@ -154,9 +200,11 @@ public class BinarySearchTree {
 	/*
 	 * Post-order:
 	 * 
-	 * Below process is applied recursively to all the node in the tree, until either the left sub tree is empty or the right sub tree is empty.
+	 * Below process is applied recursively to all the node in the tree, until
+	 * either the left sub tree is empty or the right sub tree is empty.
 	 * 
-	 * 1. Left sub tree of the given node is visited first 2. Right sub tree of the given node is visited 3. Value at the given node is printed
+	 * 1. Left sub tree of the given node is visited first 2. Right sub tree of the
+	 * given node is visited 3. Value at the given node is printed
 	 * 
 	 * 3 1 2
 	 */

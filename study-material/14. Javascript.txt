@@ -1,0 +1,705 @@
+JavaScript
+-----------------------------------------------------------------------------------------------------------------------------
+https://career.guru99.com/top-85-javascript-interview-questions/
+
+- JavaScript is a client-side as well as server side scripting language. 
+- JavaScript is the programming language of HTML and the Web.
+- JavaScript is also an Object based Programming language.
+- JavaScript is untyped language. This means that a JavaScript variable can hold a value of any data type
+
+Which company developed JavaScript?
+	- Netscape is the software company who developed JavaScript.
+
+Is JavaScript case sensitive? Give an example?
+	- Yes.
+	- Example: a function parseInt() is not same as the function Parseint()
+
+How are JavaScript and ECMA Script related?
+	- ECMA Script are like rules and guideline while Javascript is a scripting language used for web development.
+
+What is namespacing in JavaScript and how is it used?
+	- Namespacing is used for grouping the desired functions, variables etc. under a unique name. 
+	- It is a name that has been attached to the desired functions, objects and properties. 
+	- This improves modularity in the coding and enables code reuse.
+
+How can JavaScript codes be hidden from old browsers that don’t support JavaScript?
+	- Add “<!–” without the quotes in the code just after the <script> tag.
+	- Add “//–>” without the quotes in the code just before the <script> tag.
+	- Old browsers will now treat this JavaScript code as a long HTML comment. 
+	  While, a browser that supports JavaScript, will take the “<!–” and “//–>” as one-line comments.
+
+	<!DOCTYPE html>
+	<html>
+		<head>
+			
+			<script type="text/javascript" src="jQuery.js" ></script>
+			
+			<script language="javascript" type="text/javascript">
+				function myFunction() {
+				    document.getElementById("demo").innerHTML = "Paragraph changed.";
+				}
+			</script>
+			
+		</head>
+		<body>
+		
+			<h1>A Web Page</h1>
+			<p id="demo">A Paragraph</p>
+			<button type="button" onclick="myFunction()">Try it</button>
+		
+		</body>
+	</html>
+
+Warning for Non-JavaScript Browsers
+	You can add a noscript block immediately after the script block as follows
+		<html>
+		   <body>
+		      
+		      <script language="javascript" type="text/javascript">
+		         <!--
+		            document.write("Hello World!")
+		         //-->
+		      </script>
+		      
+		      <noscript>
+		         Sorry...JavaScript is needed to go ahead.
+		      </noscript>
+		      
+		   </body>
+		</html>
+
+----------------------------------------
+Data types
+----------------------------------------
+What are JavaScript Data Types?
+- Function
+	- Object
+	- Undefined
+
+What are the two basic groups of dataypes in JavaScript?
+	- Primitive
+		- Number
+		- String
+		- Boolean
+		- null
+		- undefined
+	- Reference types
+		- Reference types are more complex types like strings and dates.
+	- Note: All numbers in JavaScript are represented as floating-point values.
+	
+----------------------------------------
+Variables
+----------------------------------------
+What are global variables? How are these variable declared and what are the problems associated with using them?
+	- Global variables are those that are available throughout the length of the code, that is, these have no scope. 
+	- The var keyword is used to declare a local variable or object. 
+	- If the var keyword is omitted, a global variable is declared.
+	- Example: // Declare a global 
+		globalVariable = "Test";
+	- The problems are conflicts between local and global variables.
+	  Also, it is difficult to debug and test the code that relies on global variables.
+
+What is the data type of variables in JavaScript?
+	- All variables in the JavaScript are object data types.
+
+What is 'this' keyword in JavaScript?
+	- 'This' keyword refers to the object from where it was called.
+	
+How generic objects can be created?
+	- var I = new object();
+
+How are object properties assigned?
+	obj["class"] = 12;
+		or
+	obj.class = 12;
+
+Declare a three dimensional array?
+	var myArray = [[[]]];
+
+What are undeclared and undefined variables?
+	- Undeclared variables are those that do not exist in a program and are not declared. 
+	  If the program tries to read the value of an undeclared variable, then a runtime error is encountered.
+	- Undefined variables are those that are declared in the program but have not been given any value. 
+	  If the program tries to read the value of an undefined variable, an undefined value is returned.
+
+What is an undefined value in JavaScript?
+	- Variable used in the code doesn’t exist
+	- Variable is not assigned to any value
+	- Property doesn’t exist
+
+
+What is the difference between ViewState and SessionState?
+	- 'ViewState' is specific to a page in a session.
+	- 'SessionState' is user specific data that can be accessed across all pages in the web application.
+
+What is called Variable typing in Javascript?
+	- Variable typing is used to assign a number to a variable and the same variable can be assigned to a string.
+	- Example:
+		i = 10; 
+		i = "string";
+	- This is called variable typing.
+
+What do mean by NULL in Javascript?
+	- The NULL value is used to represent no value or no object.  
+	- It implies no object or null string, no valid boolean value, no number and no array object.
+
+What is negative infinity?
+	- Negative Infinity is a number in JavaScript which can be derived by dividing negative number by zero.
+
+What is the 'Strict' mode in JavaScript and how can it be enabled?
+	- Strict mode can be enabled by adding the string literal "use strict" as shown below.
+	function myfunction()
+	{
+		"use strict";
+		var v = “This is a strict mode function";
+	}
+	- Under the strict mode, JavaScript shows errors on codes that might be problematic and potentially unsafe.
+
+----------------------------------------
+Operators
+----------------------------------------
+Types of operators:
+	- Arithmetic Operators: +, -, *, /, %, ++, --
+	- Comparison Operators: ==, !=, <, >, <=, >=
+	- Logical (or Relational) Operators: &&, ||, !
+	- Bitwise Operators: &, |, ^ (XOR - either operand true but not both), ~ (NOT), << (Left Shift), >> (Right shift), >>> (Right shift with Zero)
+	- Assignment Operators: =, +=, -=, *=, /=, %=
+	- Conditional (or ternary) Operators: '?:(x:y)'
+
+What is === operator?
+	- Is called as 'strict equality operator'
+	- Returns true when two operands have same value without any type conversion.
+
+Explain the difference between “==” and “===”?
+	- "==" checks only value of variables
+	- "===" checks both value and the type of variables
+
+What is the use of 'typeof' operator?
+	- 'Typeof' is an operator which is used to return a string description of the type of a variable.
+
+----------------------------------------
+Looping structures
+----------------------------------------
+What are all the looping structures in JavaScript?
+	- while
+		while (count < 10){
+			document.write("Current Count : " + count + "<br />");
+            count++;
+        }
+        
+	- do-while
+		do {
+		   Statement(s) to be executed;
+		} while (expression);
+
+	- for
+		for (initialization; test condition; iteration statement){
+		   Statement(s) to be executed if test condition is true
+		}
+
+	- for..in
+		for (variablename in object){
+		   statement or block to execute
+		}
+		- In each repetition, one property from the object is associated to the variable name
+		  and the loop is continued till all the properties of the object are depleted.
+			
+
+
+----------------------------------------
+Pop up boxes
+----------------------------------------
+Types of Pop up boxes available in JavaScript?
+	- Alert - displays only one button which is the OK button
+		alert('Hello World!');
+	- Confirm - displays two buttons namely OK and Cancel
+		var retVal = confirm("Do you want to continue ?");
+	- Prompt - allows user to enter input by providing a text box
+		var retVal = prompt("Enter your name : ", "your name here");
+	
+Example 1:
+	<html>
+	   <head>
+	   
+	      <script type="text/javascript">
+	         <!--
+	            function getConfirmation(){
+	               var retVal = confirm("Do you want to continue ?");
+	               if( retVal == true ){
+	                  document.write ("User wants to continue!");
+	                  return true;
+	               }
+	               else{
+	                  document.write ("User does not want to continue!");
+	                  return false;
+	               }
+	            }
+	         //-->
+	      </script>
+	      
+	   </head>
+	   <body>
+	      <p>Click the following button to see the result: </p>
+	      
+	      <form>
+	         <input type="button" value="Click Me" onclick="getConfirmation();" />
+	      </form>
+	      
+	   </body>
+	</html>
+
+Example 2:
+	<html>
+	   <head>
+	      
+	      <script type="text/javascript">
+	         <!--
+	            function getValue(){
+	               var retVal = prompt("Enter your name : ", "your name here");
+	               document.write("You have entered : " + retVal);
+	            }
+	         //-->
+	      </script>
+	      
+	   </head>
+	   
+	   <body>
+	      <p>Click the following button to see the result: </p>
+	      
+	      <form>
+	         <input type="button" value="Click Me" onclick="getValue();" />
+	      </form>
+	      
+	   </body>
+	</html>
+
+----------------------------------------
+Check boxes and Radio buttons
+----------------------------------------
+What is the way to get the status of a CheckBox?
+	- alert(document.getElementById('checkbox1').checked);
+
+----------------------------------------
+Comments
+----------------------------------------
+Which symbol is used for comments in Javascript?
+	- // for Single line comments
+	- /*   Multi
+			Line
+			Comment
+	  */
+	- <!-- comments //-->
+		<script language="javascript" type="text/javascript">
+		   <!--
+		   
+		      // This is a comment. It is similar to comments in C++
+		   
+		      /*
+		      * This is a multiline comment in JavaScript
+		      * It is very similar to comments in C Programming
+		      */
+		   
+		   //-->
+		</script>
+	
+Is it possible to break JavaScript Code into several lines?
+	- Breaking within a string statement can be done by the use of a backslash, ‘\’, at the end of the first line
+	
+	- Example: document.write("This is \a program");
+		And if you change to a new line when not within a string statement, then javaScript ignores break in line.
+		
+	- Example:
+		var x=1, y=2,
+		z=
+		x+y;
+	- The above code is perfectly fine, though not advisable as it hampers debugging.
+
+----------------------------------------
+Type conversions
+----------------------------------------
+Does JavaScript support automatic type conversion?
+	- Yes, it does support automatic type conversion
+
+What would be the result of 3+2+"7"?
+	- Since 3 and 2 are integers, they will be added numerically. 
+	- And since 7 is a string, its concatenation will be done. 
+	- So the result would be 57.
+
+How can you convert the string of any base to integer in JavaScript?
+	- parseInt() function is used to convert numbers between different bases. 
+	- parseInt() 
+		- string to be converted as its first parameter
+		- second parameter is the base of the given string
+	- In order to convert 4F (of base 16) to integer, the code used will be –
+		parseInt ("4F", 16);
+
+Which keywords are used to handle exceptions?
+	- Try… Catch—finally is used to handle exceptions in the JavaScript
+		try {
+			Code
+		} catch(exp) {
+			Code to throw an exception
+		} finally {
+			Code runs either it finishes successfully or after catch
+		}
+
+What are the different types of errors in JavaScript?
+	- 3 types of errors:
+		- Load time errors: 
+			Errors that occur on loading a web page like improper syntax errors.
+		- Run time errors: 
+			Errors that occur due to misuse of the command inside the HTML language.
+		- Logical Errors: 
+			Errors that occur due to the bad logic performed on a function.
+
+----------------------------------------
+Events
+----------------------------------------
+1. onclick
+2. onsubmit
+	- Occurs when you submit a form. You can put your form validation against this event type.
+	  <form method="POST" action="t.cgi" onsubmit="return validate()">
+         .......
+         <input type="submit" value="Submit" />
+      </form>
+3. onmouseover
+4. onmouseout
+
+----------------------------------------
+Cookies
+----------------------------------------
+Cookies are a plain text data record of 5 variable-length fields −
+	- Expires 
+		− The date the cookie will expire. 
+		- If this is blank, the cookie will expire when the visitor quits the browser.
+	- Domain 
+		− The domain name of your site.
+	- Path 
+		− The path to the directory or web page that set the cookie. 
+		- This may be blank if you want to retrieve the cookie from any directory or page.
+	- Secure 
+		− If this field contains the word "secure", then the cookie may only be retrieved with a secure server. 
+		- If this field is blank, no such restriction exists.
+	- Name=Value 
+		− Cookies are set and retrieved in the form of key-value pairs
+
+Reading Cookies:
+	<html>
+	   <head>
+	   
+	      <script type="text/javascript">
+	         <!--
+	            function ReadCookie()
+	            {
+	               var allcookies = document.cookie;
+	               document.write ("All Cookies : " + allcookies );
+	               
+	               // Get all the cookies pairs in an array
+	               cookiearray = allcookies.split(';');
+	               
+	               // Now take key value pair out of this array
+	               for(var i=0; i<cookiearray.length; i++){
+	                  name = cookiearray[i].split('=')[0];
+	                  value = cookiearray[i].split('=')[1];
+	                  document.write ("Key is : " + name + " and Value is : " + value);
+	               }
+	            }
+	         //-->
+	      </script>
+	      
+	   </head>
+	   <body>
+	      
+	      <form name="myform" action="">
+	         <p> click the following button and see the result:</p>
+	         <input type="button" value="Get Cookie" onclick="ReadCookie()"/>
+	      </form>
+	      
+	   </body>
+	</html>
+
+Creating Cookies:
+	- Simplest way to create a cookie is to assign a string value to the document.cookie object
+		document.cookie = "key1=value1;key2=value2;expires=date";
+	- Example	
+		<html>
+		   <head>
+		   
+		      <script type="text/javascript">
+		         <!--
+		            function WriteCookie()
+		            {
+		               var now = new Date();
+		               now.setMonth( now.getMonth() + 1 );
+		               cookievalue = escape(document.myform.customer.value) + ";"
+		               
+		               document.cookie="name=" + cookievalue;
+		               document.cookie = "expires=" + now.toUTCString() + ";"
+		               document.write ("Setting Cookies : " + "name=" + cookievalue );
+		            }
+		         //-->
+		      </script>
+		      
+		   </head>
+		   <body>
+		   
+		      <form name="myform" action="">
+		         Enter name: <input type="text" name="customer"/>
+		         <input type="button" value="Set Cookie" onclick="WriteCookie()"/>
+		      </form>
+		      
+		   </body>
+		</html>
+
+Deleting a Cookie:
+	- By setting its expiry date to previous date (for eg: one month behind the current date).
+
+----------------------------------------
+Page redirection
+----------------------------------------
+Example 1: On click event, redirect user to another page.
+	<html>
+	   <head>
+	      
+	      <script type="text/javascript">
+	         <!--
+	            function Redirect() {
+	               window.location="http://www.tutorialspoint.com";
+	            }
+	         //-->
+	      </script>
+	      
+	   </head>
+	   
+	   <body>
+	      <p>Click the following button, you will be redirected to home page.</p>
+	      
+	      <form>
+	         <input type="button" value="Redirect Me" onclick="Redirect();" />
+	      </form>
+	      
+	   </body>
+	</html>
+
+Example 2: Show an appropriate message to user before redirecting them to a new page.
+	<html>
+	   <head>
+	   
+	      <script type="text/javascript">
+	         <!--
+	            function Redirect() {
+	               window.location="http://www.tutorialspoint.com";
+	            }
+	            
+	            document.write("You will be redirected to main page in 10 sec.");
+	            setTimeout('Redirect()', 10000);
+	         //-->
+	      </script>
+	      
+	   </head>
+	   
+	   <body>
+	   </body>
+	</html>
+
+Example 3: Redirect users onto a different page based on their browsers
+	<html>
+	   <head>
+	   
+	      <script type="text/javascript">
+	         <!--
+	            var browsername=navigator.appName;
+	            if( browsername == "Netscape" )
+	            {
+	               window.location="http://www.location.com/ns.htm";
+	            }
+	            else if ( browsername =="Microsoft Internet Explorer")
+	            {
+	               window.location="http://www.location.com/ie.htm";
+	            }
+	            else
+	            {
+	               window.location="http://www.location.com/other.htm";
+	            }
+	         //-->
+	      </script>
+	      
+	   </head>
+	   
+	   <body>
+	   </body>
+	</html>
+	
+----------------------------------------
+Functions
+----------------------------------------
+What are the various functional components in JavaScript?
+	The different functional components in JavaScript are
+		- First-class functions
+			Functions in JavaScript are utilized as first class objects. 
+			This usually means that these functions can be passed as arguments to other functions, 
+			returned as values from other functions, assigned to variables or can also be stored in data structures.
+		- Nested functions
+			The functions, which are defined inside other functions, are called Nested functions. 
+			They are called 'everytime' the main function is invoked.
+
+Which keyword is used to print the text in the screen?
+	- document.write("Welcome") is used to print the text
+
+window.onload vs onDocumentReady?
+	- onload function is not run until all the information on the page is loaded. 
+	  This leads to a substantial delay before any code is executed.
+	- onDocumentReady loads the code just after the DOM is loaded. 
+	  This allows early manipulation of the code.
+
+print()
+	<form>
+    	<input type="button" value="Print" onclick="window.print()" />
+	</form>
+	
+isNaN()
+	- Returns true if the argument is not a number otherwise it is false.
+
+submit()
+	- document.form[0].submit();
+	- Used to submit a form
+
+Timers
+	1. setTimeout(function, delay)
+		- calls a function after the mentioned delay
+	2. setInterval(function, delay)
+		- repeatedly calls the given function in the mentioned delay and only halts when cancelled
+	3. clearInterval(id) 
+		- function instructs the timer to stop
+	- Drawback - Timers are operated within a single thread, and thus events might queue up, waiting to be executed.	
+
+
+escape()
+	- Is responsible for coding a string so as to make the transfer of the information from one computer to the other, across a network.
+	- For Example:
+		<script>
+			document.write(escape(“Hello? How are you!”));
+		</script>
+		Output: Hello%3F%20How%20are%20you%21
+		
+unescape()
+	- It decodes the coded string.
+	- For example:
+		<script>
+			document.write(unescape(“Hello%3F%20How%20are%20you%21”));
+		</script>
+		Output: Hello? How are you!
+
+encodeURI()
+	- Is used to convert URL into their hex coding. 
+
+decodeURI()
+	- Is used to convert the encoded URL back to normal.
+	
+	<script>
+		var uri="my test.asp?name=ståle&car=saab";
+		document.write(encodeURI(uri)+ "<br>");
+		document.write(decodeURI(uri));
+	</script>
+	Output: 
+		my%20test.asp?name=st%C3%A5le&car=saab
+		my test.asp?name=ståle&car=saab
+
+Void(0)
+	- Is used to prevent the page from refreshing and parameter "zero" is passed while calling.
+	- Is used to call another method without refreshing the page.
+
+blur()
+	 - Used to remove the focus from the specified object.
+
+Push()
+	- Used to add or append one or more elements to the end of an array.
+
+unshift()
+	- Used to prepend one or more elements to the beginning of the array.
+		var name = [ "john" ];
+		name.unshift( "charlie" );
+		name.unshift( "joseph", "Jane" );
+		console.log(name);
+		Output: [" joseph "," Jane ", " charlie ", " john "]
+
+Explain how to detect the operating system on the client machine?
+	- navigator.appVersion string (property).
+
+Difference between .call() and .apply()?
+	- call() is used when the number of the function's arguments are known to the programmer.
+	- apply() is used when the number is not known. 
+	  apply() expects the argument to be an array.
+	
+	- The basic difference between .call() and .apply() is in the way arguments are passed to the function. 
+	- Their usage can be illustrated by the given example.
+	
+		var someObject = {
+			myProperty : 'Foo',
+			myMethod : function(prefix, postfix) {
+				alert(prefix + this.myProperty + postfix);
+			}
+		};
+		someObject.myMethod('<', '>'); // alerts '<Foo>'
+		
+		var someOtherObject  = {
+			myProperty : 'Bar'
+		};
+		someObject.myMethod.call(someOtherObject, '<', '>'); // alerts '<Bar>'
+		someObject.myMethod.apply(someOtherObject, ['<', '>']); // alerts '<Bar>'
+
+What is the function of delete operator?
+	- Is used to delete all variables and objects in a program 
+	  but it cannot delete variables declared with VAR keyword
+
+Write the code for adding new elements dynamically?
+	<html> 
+		<head> <title>t1</title> 
+		<script type="text/javascript"> 
+		function addNode() { 
+			var newP = document.createElement("p"); 
+			var textNode = document.createTextNode(" This is a new text node"); 
+			newP.appendChild(textNode); 
+			document.getElementById("firstP").appendChild(newP); 
+		} 
+		</script> </head> 
+		<body> 
+			<p id="firstP">firstP<p> 
+		</body> 
+	</html>
+
+How can the style/class of an element be changed?
+	document.getElementById("myText").style.fontSize = "20";
+		or
+	document.getElementById("myText").className = "anyclass";
+
+Explain how to read and write a file using JavaScript?
+	- There are two ways to read and write a file using JavaScript
+		- Using JavaScript extensions
+		- Using a web page and Active X objects
+
+How can a page be forced to load another page in JavaScript?
+	The following code has to be inserted to achieve the desired effect:
+	<script language="JavaScript" type="text/javascript" >
+		<!-- location.href="http://newhost/newpath/newfile.html"; //-->
+	</script>
+
+What are JavaScript Cookies?
+	- Cookies are the small test files stored in a computer 
+	- It gets created when the user visits the websites to store information that they need.
+	- Example could be User Name details and shopping cart information from the previous visits.
+
+Mention what is the disadvantage of using innerHTML in JavaScript?
+	- Content is replaced everywhere
+	- We cannot use like "appending to innerHTML"
+	- Even if you use +=like "innerHTML = innerHTML + 'html'" still the old content is replaced by html
+	- The entire innerHTML content is re-parsed and build into elements, therefore its much slower
+	- The innerHTML does not provide validation and 
+	  therefore we can potentially insert valid and broken HTML in the document and break it
+
+What is the difference between undefined and null?
+What is JavaScript’s this keyword?
+Can you explain how inheritance works in JavaScript?
+What are closure functions ib javascript?
+What is name spacing in javascript?
+2. How does variable scope work in JavaScript?

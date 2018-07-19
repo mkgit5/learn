@@ -82,11 +82,12 @@ Can you write thread-safe Singleton in Java?
 			* Singleton pattern example with Double checked Locking
 			*/
 			public class DoubleCheckedLockingSingleton{
-			     private volatile DoubleCheckedLockingSingleton INSTANCE;
+				 // If variable is not shared between multiple threads, you don't need to use volatile keyword with that variable.
+			     private static volatile DoubleCheckedLockingSingleton INSTANCE;
 			 
 			     private DoubleCheckedLockingSingleton(){}
 			 
-			     public DoubleCheckedLockingSingleton getInstance(){
+			     public static DoubleCheckedLockingSingleton getInstance(){
 			         if(INSTANCE == null){
 			            synchronized(DoubleCheckedLockingSingleton.class){
 			                //double checking Singleton instance
@@ -119,8 +120,35 @@ Can you write thread-safe Singleton in Java?
 			/**
 			* Singleton pattern example using Java Enumj
 			*/
-			public enum EasySingleton{
+			public enum SingletonEnum {
 			    INSTANCE;
+			}
+			
+			How to use?
+			---------------
+			public enum SingletonEnum {
+			    INSTANCE;
+			    
+			    int value;
+			    
+			    public int getValue() {
+			        return value;
+			    }
+			    
+			    public void setValue(int value) {
+			        this.value = value;
+			    }
+			}
+			
+			Main class:
+			---------------
+			public class EnumDemo {
+			    public static void main(String[] args) {
+			        SingletonEnum singleton = SingletonEnum.INSTANCE;
+			        System.out.println(singleton.getValue());
+			        singleton.setValue(2);
+			        System.out.println(singleton.getValue());
+			    }
 			}
 
 Why can’t we use a static class instead of singleton?
