@@ -1,6 +1,0 @@
-0:0:0:0:0:0:0:1 - - [19/Jul/2018:01:00:12 -0700] "POST /learn-spring-envers/users HTTP/1.1" 200 187 http-bio-8080-exec-2 898
-0:0:0:0:0:0:0:1 - - [19/Jul/2018:01:00:14 -0700] "PUT /learn-spring-envers/users/1 HTTP/1.1" 200 187 http-bio-8080-exec-3 99
-0:0:0:0:0:0:0:1 - - [19/Jul/2018:01:00:17 -0700] "GET /learn-spring-envers/users/1/history HTTP/1.1" 200 411 http-bio-8080-exec-4 81
-0:0:0:0:0:0:0:1 - - [19/Jul/2018:01:00:43 -0700] "GET /learn-spring-envers/users/1 HTTP/1.1" 200 187 http-bio-8080-exec-5 43
-0:0:0:0:0:0:0:1 - - [19/Jul/2018:01:00:57 -0700] "DELETE /learn-spring-envers/users/1 HTTP/1.1" 200 - http-bio-8080-exec-6 44
-0:0:0:0:0:0:0:1 - - [19/Jul/2018:01:01:00 -0700] "GET /learn-spring-envers/users/1/history HTTP/1.1" 200 610 http-bio-8080-exec-7 34
