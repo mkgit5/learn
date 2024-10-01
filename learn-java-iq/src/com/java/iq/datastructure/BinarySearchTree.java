@@ -8,6 +8,57 @@ package com.java.iq.datastructure;
  * 3. Both the right and left subtree should also be binary search tree.
  * 4. There should not be any duplicate nodes.
  * 
+ * EG:
+ * 		2
+ * 	1		3
+ * 
+ * Preorder traversal:
+ *	2 
+ *	1 
+ *	3 
+ *
+ * Inorder traversal:
+ *	1 
+ *	2 
+ *	3
+ * 
+ * Postorder traversal:
+ *	1 
+ *	3 
+ *	2 
+ * 
+ * EG: 
+ * 				4
+ * 		2				6
+ * 	1		3		5		7
+ * 
+ * Preorder traversal:
+ *	4 
+ *	2 
+ *	1 
+ *	3 
+ *	6 
+ *	5 
+ *	7
+ * 
+ * Inorder traversal:
+ *	1 
+ *	2 
+ *	3 
+ *	4 
+ *	5 
+ *	6 
+ *	7 
+ *
+ * Postorder traversal:
+ *	1 
+ *	3 
+ *	2 
+ *	5 
+ *	7 
+ *	6 
+ *	4 
+ *
  */
 public class BinarySearchTree {
 
@@ -82,14 +133,17 @@ public class BinarySearchTree {
 	/*
 	 * Performance: O(log n)
 	 * 
-	 * 1. Start at the root node as current node. 2. If the search key’s value
-	 * matches the current node’s key then found a match
+	 * 1. Start at the root node as current node. 
 	 * 
-	 * 3. If search key’s value is greater than current node’s a. If the current
-	 * node has a right child, search right b. Else, no matching node in the tree
+	 * 2. If the search key’s value matches the current node’s key then found a match
 	 * 
-	 * 4. If search key is less than the current node’s a. If the current node has a
-	 * left child, search b. Else, no matching node in the tree
+	 * 3. If search key’s value is greater than current node’s 
+	 * 		a. If the current node has a right child, search right 
+	 * 		b. Else, no matching node in the tree
+	 * 
+	 * 4. If search key is less than the current node’s 
+	 * 		a. If the current node has a left child, search 
+	 * 		b. Else, no matching node in the tree
 	 */
 	private void search(Node n, int value) {
 		if (n != null) {
@@ -111,11 +165,13 @@ public class BinarySearchTree {
 	 * 
 	 * 2. Start at root node as current node
 	 * 
-	 * 3. If new node’s key < current’s key a. If current node has a left child,
-	 * search left b. Else add new node as current’s left child
+	 * 3. If new node’s key < current’s key 
+	 * 		a. If current node has a left child, search left 
+	 * 		b. Else add new node as current’s left child
 	 * 
-	 * 4. If new node’s key > current’s key a. If current node has a right child,
-	 * search right b. Else add new node as current’s right child
+	 * 4. If new node’s key > current’s key 
+	 * 		a. If current node has a right child, search right 
+	 * 		b. Else add new node as current’s right child
 	 */
 	private void insert(Node n, int value) {
 		if (n != null) {
@@ -136,7 +192,7 @@ public class BinarySearchTree {
 			}
 
 		} else {
-			n = new Node(value);
+			root = new Node(value);
 		}
 	}
 
@@ -168,7 +224,7 @@ public class BinarySearchTree {
 	 * 1. Value at the given node is printed first 2. Left sub tree of the given
 	 * node is visited 3. Right sub tree of the given node is visited
 	 *
-	 * 1 2 3
+	 * 2 1 3
 	 */
 	private void preorderTraversal(Node n) {
 		if (n == null) {
@@ -183,8 +239,9 @@ public class BinarySearchTree {
 	 * In-order: Below process is applied recursively to all the node in the tree,
 	 * until either the left sub tree is empty or the right sub tree is empty.
 	 * 
-	 * 1. Left sub tree of the given node is visited first 2. Value at the given
-	 * node is printed 3. Right sub tree of the given node is visited
+	 * 1. Left sub tree of the given node is visited first 
+	 * 2. Value at the given node is printed 
+	 * 3. Right sub tree of the given node is visited
 	 * 
 	 * 2 1 3
 	 */
@@ -203,8 +260,9 @@ public class BinarySearchTree {
 	 * Below process is applied recursively to all the node in the tree, until
 	 * either the left sub tree is empty or the right sub tree is empty.
 	 * 
-	 * 1. Left sub tree of the given node is visited first 2. Right sub tree of the
-	 * given node is visited 3. Value at the given node is printed
+	 * 1. Left sub tree of the given node is visited first 
+	 * 2. Right sub tree of the given node is visited 
+	 * 3. Value at the given node is printed
 	 * 
 	 * 3 1 2
 	 */
@@ -220,14 +278,42 @@ public class BinarySearchTree {
 	class Node {
 
 		private Node left;
-		private Node right;
 		private int value;
+		private Node right;
 
 		public Node(int value) {
 			super();
 			this.value = value;
 		}
 
+	}
+
+	public static void main(String[] args) {
+		BinarySearchTree bst = new BinarySearchTree();
+		bst.insert(2);
+		bst.insert(1);
+		bst.insert(3);
+		System.out.println("Preorder traversal:");
+		bst.preorderTraversal();
+		System.out.println("Inorder traversal:");
+		bst.inorderTraversal();
+		System.out.println("Postorder traversal:");
+		bst.postorderTraversal();
+
+		BinarySearchTree bst2 = new BinarySearchTree();
+		bst2.insert(4);
+		bst2.insert(2);
+		bst2.insert(1);
+		bst2.insert(3);
+		bst2.insert(6);
+		bst2.insert(5);
+		bst2.insert(7);
+		System.out.println("Preorder traversal:");
+		bst2.preorderTraversal();
+		System.out.println("Inorder traversal:");
+		bst2.inorderTraversal();
+		System.out.println("Postorder traversal:");
+		bst2.postorderTraversal();
 	}
 
 }

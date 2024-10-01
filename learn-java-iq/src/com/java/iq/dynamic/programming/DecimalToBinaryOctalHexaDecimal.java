@@ -1,6 +1,7 @@
 package com.java.iq.dynamic.programming;
 
 /*
+
 Decimal : 50 
 Binary 	: 110010
 
@@ -11,7 +12,7 @@ Decimal : 2000
 Hexa	: 7D0
 
  */
-public class DecimalTBinaryOctalHexaDecimal {
+public class DecimalToBinaryOctalHexaDecimal {
 
 	public static void decimalToBinary(int num) {
 		System.out.println("Decimal Number : " + num);

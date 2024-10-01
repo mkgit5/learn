@@ -24,7 +24,7 @@ public class BalancedParanthesis {
 	}
 
 	private static boolean isValid(String input) {
-		Stack<Character> stack = new Stack<Character>();
+		final Stack<Character> stack = new Stack<Character>();
 		for (char c : input.toCharArray()) {
 			if (c == '(' || c == '[' || c == '{') {
 				stack.push(c);

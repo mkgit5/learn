@@ -46,7 +46,7 @@ public class FirstNonRepeatedCharacter {
 	 * Here order is achieved by going through String again.
 	 */
 	private static char firstNonRepeatedChar1(String word) {
-		Map<Character, Integer> scoreboard = new HashMap<>();
+		final Map<Character, Integer> scoreboard = new HashMap<>();
 		// Build table [char -> count]
 		for (int i = 0; i < word.length(); i++) {
 			char c = word.charAt(i);
@@ -74,8 +74,8 @@ public class FirstNonRepeatedCharacter {
 	 * element from List is our first non repeated character from String.
 	 */
 	private static char firstNonRepeatedChar2(String word) {
-		Set<Character> repeating = new HashSet<>();
-		List<Character> nonRepeating = new ArrayList<>();
+		final Set<Character> repeating = new HashSet<>();
+		final List<Character> nonRepeating = new ArrayList<>();
 		for (int i = 0; i < word.length(); i++) {
 			char letter = word.charAt(i);
 			if (repeating.contains(letter)) {

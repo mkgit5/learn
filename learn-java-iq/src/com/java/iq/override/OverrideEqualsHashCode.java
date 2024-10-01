@@ -39,6 +39,7 @@ public class OverrideEqualsHashCode {
 		System.out.println("Starting...");
 		OverrideEqualsHashCode code = new OverrideEqualsHashCode();
 		code.name = Arrays.asList("Manju", "Kogunde");
+		code.age = 25;
 
 		OverrideEqualsHashCode code1 = new OverrideEqualsHashCode();
 		code1.name = Arrays.asList("Manju", "Kogunde");

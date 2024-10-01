@@ -4,6 +4,11 @@ package com.java.iq.dynamic.programming;
 Step 1 : First we find out sum of ‘n’ numbers by using formula n*(n+1)/2.
 Step 2 : Then we will find sum of all elements of array ‘a’.
 Step 3 : Missing_Number = (Sum of 1 to ‘n’ numbers) – (Sum of elements of array ‘a’)
+
+EG: 
+Input: int[] a = { 1, 4, 5, 3, 7, 8, 6 };
+Output: Missing Number is (sumOfNnumbers - sumOfElements) = 36 - 34 = 2
+
  */
 public class MissingNumberInArray {
 
@@ -35,6 +40,7 @@ public class MissingNumberInArray {
 		// Step 3
 		int missingNumber = sumOfNnumbers - sumOfElements;
 
-		System.out.println("Missing Number is = " + missingNumber);
+		System.out.println("Missing Number is (sumOfNnumbers - sumOfElements) = " + sumOfNnumbers + " - "
+				+ sumOfElements + " = " + missingNumber);
 	}
 }

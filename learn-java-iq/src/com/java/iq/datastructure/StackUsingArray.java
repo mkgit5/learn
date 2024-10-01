@@ -27,12 +27,14 @@ public class StackUsingArray {
 	}
 
 	public static void main(String[] args) {
-		StackUsingArray stack = new StackUsingArray();
+		final StackUsingArray stack = new StackUsingArray();
 		stack.push(1);
 		stack.push(2);
 		stack.push(3);
+		System.out.print("Stack values: ");
 		stack.display();
-		System.out.println(stack.pop());
+		System.out.println("Stack pop: " + stack.pop());
+		System.out.print("Stack values: ");
 		stack.display();
 	}
 }

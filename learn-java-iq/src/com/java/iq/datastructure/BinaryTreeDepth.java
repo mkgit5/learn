@@ -10,7 +10,7 @@ package com.java.iq.datastructure;
  *  		(a) Get the max depth of right subtree recursively  i.e., 
  *      		call maxDepth( tree->right-subtree)
  * 		(c) Get the max of max depths of left and right subtrees and add 1 to it for the current node.
- *  			max_depth = max(max dept of left subtree, max depth of right subtree) + 1
+ *  			max_depth = max(max depth of left subtree, max depth of right subtree) + 1
  * 		(d) Return max_depth
  * 
  * Input:

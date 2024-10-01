@@ -2,6 +2,11 @@ package com.java.iq.dynamic.programming;
 
 import java.util.Arrays;
 
+/*
+ * 1. Using iterative method
+ * 2. Using Arrays.equals()
+ * 3. Using Arrays.deepEquals() for multidimensional arrays
+ */
 public class EqualityOfTwoArrays {
 
 	public static void main(String[] args) {

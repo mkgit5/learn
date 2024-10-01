@@ -3,18 +3,25 @@ package com.java.iq.programs;
 public class IntegerStringConversion {
 
 	public static void main(String[] args) {
-		int i = 4;
-		String str = convertIntegerToString1(i);
-		System.out.println(str);
+		int i = -123;
 
-		System.out.println(stringToint(str));
+		String str = intToString(i);
+		System.out.println("Int to String: " + str);
+
+		System.out.println("String to int: " + stringToInt(str));
 	}
 
-	private static String convertIntegerToString1(int i) {
+	private static String intToString(int i) {
+		// return String.valueOf(i);
 		return "" + i;
 	}
 
-	public static int stringToint(String str) {
+	/*
+	 * String str = "123";
+	 */
+	public static int stringToInt(String str) {
+		// int i = Integer.parseInt(str);
+
 		boolean isNegative = false;
 		int len = str.length();
 		int i = 0;
@@ -25,7 +32,7 @@ public class IntegerStringConversion {
 		int number = 0;
 		while (i < len) {
 			number *= 10;
-			number += (str.charAt(i) - '0');
+			number += str.charAt(i) - '0';
 			i++;
 		}
 		if (isNegative)

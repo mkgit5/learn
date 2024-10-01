@@ -12,6 +12,7 @@ Index
 9. Nested Classes
 10. Generics
 11. IO (Input / Output)
+12. Threads
 
 -----------------------------------------------------------------------------------------------------------------------------
 Java
@@ -51,8 +52,9 @@ What is difference between Abstraction and Encapsulation in Java?
 	1. Abstraction is implemented in Java using interface and abstract class 
 	   while Encapsulation is implemented using private, package-private and protected access modifier.
 	2. Encapsulation is also called as data hiding.
-	3. Design principles "programming for interface than implementation" is based on abstraction 
-	   and "encapsulate whatever changes" is based upon Encapsulation.
+	3. Design principles 
+		- "programming for interface than implementation" is based on abstraction 
+	   	- "encapsulate whatever changes" is based upon Encapsulation.
 
 ------------------------------------------------------
 # Inheritance:
@@ -66,13 +68,13 @@ Why java doesn't allow multiple inheritance?
 # Polymorphism:
 ------------------------------------------------------
 What is Polymorphism?
-	Means ability of an object to take on many forms.
+	Means ability of an object to take many forms.
 	Reference variables are good example of polymorphism.
 
 Which object oriented concept is achieved by using overloading and overriding?
 	- Polymorphism
 
-What is the difference between static and dynamic polymorphism?	
+What is the difference between static and dynamic polymorphism?
 	Static 	- Method overloading (Defining methods with the same name but with different arguments)
 		      Which method is to be called is decided at compile-time only.
 	Dynamic - Method overriding (Re-defining the methods defined in the super classes)
@@ -175,6 +177,24 @@ How to deal with java.lang.OutOfMemoryError error?
 	- 1. By specifying JVM parameters -Xmx and -XX:MaxPermSize
 	- 2. Analyze the heap dump and identify the code which causes high volume of memory.
 
+Sample to generate OutOfMemoryError?
+	private static void addingBytes() {
+		List<byte[]> list = new ArrayList<>();
+		int index = 1;
+		while (true) {
+			// 1MB each loop, 1 x 1024 x 1024 = 1048576
+			byte[] b = new byte[1048576];
+			list.add(b);
+			Runtime rt = Runtime.getRuntime();
+			// Print available free memory
+			System.out.printf("[%d] free memory: %s%n", index++, rt.freeMemory());
+		}
+	}
+	
+	Output:
+	Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+	at com.java.iq.test.JavaOutOfMemory.addingBytes(JavaOutOfMemory.java:18)
+	at com.java.iq.test.JavaOutOfMemory.main(JavaOutOfMemory.java:9)
 ------------------------------------------------------
 # General concepts:
 ------------------------------------------------------
@@ -243,7 +263,7 @@ What is the significance of volatile keyword in Java?
 		- Declaring a variable volatile thus guarantees the visibility for other threads of writes to that variable. 
 					
 	- Happens-before Guarantee
-		- The happens before guarantee guarantees that read and write instructions of volatile variables cannot be reordered. 
+		- The happens-before guarantee guarantees that read and write instructions of volatile variables cannot be reordered. 
 		- Instructions before and after can be reordered, but the volatile read/write instruction cannot be reordered with 
 		  any instruction occurring before or after it.
 		- Look at this example:
@@ -272,8 +292,7 @@ What is the significance of volatile keyword in Java?
 		4. Can be used to fix "double checked locking" in Singleton pattern.
 /**
  * Java program to demonstrate where to use Volatile keyword in Java.
- * In this example Singleton Instance is declared as volatile variable to ensure
- * every thread see updated value for _instance.
+ * In this example Singleton Instance is declared as volatile variable to ensure every thread see updated value for _instance.
  */
 public class Singleton{
 	private static volatile Singleton _instance; // volatile variable 
@@ -342,7 +361,7 @@ If we don't have volatile, AtomicInteger or Synchronized how do we achieve threa
 Note: Atomicity, synchronization, and volatility are independent attributes, 
       but are typically used in combination to enforce proper thread cooperation for accessing variables.
 
-Hypothetic question: If by mistake instead of updating the next address location in  LinkedList, is updated the previous address. 
+Hypothetic question: If by mistake instead of updating the next address location in LinkedList, is updated the previous address. 
 	- How do we find and resolve it.
 
 Have you heard of weak/strong references in java? Can you explain?
@@ -386,7 +405,7 @@ Have you heard of weak/strong references in java? Can you explain?
 			A a = new A();      //Strong Reference
         	// Creating ReferenceQueue
         	ReferenceQueue<A> refQueue = new ReferenceQueue<A>();
-        	// Creating Phantom Reference to A-type object to which 'a' is also pointing
+        	// Creating Phantom Reference to A-type object to which 'a' is pointing
         	PhantomReference<A> phantomA = new PhantomReference<A>(a, refQueue);
         	a = null;   // Now, A-type object to which 'a' is pointing earlier is available for garbage collection. 
         				// But, this object is kept in 'refQueue' before removing it from the memory.
@@ -422,7 +441,7 @@ What is the difference between String class and string literal?
 		- By default Java will call intern() method.
 
 	String pool:
-		Up-to Java 1.6 String pool is located in permgen area of heap, but in Java 1.7 updates its moved to main heap area.
+		Up-to Java 1.6 String pool is located in permgen area of heap, but in Java 1.7 its moved to main heap area.
 		Default size is 64 MB.
 		Creating too many String literals can cause java.lang.OutOfMemory: permgen space.
 
@@ -532,7 +551,7 @@ How do you monitor garbage collection activities?
         -XX:HeapDumpPath=/Users/manju_kogunde
 
 How do you identify minor and major garbage collection in Java?
-	- Minor collection prints “GC” if garbage collection logging is enable using –verbose:gc or -XX:PrintGCDetails, 
+	- Minor collection prints “GC” if garbage collection logging is enabled using –verbose:gc or -XX:PrintGCDetails, 
 	- Major collection prints “Full GC”. 
 
 How do you find GC resulted due to calling System.gc()?
@@ -555,7 +574,7 @@ What is difference between Serial and Throughput Garbage collector?
 	- Serial GC can be enabled using -XX:UseSerialGC
 	  Throughput Garbage collector can be enabled using -XX:UseParallelGC or -XX:UseOldParallelGC
 
-When does an Object becomes eligible for Garbage collection in Java ?
+When does an Object become eligible for Garbage collection in Java ?
 	- An object becomes eligible for garbage collection when there is no live reference for that object 
 	  or it can not be reached by any live thread. 
 	- Cyclic reference doesn’t count as live reference and if two objects are pointing to each other 
@@ -571,7 +590,7 @@ What is finalize method in Java? When does Garbage collector calls finalize meth
 	- Finalize method is also called finalizer
 	- Is a method defined in java.lang.Object 
 	- Invoked by Garbage collector before collecting any object which is eligible for GC
-	- Finalize() method provides last chance to object to do cleanup and free any remaining resource
+	- Finalize() method provides last chance for object to do cleanup and free any remaining resource
 
 Can we force Garbage collector to run at any time ?
 	- No, you can not force Garbage collection in Java. 
@@ -607,9 +626,9 @@ What is the difference between Collection and Collections ?
    |                       |                            AbstractList                          |                         |
 AbstractSet            SortedSet(I)               ___________|___________        		    Deque(I)               	AbstractQueue    
    |                       |                     |           |           |              	  |                         |
-HashSet                NavigableSet(I)      ArrayList      Vector     LinkedList 	AbstractSequentialList     		PriorityQueue
+HashSet                NavigableSet(I)      ArrayList     Vector(S)  LinkedList 	AbstractSequentialList     		PriorityQueue
    |                       |                                 |                
-LinkedHashSet          TreeSet                             Stack
+LinkedHashSet          TreeSet                             Stack(S)
 
 ______________________________________________________________________________________________________________________________________
 
@@ -617,9 +636,9 @@ ________________________________________________________________________________
 Dictionary                                                     	 Map(I)
   |     ___________________________________________________________|___________________________________________________________
   |    |                                      |                                                  	 |                         |
-Hashtable                                 AbstractMap                                        ConcurrentMap(I)          		SortedMap(I)                                
+Hashtable(S)                             AbstractMap                                        ConcurrentMap(I)          		SortedMap(I)                                
     |                _________________________|______________________________                        |                         |
-Properties          |             |           |                 |            |             	ConcurrentNavigableMap(I)     	NavigableMap(I)
+Properties(S)       |             |           |                 |            |             	ConcurrentNavigableMap(I)     	NavigableMap(I)
                   HashMap    WeakHashMap    EnumMap   IdentityHashMap   ConcurrentHashMap                                      |                               
                     |                                                                                                       TreeMap   
                LinkedHashMap                                                                     
@@ -632,7 +651,7 @@ Which collection classes are synchronized or thread-safe ?
 
 What is the difference between List and Set?
 	- Set contain only unique elements
-	  List can contain duplicate elements
+	  List can contain duplicfate elements
 	- Set is unordered
 	  List is ordered (List maintains the order in which the objects are added)
 	- Set allows only one null element
@@ -753,6 +772,70 @@ What is the difference between HashMap and Hashtable ?
 	  Hashtable iterator is fail-safe
 	- HashMap is much faster and uses less memory than Hashtable, as former is unsynchronized
 	
+Fail-Fast vs Fail-Safe?
+	- Fail-Fast iterators throw an exception(ConcurrentModificationException) if the collection is modified while iterating over it.
+	- Examples : ArrayList, HashMap
+	- Fail-Fast Iterators internal working
+		Every fail fast collection has a modCount field, to represent how many times the collection has changed/modified.
+		So at every modification of this collection we increment the modCount value. 
+		For example the modCount is incremented in below cases:
+		1. When one or more elements are removed.
+		2. When one or more elements are added.
+		3. When the collection is replaced with other collection.
+		4. When the collection is sorted.
+		So everytime there is some change in the collection structure, the mod count is incremented.
+
+	- Fail-Safe iterators will not throw any exception even if the collection is modified while iterating over it. 	
+	- Examples: CopyOnWriteArrayList, ConcurrentHashMap
+	- Fail-Safe Iterators internal working:
+		These iterators traverse over the clone of the collection. 
+		So even if the original collection gets structurally modified, no exception will be thrown.
+		E.g. in case of CopyOnWriteArrayList the original collections is passed and is stored in the iterator
+	- Note: although it does not throw any exception, but the downsides of this iterator are
+		1. They will not reflect the latest state of the collection.
+		2. It requires extra memory as it clones the collection.
+	- Example of Fail-Safe Iterator which does not create separate copy
+		
+		// Java program to illustrate Fail-Safe Iterator which does not create separate copy 
+		import java.util.concurrent.ConcurrentHashMap; 
+		import java.util.Iterator; 
+		  
+		public class FailSafeItr { 
+		    public static void main(String[] args) { 
+		        // Creating a ConcurrentHashMap 
+		        ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<String, Integer>(); 
+		  
+		        map.put("ONE", 1); 
+		        map.put("TWO", 2); 
+		        map.put("THREE", 3); 
+		        map.put("FOUR", 4); 
+		  
+		        // Getting an Iterator from map 
+		        Iterator it = map.keySet().iterator(); 
+		  
+		        while (it.hasNext()) { 
+		            String key = (String)it.next(); 
+		            System.out.println(key + " : " + map.get(key)); 
+		  
+		            // This will reflect in iterator. Hence, it has not created separate copy 
+		            map.put("SEVEN", 7); 
+		        } 
+		    } 
+		} 
+		
+		Output
+		
+		ONE : 1
+		FOUR : 4
+		TWO : 2
+		THREE : 3
+		SEVEN : 7
+
+		Note: The iterators returned by ConcurrentHashMap is weakly consistent. 
+			  This means that this iterator can tolerate concurrent modification, 
+			  traverses elements as they existed when iterator was constructed and 
+			  may (but not guaranteed to) reflect modifications to the collection after the construction of the iterator.
+	
 What is the difference between HashMap and ConcurrentHashMap ?
 	- HashMap is not synchronized
 	  ConcurrentHashMap is synchronized
@@ -762,7 +845,7 @@ What is the difference between HashMap and ConcurrentHashMap ?
 
 How HashMap works internally? 
 	- HashMap works on the principle of Hashing
-	- To understand Hashing, we should understand the three terms first i.e  Hash Function, Hash Value and Bucket
+	- To understand Hashing, we should understand the three terms first i.e  Hash Function, Hash Value and Bucket (using hashCode() modulo number_of_buckets)
 		- hashCode() is the "Hash Function" which returns int value
 		- This int value is called "Hash Value"
 		- A bucket is used to store key value pairs
@@ -778,11 +861,34 @@ How HashMap works internally?
       and now it applies returned hashValue into its own hashing function, to find final hash value
     - Final hashvalue is used to find the bucket location at which the Entry object is stored
     - Entry object stores in the bucket like this (hash,key,value,nextEntryReference) 
-    - If two Keys are having same hashCode, here equals() method comes to rescue
+    - If two Keys are having same hashCode, here equals() method comes to the rescue
       The bucket is a linked list effectively. Its not a LinkedList as in a java.util.LinkedList.
       It's a separate (simpler) implementation just for the map.
       So we traverse through linked list, comparing keys in each entries using keys.equals() until it returns true.
       Then the corresponding entry object value is returned (or inserted in case of put()).
+
+Performance Improvement of HashMap in Java8?
+	Java 8 is on average 20% faster than Java 7 in simple HashMap.get()
+	
+	What is the reason behind such a tremendous performance improvement, even in terms of big-O notation? 
+		Well, this optimization is described in JEP-180. 
+		Basically when a bucket becomes too big (currently: TREEIFY_THRESHOLD = 8), 
+		HashMap dynamically replaces it with an ad-hoc implementation of tree map. 
+		This way rather than having pessimistic O(n) we get much better O(log n). 
+	
+	How does it work? 
+		Well, previously entries with conflicting keys were simply appended to linked list, which later had to be traversed. 
+		Now HashMap promotes list into "binary tree"", using hash code as a branching variable. 
+		If two hashes are different but ended up in the same bucket, one is considered bigger and goes to the right. 
+		If hashes are equal (as in our case), HashMap hopes that the keys are "Comparable", so that it can establish some order. 
+		This is not a requirement of HashMap keys, but apparently a good practice. 
+		Note: If keys are not comparable, don't expect any performance improvements in case of heavy hash collisions.
+
+	Why is all of this so important? 
+		Malicious software, aware of hashing algorithm we use, might craft couple of thousand requests that will result in massive hash collisions. 
+		Repeatedly accessing such keys will significantly impact server performance, effectively resulting in denial-of-service attack. 
+		In JDK 8 an amazing jump from O(n) to O(logn) will prevent such attack vector, also making performance a little bit more predictive. 
+		I hope this will finally convince your boss to upgrade.
 
 What is hash-collision? How does java handle Hash collision?
 	- If two different keys have the same hash value then it leads to hash-collision
@@ -889,7 +995,7 @@ Have you involved in design activities? What is the difference between associati
     - Composition: Association between two objects is referred as Composition, 
                    when one class owns other class and other class can not meaningfully exist, when it's owner is destroyed
                    Composition is also called as "Strong Aggregation"
-                   For example: Car and it's part e.g. engines, wheels etc, individual parts of the car can not function when a car is destroyed
+                   For example: Car and it's parts like engines, wheels etc, individual parts of the car can not function when a car is destroyed
                    Here is how they are implemented between Java classes
                    
                    public class Car {
@@ -911,7 +1017,7 @@ Have you involved in design activities? What is the difference between associati
                    Here is how they look like in terms of Java classes
                    
                     public class Organization {
-                        private List employees;
+                        private List<Person> employees;
                     }
                     
                     public class Person {
@@ -1022,8 +1128,8 @@ Local Class
 	- Rules of Local Inner Class:
 	    a. The scope of local inner class is restricted to the block they are defined in.
     	b. Local inner class cannot be instantiated from outside the block where it is created in.
-	    c. Till JDK 7,Local inner class can access only final local variable of the enclosing block. 
-	       However From JDK 8, it is possible to access the non-final local variable of enclosing block in local inner class.
+	    c. Till JDK 7, Local inner class can access only final local variable of the enclosing block. 
+	       However from JDK 8, it is possible to access the non-final local variable of enclosing block in local inner class.
     	d. A local class has access to the members of its enclosing class.
 	    e. Local inner classes can extend an abstract class or can also implement an interface. 
 	- Declaring a Local Inner class
@@ -1082,7 +1188,6 @@ Local Class
 		        OuterClass.InnerClass innerObject = outerObject.new InnerClass();
 		         
 		        innerObject.display();
-		         
 		    }
 		}
 		
@@ -1208,7 +1313,8 @@ Before Java 5:
  
 	String moreText = (String) list.get( 1 ); // Run-Time:ClassCastException: Integer cannot be cast to String
 	
-In this example, Generics will help not only eliminate the Run-Time:ClassCastException, but It will also save you the trouble of casting to String.
+In this example, Generics will help not only eliminate the Run-Time:ClassCastException, 
+but it will also save you the trouble of casting to String.
 
 ----------------------------------------
 After Java 5:
@@ -1415,12 +1521,144 @@ BufferedReader vs Scanner
 -----------------------------------------------------------------------------------------------------------------------------
 # Threading:
 -----------------------------------------------------------------------------------------------------------------------------
+How to create threads?
+	- Implement Runnable interface
+		public class MyRunnable implements Runnable {
+			@Override
+			public void run() {
+				for (int i = 0; i < 10; i++) {
+					System.out.println(Thread.currentThread().getName() + " MyRunnable - run method..." + i);
+				}
+			}
+		}
+		
+		public class TestThread {
+			public static void main(String[] args) throws InterruptedException {
+				System.out.println("---Start---");
+				Thread t = new Thread(new MyRunnable());
+				t.start();
+				System.out.println("---End---");
+			}
+		}
+			
+	- Extend Thread class
+		public class MyThread extends Thread {
+			@Override
+			public void run() {
+				for (int i = 0; i < 10; i++) {
+					System.out.println(Thread.currentThread().getName() + " MyThread - run method..." + i);
+				}
+			}
+		}
+		
+		public class TestThread {
+			public static void main(String[] args) throws InterruptedException {
+				System.out.println("---Start---");
+		
+				Thread mt = new MyThread();
+				mt.start();
+		
+				System.out.println("---End---");
+			}
+		}
+			
+Callable and Future
+----------------------------------------
+	Callable
+	-----------------
+		There are two ways of creating threads, one by extending the Thread class and other by creating a thread with a Runnable. 
+		However, one feature lacking in  Runnable is that we cannot make a thread return result when it terminates, i.e. when run() completes. 
+		For supporting this feature, the Callable interface is present in Java.		
+
+	Future
+	-----------------
+		When the call() method completes, answer must be stored in an object known to the main thread, 
+		so that the main thread can know about the result that the thread returned. 
+		How will the program store and obtain this result later? 
+		For this, a Future object can be used. 
+		Think of a Future as an object that holds the result – it may not hold it right now, 
+		but it will do so in the future (once the Callable returns). 
+		Thus, a Future is basically one way the main thread can keep track of the progress and result from other threads. 
+		To implement this interface, 5 methods have to be overridden.
+
+	FutureTask
+	-----------------
+		To create the thread, a Runnable is required. To obtain the result, a Future is required.
+		The Java library has the concrete type FutureTask, which implements Runnable and Future, combining both functionality conveniently.
+		A FutureTask can be created by providing its constructor with a Callable. 
+		Then the FutureTask object is provided to the constructor of Thread to create the Thread object. 
+		Thus, indirectly, the thread is created with a Callable. 
+		For further emphasis, note that there is no way to create the thread directly with a Callable.
+		
+	Callable vs Runnable
+	-----------------
+		For implementing Runnable, the run() method needs to be implemented which does not return anything, 
+		while for a Callable, the call() method needs to be implemented which returns a result on completion. 
+		Note that a thread can’t be created with a Callable, it can only be created with a Runnable.
+	    Another difference is that the call() method can throw an exception whereas run() cannot.
+
+	Callable method signature
+	-----------------	
+	public Object call() throws Exception;
+	
+	Runnable method signature
+	-----------------
+	public void run();
+	
+	Sample Code
+	-----------------
+	    public class MyCallable implements Callable {
+		    public Object call() throws Exception {
+		        // Create random number generator
+		        Random generator = new Random();
+		  
+		        Integer randomNumber = generator.nextInt(5);
+		  
+		        // To simulate a heavy computation, we delay the thread for some random time
+		        Thread.sleep(randomNumber * 1000);
+		  
+		        return randomNumber;
+		    }
+		}
+		
+		public class TestCallableFuture {
+		  public static void main(String[] args) throws Exception {
+		  
+		    // FutureTask is a concrete class that implements both Runnable and Future
+		    FutureTask[] randomNumberTasks = new FutureTask[5];
+		  
+		    for (int i = 0; i < 5; i++)
+		    {
+		      Callable callable = new MyCallable();
+		  
+		      // Create the FutureTask with Callable
+		      randomNumberTasks[i] = new FutureTask(callable);
+		  
+		      // As it implements Runnable, create Thread with FutureTask
+		      Thread t = new Thread(randomNumberTasks[i]);
+		      t.start();
+		    }
+		  
+		    for (int i = 0; i < 5; i++)
+		    {
+		      // As it implements Future, we can call get()
+		      System.out.println(randomNumberTasks[i].get());
+		  
+		      // This method blocks till the result is obtained
+		      // The get method can throw checked exceptions like when it is interrupted. 
+		      // This is the reason for adding the throws clause to main
+		    }
+		  }
+		}
+	
+	
+
 How to make a class thread safe? What basic precautions should I take to make it thread safe.
 Can a lock be acquired on a class?
 
 What does the Java “synchronized” keyword do, and when do you use it?
 * what happens when i make static method as synchronized?
-can we synchorzied a constructor in java?
+can we synchronize a constructor in java?
 
 What are some of the problems you can encounter with multi-threaded programming?
 Is there an advantage to running a multi-threaded application on a single processor computer?
@@ -1534,9 +1772,20 @@ Have you ever involved in debugging of a Java EE application?
 The application is performing good, but most of the times it experiences splices in CPU and RAM usage; what could be the reason? how do you want to debug?
 How do you write a thread-safe java class?
 
+ClassNotFoundException Vs NoClassDefFoundError
+-----------------------------------------------------------------------------------------------------------------------------
+ClassNotFoundException is an exception that occurs when you try to load a class at run time using Class.forName() or loadClass() methods 
+and mentioned classes are not found in the classpath. 
 
-COBRA - 800-307-4830
+NoClassDefFoundError is an error that occurs when a particular class is present at compile time, but was missing at run time
 
-Cigna	- 1400 - 150
-Kaiser	- 
 
+
+
+
+Callable vs Runnable
+
+    For implementing Runnable, the run() method needs to be implemented which does not return anything.
+    While for a Callable, the call() method needs to be implemented which returns a result on completion. 
+    Note that a thread can’t be created with a Callable, it can only be created with a Runnable.
+    Another difference is that the call() method can throw an exception whereas run() cannot.

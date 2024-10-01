@@ -7,7 +7,6 @@ import java.util.List;
  * Assign Double and Number types?
  * 
  * Double is a subclass of Number. Number cannot be assigned to Double variable.
- * 
  */
 public class CastingDoubleAndNumber {
 

@@ -49,12 +49,14 @@ public class QueueUsingLinkedList {
 	}
 
 	public static void main(String[] args) {
-		QueueUsingLinkedList usingLinkedList = new QueueUsingLinkedList();
+		final QueueUsingLinkedList usingLinkedList = new QueueUsingLinkedList();
 		usingLinkedList.add(1);
 		usingLinkedList.add(2);
 		usingLinkedList.add(3);
+		System.out.print("Queue values: ");
 		usingLinkedList.display();
-		System.out.println(usingLinkedList.poll());
+		System.out.println("Queue poll: " + usingLinkedList.poll());
+		System.out.print("Queue values: ");
 		usingLinkedList.display();
 	}
 

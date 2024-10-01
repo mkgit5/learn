@@ -7,7 +7,7 @@ public class TestSingletonEnum {
 		System.out.println(singleton.getValue());
 
 		SingletonEnum singleton2 = SingletonEnum.INSTANCE;
-		// singleton2.setValue(2);
+		singleton2.setValue(2);
 		System.out.println(singleton2.getValue());
 
 		System.out.println(singleton.hashCode());

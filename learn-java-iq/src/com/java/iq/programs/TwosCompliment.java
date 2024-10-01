@@ -8,15 +8,7 @@ public class TwosCompliment {
 
 	public static void main(String[] args) {
 		TwosCompliment twosCompliment = new TwosCompliment();
-		twosCompliment.twosCompliment("10000000");
-	}
-
-	public String onesCompliment(String bin) {
-		String ones = "";
-		for (int i = 0; i < bin.length(); i++) {
-			ones += flip(bin.charAt(i));
-		}
-		return ones;
+		twosCompliment.twosCompliment("1000");
 	}
 
 	public String twosCompliment(String bin) {
@@ -41,6 +33,14 @@ public class TwosCompliment {
 		System.out.println("Twos Compliment - " + twos);
 
 		return twos;
+	}
+
+	public String onesCompliment(String bin) {
+		String ones = "";
+		for (int i = 0; i < bin.length(); i++) {
+			ones += flip(bin.charAt(i));
+		}
+		return ones;
 	}
 
 	// Returns '0' for '1' and '1' for '0'

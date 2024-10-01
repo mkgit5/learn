@@ -5,7 +5,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 /*				
- * Print binary tree nodes level by level.
+ * Print binary tree nodes, level by level.
  * 
  * 													(1)
  * 
@@ -13,13 +13,10 @@ import java.util.Queue;
  * 
  * 				(4)						(5)						(6)						(7)
  * 
- * 		(8)				(9)		(10)				(11)		(12)				(13)		(14)			(15)
- * 
- * 
  * Output:
  * 1
  * 2 3
- * 4 5 6 7 8
+ * 4 5 6 7 
  * 		
  */
 public class PrintBinaryTreeByLevel {

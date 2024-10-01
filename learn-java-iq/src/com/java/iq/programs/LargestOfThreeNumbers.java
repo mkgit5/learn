@@ -19,14 +19,21 @@ import java.util.Scanner;
 public class LargestOfThreeNumbers {
 
 	public static void main(String[] args) {
-		Scanner scanner = new Scanner(System.in);
+		final Scanner scanner = new Scanner(System.in);
+
+		System.out.print("Enter number one: ");
 		int one = scanner.nextInt();
+
+		System.out.print("Enter number two: ");
 		int two = scanner.nextInt();
+
+		System.out.print("Enter number three: ");
 		int three = scanner.nextInt();
+
 		scanner.close();
 
-		System.out.println(findLargestOfThree(one, two, three));
-		System.out.println(findLargestOfThreeByTernaryCondition(one, two, three));
+		System.out.println("Largest of three number: " + findLargestOfThree(one, two, three));
+		System.out.println("Largest of three number by ternary condition: " + findLargestOfThreeByTernaryCondition(one, two, three));
 	}
 
 	private static int findLargestOfThree(int one, int two, int three) {

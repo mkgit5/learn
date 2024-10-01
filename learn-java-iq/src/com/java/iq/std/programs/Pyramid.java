@@ -1,12 +1,16 @@
 package com.java.iq.std.programs;
 
 /*
+ * 
+ * Input: Level=5
+ * 
+ * Output:
  *     *			5 space + star
  *    * *			4 space + star + space + star
  *   * * *			3 space + star + space + star + space + star
  *  * * * *			2 space + star + space + star + space + star + space + star
  * * * * * *		1 space + star + space + star + space + star + space + star + space + star
- * 
+ * [
  *     0			5 space + 0
  *    0 1			4 space + 0 + space + 1
  *   0 1 2			3 space + 0 + space + 1 + space + 2

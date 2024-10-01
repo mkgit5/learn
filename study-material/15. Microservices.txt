@@ -1,0 +1,582 @@
+----------------------------------------------------------------------------------------
+Monolith applications
+----------------------------------------------------------------------------------------
+
+Monolithic applications
+------------------------------------
+1. Its a large applications where all the functionalities are bundled into a single application
+2. It talks to a single database
+
+Disadvantages
+------------------------------------
+# Deployment is complex - Minor updates need complete redeployment
+# Tightly coupled components - Changes in one part can affect others, leading to longer release cycles
+# Scalability limitations - Scaling can be resource intensive. Entire app to be scaled up even if only one part of it needs more capacity.
+# Technology lock-in - Entire app is built on single technology stack. Adopting new technologies is challenging.
+
+----------------------------------------------------------------------------------------
+Microservices
+----------------------------------------------------------------------------------------
+# Microservices are small autonomous services that work together
+# Microservices architectural style is an approach of developing single application as a suite of small services, 
+	each running in its own process and communicating with lightweight mechanisms (often an HTTP API).
+# Microservices are independently deployable by a fully automated deployment machinery.
+# Each Microservice can be written in different programming languages and different data storage technologies
+
+Three Critical Focus Areas
+------------------------------------
+1. REST - Build APIs by following REST API standards and best practices
+2. Small well chosen deployable units - Independently deployable units of small services
+3. Dynamic Scaling - Independently scale up and down without impacting other microservices
+
+Advantages:
+------------------------------------
+1. New Technology and Process adoption
+	# Flexibility: choose best frameworks and languages for each service
+	# Innovation: Easier to experiment and use emerging technologies
+2. Dynamic Scaling
+	# Enabling scaling of individual components based on demand
+	# Efficiency: Scale only the services that needs it, reducing cost
+3. Faster release cycles
+	# Smaller independent services can be developed, tested and deployed quickly
+	# Agility: Allows for more frequent updates and quicker response to market demands
+
+Key Microservices Solutions
+------------------------------------
+1. Spring Boot
+	- Allows rapid development of REST API
+
+2. Spring Cloud
+	- Umbrella project that provides essential microservices needs
+	
+	a. Centralized configuration (Spring Cloud Config Server) 
+	--------------------------------------------------------------------------------------
+		- Mange configuration of each microservices like databases etc in central GIT repository
+		- Lot of configuration like
+			- External services
+			- Database
+			- Queue
+			- Typical Application Configuration
+		- Environment specific configurations like
+			- 1000s of microservices
+			- Multiple environments
+			- Multiple instances in each environment
+			
+		Limits Microservice 			Microservice 2 				Microservice 3
+				|							|							   |	
+				------------------------------------------------------------
+											|
+								  Spring Cloud Config Server
+											|
+									   Git Repository
+		
+		
+		# spring-cloud-config-server
+		----------------------------------------------------------------------------------
+			- Maven dependencies
+				- Config Client (Client that connects to a Spring Cloud Config Server to fetch the application's config)
+				- Config Server (Central management for configuration via Git, SVN or HashiCorp vault)
+			- application.properties
+				- spring.application.name=spring-cloud-config-server
+				- server.port=8888
+				- spring.cloud.config.server.git.uri=file:///<Path to the limits-service.properties in the git repo>
+					In Windows, replace '\' with '/'. For eg: C:/Users/manju/limits-service.properties
+			- Create git local repo (git init)
+				- Create limits-service.properties and add following properties and commit it			
+				- Create limits-service-dev.properties and add following properties and commit it			
+				- Create limits-service-uat.properties and add following properties and commit it			
+				- Create limits-service-prod.properties and add following properties and commit it			
+				- limits-service.minimum=4
+				- limits-service.maximum=996
+			- Add @EnableConfigServer to the application start up class
+			- Testing - http://localhost:8888/limits-service/default
+		
+		- Example - Limits-Service
+		----------------------------------------------------------------------------------
+			- Maven dependencies
+				- Spring Web (To build web, RESTful APIs using Spring MVC. Apache tomcat embedded server)
+				- Spring Boot Dev Tools (Helps in fast app restart and Live Reload)
+				- Spring Boot Actuator (Helps in monitoring and managing of app such as health, metrics etc)
+				- Config Client (Client that connects to a Spring Cloud Config Server to fetch the application's config)
+			- application.properties
+				- spring.application.name=limits-service
+				- spring.profiles.active=dev (You can set the profiles via program args as -Dspring.profiles.active=dev)
+				- spring.cloud.config.profile=dev (You can set the profiles via program args as -Dspring.cloud.config.profile=dev)
+				- spring.cloud.config.name=<Specify the properties file name, if you have saved it with a different name in Spring cloud config server other than limits-service.properties>
+				- spring.config.import=optional:configserver:http://localhost:8888
+				- limits-service.minimum=2
+				- limits-service.maximum=998
+			- http://localhost:8080/limits - {"minimum":1,"maximum":1000}
+		
+		
+		- Standardization of Ports
+		----------------------------------------------------------------------------------
+			1. Limits Microservice Ports				: 8080, 8081, etc.
+			2. Currency Exchange Microservice Ports		: 8000, 8001, 8002, etc.
+			3. Currency Conversion Microservice Ports	: 8100, 8101, 8102, etc.
+			4. Spring Cloud Config Server Port			: 8888
+			5. Netflix Eureka Naming Server Port		: 8761
+			6. API Gateway Port							: 8765
+			7. Zipkin Distributed Tracing Server Port	: 9411
+		
+		- Currency Exchange Microservice
+		----------------------------------------------------------------------------------
+			- Maven dependencies
+				- Spring Web (To build web, RESTful APIs using Spring MVC. Apache tomcat embedded server)
+				- Spring Boot Dev Tools (Helps in fast app restart and Live Reload)
+				- Spring Boot Actuator (Helps in monitoring and managing of app such as health, metrics etc)
+				- Config Client (Client that connects to a Spring Cloud Config Server to fetch the application's config)
+				- Spring Data JPA
+					<dependency>
+						<groupId>com.springframework.boot</groupId>
+						<artifactId>spring-boot-starter-data-jpa</artifactId>
+					</dependency>
+				- H2 Database 
+					<dependency>
+						<groupId>com.h2database</groupId>
+						<artifactId>h2</artifactId>
+					</dependency>
+				- Netflix Eureka Client (Add this dependency to register the services in the naming-server and configure the url in properties file)
+					<dependency>
+						<groupId>com.springframework.cloud</groupId>
+						<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+					</dependency>
+			- application.properties
+				- spring.application.name=currency-exchange
+				- server.port=8000
+				- spring.profiles.active=dev (You can set the profiles via program args as -Dspring.profiles.active=dev)
+				- spring.jpa.show_sql=true
+				- spring.jpa.defer-datasource-intialization=true
+				- spring.datasource.url-=jdbc:h2:mem:testdb
+				- spring.h2.console.enabled=true
+				- eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka (naming-server URL to be used by this service to register itself)
+			- Controller/Service 
+			
+				public class CurrencyExchangeController {
+					@Autowired
+					private CurrencyExchangeRepository repository;
+					
+					@Autowired
+					private Envrionment env;
+	
+					@GetMapping("/currency-exchange/from/{from}/to/{to}")
+					public CurrencyExchange retrieveExchangeValue(@PathVariable String from, @PathVariable String to){
+						CurrencyExchange result = repository.findByFromAndTo(from, to);
+						if (result == null) {
+							throw new RuntimeException("No data found!");
+						}
+						S.O.P(env.getProperty("local.server.port"));
+						return result;
+					}
+				}
+			- Create JpaRepository class
+				public interface CurrencyExchangeRepository extends JpaRepository<CurrencyExchange, Long> {
+					CurrencyExchange findByFromAndTo(String from, String to);
+				} 
+				
+			- How to load test data to H2 database?
+				- Create data.sql file with insert commands.
+				- At the application startup, data.sql file will be executed in the database
+				- data.sql will be executed even before the tables are created, hence set the below property
+					spring.jpa.defer-datasource-intialization=true
+			
+			- Testing
+				- Access h2 console - http://localhot:8000/h2-console
+				- Invoke currency-exchange - http://localhost:8000/currency-exchange/from/USD/to/INR
+		
+		- Currency Conversion Microservice
+		----------------------------------------------------------------------------------
+			- Maven dependencies
+				- Spring Web (To build web, RESTful APIs using Spring MVC. Apache tomcat embedded server)
+				- Spring Boot Dev Tools (Helps in fast app restart and Live Reload)
+				- Spring Boot Actuator (Helps in monitoring and managing of app such as health, metrics etc)
+				- Config Client (Client that connects to a Spring Cloud Config Server to fetch the application's config)
+				- Netflix Eureka Client (Add this dependency to register the services in the naming-server and configure the url in properties file)
+					<dependency>
+						<groupId>com.springframework.cloud</groupId>
+						<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+					</dependency>
+			- application.properties
+				- spring.application.name=currency-conversion
+				- server.port=8100
+				- spring.profiles.active=dev (You can set the profiles via program args as -Dspring.profiles.active=dev)
+				- eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka (naming-server URL to be used by this service to register itself)
+			- Controller/Service 
+			
+				- Invoking CurrencyExchange via RestTemplate
+				--------------------------------------------------------------------------
+				public class CurrencyConversionController {
+	
+					@GetMapping("/currency-conversion/from/{from}/to/{to}/quantity/{quantity}")
+					public CurrencyConversion calculateCurrencyConversion(@PathVariable String from, @PathVariable String to, @PathVariable BigDecimal quantity){
+						
+						final Map<String, String> uriVariables = new HashMap<>();
+						uriVariables.put("from", from);
+						uriVariables.put("to", to);
+						
+						final ResponseEntity<CurrencyConversion> result = new RestTemplate().getForEntity("http://localhost:8000/currency-exchange/from/{from}/to/{to}"
+						, CurrencyConversion.class, uriVariables);
+						
+						final CurrencyConversion currencyConversion = result.getBody();
+						currencyConversion.setTotalCalculatedAmount(quantity.multiply(currencyConversion.getConversionMultiple()));
+
+						return currencyConversion;
+					}
+				}
+				
+				- Invoking CurrencyExchange via FeignClient
+				--------------------------------------------------------------------------
+					a. Add below dependency in the pom.xml
+						<dependency>
+							<groupId>org.springframework.cloud</groupId>
+							<artifactId>spring-cloud-starter-openfeign</artifactId>
+						</dependency>
+						<dependency>
+							<groupId>com.springframework.cloud</groupId>
+							<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+						</dependency>
+					b. Add @EnableFeignClients annotation to the application start up class 
+					
+					c. Create CurrencyExchangeProxy class
+						// FeignClient with hard coded target URL (No naming-server and load balancing)
+						// name -> Usually use application name of the target service
+						// url 	-> localhost:8000
+						@FeignClient(name="currency-exchange", url="localhost:8000")
+						
+						// FeignClient + Client Side Load Balancing (spring-cloud-loadbalancer) with Eureka (netflix-eureka-client)
+						// Earlier netflix-eureka-client was using Ribbon for load balancing, but in the recent version it uses spring-cloud-loadbalancer
+						// If you remove the URL attribute, feign will talk to Eureka naming-server to fetch the currency-exchange URL
+						@FeignClient(name="currency-exchange")
+						public interface CurrencyExchangeProxy {
+						
+							@GetMapping("/currency-exchange/from/{from}/to/{to}")
+							public CurrencyConversion retrieveExchangeValue(@PathVariable String from, @PathVariable String to);
+							
+						}
+						
+						@RestController
+						public class CurrencyConversionController {
+						
+							@Autowired
+							private CurrencyExchangeProxy currencyExchangeProxy; 
+			
+							@GetMapping("/currency-conversion-feign/from/{from}/to/{to}/quantity/{quantity}")
+							public CurrencyConversion calculateCurrencyConversionFeign(@PathVariable String from, @PathVariable String to, @PathVariable BigDecimal quantity){
+								
+								final CurrencyConversion currencyConversion = currencyExchangeProxy.retrieveExchangeValue(from, to);
+								currencyConversion.setTotalCalculatedAmount(quantity.multiply(currencyConversion.getConversionMultiple()));
+		
+								return currencyConversion;
+							}
+						}
+			- Testing
+				- Invoke API - http://localhost:8100/currency-conversion-feign/from/{from}/to/{to}/quantity/10
+
+	
+	b. Load Balancing (Spring Cloud LoadBalancing)
+	--------------------------------------------------------------------------------------
+		- Distributes requests across active instances instances of microservices dynamically
+						
+								[Currency Conversion Microservice]
+												|
+										 [Load Balancer] ------------------- [Naming Server]
+												|
+				---------------------------------------------------------------------							
+				|								|									|			
+	[Currency Exchange - Instance 1]	[Currency Exchange - Instance 2]	[Currency Exchange - Instance 3]
+
+
+	c. Service Discovery (Naming Server - for eg: Eureka Naming Server)
+	--------------------------------------------------------------------------------------
+		- Instead of hardcoding hundreds of urls of microservices in the code, 
+		  Service Discovery enables automatic discovery of microservices
+		  
+		  CurrencyConversion 		CurrencyExchange			MicroserviceX
+		  		|							|						|
+		  		-----------------------------------------------------
+		  									|
+							[ Naming Server or Service Registry ]
+		
+		- Naming Server
+		  	- Maven dependencies
+				- Spring Boot Dev Tools (Helps in fast app restart and Live Reload)
+				- Spring Boot Actuator (Helps in monitoring and managing of app such as health, metrics etc)
+				- Eureka Server (Spring Cloud Netflix Eureka Server -> Naming Server or Service Registry)
+					<dependency>
+						<groupId>org.springframework.cloud</groupId>
+						<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+					</dependency>
+			- application.properties
+				- spring.application.name=naming-server
+				- server.port=8761
+				- eureka.client.register-with-eureka=false // Disabling registering itself to the naming-server
+				- eureka.client.fetch-registry=false
+				
+			- Add @EnableEurekaServer annotation to the application start up class
+			- Testing
+				- Browser URL - http://localhost:8761
+
+	
+	d. Distributed Tracing (eg - Zipkin Distributed Tracing)
+	--------------------------------------------------------------------------------------
+		- Helps trace request across microservices 
+
+	e. API Gateway/Edge server (Spring Cloud Gateway)
+	--------------------------------------------------------------------------------------
+		- Single entry point - Implement common features like authentication
+		- API Gateway (Earlier Zuul was used but now Spring Cloud Gateway)
+		  Provides a simple, effective way to route to APIs in the reactive applications.
+		  Provides cross-cutting concerns to those APIs such as security, monitoring/metrics and resiliency.
+		  Built on top of Spring WebFlux (Reactive approach)
+		- Features
+			- Match routes on any request attributes
+			- Define Predicates and Filters
+			- Integrates with Spring Cloud Discovery Client (Load Balancing)
+			- Path rewriting
+		- Maven dependencies
+			- Spring Boot Dev Tools (Helps in fast app restart and Live Reload)
+			- Spring Boot Actuator (Helps in monitoring and managing of app such as health, metrics etc)
+			- Eureka Discovery Client (A REST based service for locating services for the purpose of load balancing and failover of middle-tier servers)
+				<dependency>
+					<groupId>com.springframework.cloud</groupId>
+					<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+				</dependency>
+			- Reactive Gateway
+				<dependency>
+					<groupId>com.springframework.cloud</groupId>
+					<artifactId>spring-cloud-starter-gateway</artifactId>
+				</dependency>
+		- application.properties
+			- spring.application.name=api-gateway
+			- server.port=8765
+			- spring.profiles.active=dev (You can set the profiles via program args as -Dspring.profiles.active=dev)
+			- eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka (naming-server URL to be used by this service to register itself)
+			- spring.cloud.gateway.discovery.locator.enabled=true // Enables the api-gateway to check the currency-exchange service in the eureka naming-server
+				// Invoke the API Gateway using the below URLs
+				// http://localhost:8765/CURRENCY-EXCHANGE/currency-exchange/from/USD/to/INR
+				// http://localhost:8765/CURRENCY-CONVERSION/currency-conversion/from/USD/to/INR/quantity/10
+				// http://localhost:8765/CURRENCY-CONVERSION/currency-conversion-feign/from/USD/to/INR/quantity/10
+			- spring.cloud.gateway.discovery.locator.lowerCaseServiceId=true 
+				// Converts the above upper case service names to lower case as below
+				// http://localhost:8765/currency-exchange/currency-exchange/from/USD/to/INR
+				// http://localhost:8765/currency-conversion/currency-conversion/from/USD/to/INR/quantity/10
+				// http://localhost:8765/currency-conversion/currency-conversion-feign/from/USD/to/INR/quantity/10
+		- Testing
+			- Check whether api-gateway is registered in the Eureka naming-server (http://localhost:8761)
+			- Copy the service name (for eg: CURRENCY-EXCHANGE) from Eureka Naming Server and prepare the URL as below
+				- http://localhost:8765/CURRENCY-EXCHANGE/currency-exchange/from/USD/to/INR
+				- http://localhost:8765/CURRENCY-CONVERSION/currency-conversion/from/USD/to/INR/quantity/10
+				- http://localhost:8765/CURRENCY-CONVERSION/currency-conversion-feign/from/USD/to/INR/quantity/10
+		
+		- Custom Routes
+			@Configuration
+			public class ApiGatewayConfiguration {
+				
+				// If custom routes are used then comment the below in application.properties
+				// spring.cloud.gateway.discovery.locator.enabled=true
+				// spring.cloud.gateway.discovery.locator.lowerCaseServiceId=true
+				@Bean
+				public RouteLocator gatewayRouter(RouteLocatorBuilder builder) {
+					return builder.routes
+							// lb - means loadbalance the request by searching the service in Eureka Naming Server
+							.route(p -> p.path("/currency-conversion/**").uri("lb://currency-conversion"))
+							.route(p -> p.path("/currency-exchange/**").uri("lb://currency-exchange"))
+							.route(p -> p.path("/currency-exchange-feign/**").uri("lb://currency-exchange"))
+							// Rewrite the path
+							.route(p -> p.path("/currency-exchange-new/**")
+										 .filter(f -> f.rewritePath(
+										 					"/currency-exchange-new/(?<segment>.*)",
+													 		"/currency-exchange-feign/${segment})"
+													 	)
+										  )
+										  .uri("lb://currency-exchange"))
+							.build();
+				}
+			}
+			
+		- LoggingFilter implements GlobalFilter
+			@Component
+			public class LoggingFilter implements GlobalFilter {
+			
+				private Logger logger = LoggerFactory.getLogger(LoggingFilter.class);
+				
+				@Override
+				public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+					logger.info("Path of the request -> {}", exchange.getRequest().getPath());
+					return chain.filter(exchange);
+				}
+			}
+
+	f. Fault Tolerance (Resilience4j)
+	--------------------------------------------------------------------------------------
+		- Ensures that failure of one microservice doesn't cascade and make other microservices to fail
+		- Resilience4j is lightweight, easy-to-use fault tolerance library inspired by Netflix Hystrix
+		
+		- Circuit Breaker Framework  
+		----------------------------------------------------------------------------------
+		- Address following questions
+			- What if one of the services go down or is slow?
+			- Can we return fallback response if a service is down?
+			- Can we implement Circuit Breaker pattern to reduce load?
+			- Can we retry requests in case of temporary failures?
+			- Can we implement rate limiting?
+		- Solution
+			- Circuit Breaker Framework - Resilience4j
+		- Plugin Resilience4j in currency-exchange service
+		------------------------------------------------------------------------------
+			- Maven dependencies
+				- Spring Web (To build web, RESTful APIs using Spring MVC. Apache tomcat embedded server)
+				- Spring Boot Dev Tools (Helps in fast app restart and Live Reload)
+				- Spring Boot Actuator (Helps in monitoring and managing of app such as health, metrics etc)
+				- Config Client (Client that connects to a Spring Cloud Config Server to fetch the application's config)
+				- Spring Data JPA
+					<dependency>
+						<groupId>com.springframework.boot</groupId>
+						<artifactId>spring-boot-starter-data-jpa</artifactId>
+					</dependency>
+				- H2 Database 
+					<dependency>
+						<groupId>com.h2database</groupId>
+						<artifactId>h2</artifactId>
+					</dependency>
+				- Netflix Eureka Client (Add this dependency to register the services in the naming-server and configure the url in properties file)
+					<dependency>
+						<groupId>com.springframework.cloud</groupId>
+						<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+					</dependency>
+				- Resilience4j dependencies (add AOP along with Resilience4j)
+					<dependency>
+						<groupId>com.springframework.cloud</groupId>
+						<artifactId>spring-cloud-starter-aop</artifactId>
+					</dependency>
+					<dependency>
+						<groupId>io.github.resilience4j</groupId>
+						<artifactId>resilience4j-spring-boot2/artifactId>
+					</dependency>
+			- application.properties
+				- spring.application.name=currency-exchange
+				- server.port=8000
+				- spring.profiles.active=dev (You can set the profiles via program args as -Dspring.profiles.active=dev)
+				- spring.jpa.show_sql=true
+				- spring.jpa.defer-datasource-intialization=true
+				- spring.datasource.url-=jdbc:h2:mem:testdb
+				- spring.h2.console.enabled=true
+				- eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka (naming-server URL to be used by this service to register itself)
+			- @Retry
+			--------------------------------------------------------------------------
+				@RestController
+				public class CircuitBreakerController {
+					
+					private Logger logger = LoggerFactory.getLogger(CircuitBreakerController.class);
+					
+					@GetMapping("/sample")
+					public String sample() {
+						return "sample";
+					}
+					
+					@GetMapping("/sample-retry")
+					@Retry(name="default")
+					// Add below property in the application.properties, to customize the retry logic
+					// resilience4j.retry.instances.sample-retry.maxRetryAttempts=5 			// retry for 5 times
+					// resilience4j.retry.instances.sample-retry.waitDuration=1s 				// wait for 1 second before each retry
+					// resilience4j.retry.instances.sample-retry.enableExponentialBackoff=true 	// wait for 1 second before each retry
+					@Retry(name="/sample-retry", fallbackMethod="hardCodedResponse")
+					public String sampleRetry() {
+						logger.info("Sample retry call received");
+						final ResponseEntity<String> result = new RestTemplate().getForEntity("dummy-url", String.class);
+						return result.getBody();
+					}
+					
+					private String hardCodedResponse(Exception ex) {
+						return "fallback-response";
+					}
+				}
+				
+			- @CircuitBreaker - What if underlying service is down, will it bring down all services?
+			--------------------------------------------------------------------------
+				- States
+					- CLOSED 	- Invokes the underlying service all the time
+					- OPEN		- Doesn't invoke the underlying service at all
+					- HALF_OPEN	- Invokes underlying service based on specified percentage of requests
+					
+				@RestController
+				public class CircuitBreakerController {
+					
+					private Logger logger = LoggerFactory.getLogger(CircuitBreakerController.class);
+					
+					@GetMapping("/sample-circuit-breaker")
+					@CircuitBreaker(name="default", fallbackMethod="hardCodedResponse")
+					// If you want to move to OPEN state only when 90% of the requests fail then configure below property
+					// resilience4j.circuitbreaker.instances.default.failureRateThreshold=90
+					public String sample() {
+						logger.info("Sample call received");
+						final ResponseEntity<String> result = new RestTemplate().getForEntity("dummy-url", String.class);
+						return result.getBody();
+					}
+					
+					private String hardCodedResponse(Exception ex) {
+						return "fallback-response";
+					}
+				}
+			
+			- @RateLimiter - How many requests are allowed for a time duration?
+			--------------------------------------------------------------------------
+				- RateLimiting means allows specific number of requests per specified duration
+				- For Eg: Allow 1000 requests per 10 seconds
+				- When more than allowed requests are fired, then it throws error
+				
+				@RestController
+				public class CircuitBreakerController {
+					
+					private Logger logger = LoggerFactory.getLogger(CircuitBreakerController.class);
+					
+					@GetMapping("/sample-circuit-breaker")
+					@RateLimiter(name="default")
+					// Configure below property to allow 2 requests per 10 seconds
+					// resilience4j.ratelimiter.instances.default.limitForPeriod=2
+					// resilience4j.ratelimiter.instances.default.limitRefreshPeriod=10s
+					public String sample() {
+						logger.info("Sample call received");
+						final ResponseEntity<String> result = new RestTemplate().getForEntity("dummy-url", String.class);
+						return result.getBody();
+					}
+					
+					private String hardCodedResponse(Exception ex) {
+						return "fallback-response";
+					}
+				}
+				
+			- @BulkHead - How many concurrent requests are allowed?
+			--------------------------------------------------------------------------
+				- RateLimiting means allows specific number of requests per specified duration
+				- For Eg: Allow 1000 requests per 10 seconds
+				- When more than allowed requests are fired, then it throws error
+				
+				@RestController
+				public class CircuitBreakerController {
+					
+					private Logger logger = LoggerFactory.getLogger(CircuitBreakerController.class);
+					
+					@GetMapping("/sample-circuit-breaker")
+					@BulkHead(name="default")
+					// Configure below property to allow max 10 concurrent requests
+					// resilience4j.bulkhead.instances.default.maxConcurrentCalls=10
+					public String sample() {
+						logger.info("Sample call received");
+						final ResponseEntity<String> result = new RestTemplate().getForEntity("dummy-url", String.class);
+						return result.getBody();
+					}
+					
+					private String hardCodedResponse(Exception ex) {
+						return "fallback-response";
+					}
+				}
+
+3. Docker
+	- Gives consistent deployment approach for microservices developed with different programming languages and frameworks.
+	- It is Programming Language and environment independent
+	
+4. Kubernetes
+	- Orchestrates thousands of microservices with advanced features like Service Discovery, Load Balancing, Release management etc.
+
+

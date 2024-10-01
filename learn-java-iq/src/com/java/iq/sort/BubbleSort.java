@@ -1,7 +1,7 @@
 package com.java.iq.sort;
 
 /*
- Starting on the left, compare adjacent items and keep “bubbling” the larger one to the right (it’s in its final place). 
+ Starting on the left, compare adjacent items and keep “bubbling” the larger one to the right (until it’s in its final place). 
  Bubble sort the remaining N -1 items.
  Though “simple” I found bubble sort nontrivial. 
 
@@ -14,54 +14,41 @@ package com.java.iq.sort;
  Best  : O(n)
  Worst : O(n^2)
 
+ Sequence of sorting:
+ ----------------------------
+ Unsorted array: 4,3,2,1
+	Bubble sort...
+	3,2,1,4,
+	2,1,3,4,
+	1,2,3,4,
+	1,2,3,4,
+ Sorted array: 1,2,3,4
+
  */
 public class BubbleSort {
 
 	public static void main(String[] args) {
-		int[] arr = new int[] { 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 };
+		// int[] arr = new int[] { 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 };
 		// int[] arr = new int[] { 4, 3, 2, 1, 5, 6, 7, 8, 9, 10 };
+		int[] arr = new int[] { 4, 3, 2, 1 };
+
 		BubbleSort bs = new BubbleSort();
 
 		System.out.print("Unsorted array: ");
 		bs.printData(arr);
 
 		System.out.println("Bubble sort...");
-		bs.bubbleSortAsc(arr);
+		bs.bubbleSort(arr);
 
 		System.out.print("Sorted array: ");
 		bs.printData(arr);
 	}
 
-	public void bubbleSortAsc(int[] arr) {
-		for (int i = 0; i < arr.length - 1; i++) {
-			for (int j = 1; j < arr.length - i; j++) {
-				if (arr[j] < arr[j - 1]) {
-					int temp = arr[j];
-					arr[j] = arr[j - 1];
-					arr[j - 1] = temp;
-				}
-			}
-		}
-	}
-
-	public void bubbleSortDesc(int[] arr) {
-		for (int i = 0; i < arr.length - 1; i++) {
-			for (int j = 1; j < arr.length - i; j++) {
-				if (arr[j] > arr[j - 1]) {
-					int temp = arr[j];
-					arr[j] = arr[j - 1];
-					arr[j - 1] = temp;
-				}
-			}
-		}
-	}
 
 	public void bubbleSort(int[] arr) {
-		// n, n-1, n-2, n-3, ...., 3,2,1 ==> n2
-		for (int i = arr.length - 1; i >= 0; i--) {
-			// 1,2,3, .... n
-			for (int j = 0; j < i; j++) {
-				if (arr[j] > arr[j + 1]) {
+		for (int i = arr.length - 1; i >= 0; i--) {	// n, n-1, n-2, n-3, ...., 3,2,1 ==> n2
+			for (int j = 0; j < i; j++) {			// 1,2,3, .... n
+				if (arr[j] > arr[j + 1]) {			// 1+2+3+...+n = (n*(n-1))/2 = O(n^2)
 					swapValues(arr, j, j + 1);
 				}
 			}
@@ -69,10 +56,10 @@ public class BubbleSort {
 		}
 	}
 
-	private void swapValues(int[] arr, int startIndex, int tempIndex) {
-		int startValue = arr[startIndex];
-		arr[startIndex] = arr[tempIndex];
-		arr[tempIndex] = startValue;
+	private void swapValues(int[] a, int i, int j) {
+		int temp = a[j];
+		a[j] = a[i];
+		a[i] = temp;
 	}
 
 	private void printData(int[] arr) {

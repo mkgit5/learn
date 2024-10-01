@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /*
+ 
  Find the duplicate elements in an array and print them.
 
  Ways:
@@ -28,7 +29,7 @@ public class DuplicateElementsInArray {
 	}
 
 	private static void findDuplicatesByIteration(int[] intArray) {
-		Map<Integer, Integer> count = new HashMap<Integer, Integer>(intArray.length);
+		final Map<Integer, Integer> count = new HashMap<Integer, Integer>(intArray.length);
 		for (int i = 0; i < intArray.length; i++) {
 			if (count.containsKey(intArray[i])) {
 				count.put(intArray[i], count.get(intArray[i]) + 1);

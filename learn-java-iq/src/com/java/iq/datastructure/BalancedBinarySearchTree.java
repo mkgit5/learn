@@ -5,9 +5,26 @@ import java.util.Queue;
 import java.util.Vector;
 
 /*
+ * A balanced binary tree is also known as a height-balanced tree.
+ * A balanced binary tree or height-balanced binary tree is such a tree whose left and right subtrees' heights differ by not more than 1, 
+ * which means the height difference could be -1, 0, and 1. 
+ * 
  * Convert Skewed Binary Tree to Balanced Binary Search Tree
  * 1. Store nodes in an array, sorted array represents in-order traversal of binary search tree.
  * 2. Using the sorted array, construct Binary Search Tree.
+ * 
+ * Input:
+ * 					3
+ * 				2
+ * 			1
+ * 		5
+ * 	6
+ * 
+ * Output:
+ * 					1
+ * 			6				2
+ * 				5				3
+ * 
  */
 public class BalancedBinarySearchTree {
 
@@ -20,6 +37,22 @@ public class BalancedBinarySearchTree {
 		return buildTree(nodes, 0, nodes.size() - 1);
 	}
 
+	private void createTree() {
+		root = new Node(3);
+		root.left = new Node(2);
+		root.left.left = new Node(1);
+		root.left.left.left = new Node(5);
+		root.left.left.left.left = new Node(6);
+	}
+
+	public void storeNodes(Node root, Vector<Node> nodes) {
+		if (root != null) {
+			storeNodes(root.left, nodes);
+			nodes.add(root);
+			storeNodes(root.right, nodes);
+		}
+	}
+
 	private Node buildTree(Vector<Node> nodes, int start, int end) {
 		if (start > end) {
 			return null;
@@ -29,14 +62,6 @@ public class BalancedBinarySearchTree {
 			node.left = buildTree(nodes, start, mid - 1);
 			node.right = buildTree(nodes, mid + 1, end);
 			return node;
-		}
-	}
-
-	public void storeNodes(Node root, Vector<Node> nodes) {
-		if (root != null) {
-			storeNodes(root.left, nodes);
-			nodes.add(root);
-			storeNodes(root.right, nodes);
 		}
 	}
 
@@ -67,20 +92,6 @@ public class BalancedBinarySearchTree {
 
 	}
 
-	private void createTree() {
-		root = new Node(30);
-		root.left = new Node(20);
-		root.left.left = new Node(10);
-		root.left.left.left = new Node(5);
-		root.left.left.left.left = new Node(1);
-	}
-
-	public static void main(String[] args) {
-		BalancedBinarySearchTree tree = new BalancedBinarySearchTree();
-		tree.root = tree.balanceBinaryTree();
-		tree.display(tree.root);
-	}
-
 	class Node {
 		Node left;
 		int data;
@@ -91,6 +102,12 @@ public class BalancedBinarySearchTree {
 			this.left = null;
 			this.right = null;
 		}
+	}
+
+	public static void main(String[] args) {
+		BalancedBinarySearchTree tree = new BalancedBinarySearchTree();
+		tree.root = tree.balanceBinaryTree();
+		tree.display(tree.root);
 	}
 
 }

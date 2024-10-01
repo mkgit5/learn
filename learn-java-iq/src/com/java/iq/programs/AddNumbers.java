@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /*
+ 
  Find the sum of 2 numbers.
 
  Condition:
@@ -24,20 +25,19 @@ public class AddNumbers {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String line = br.readLine();
-		int N = Integer.parseInt(line);
+		int n = Integer.parseInt(line);
 
-		for (int i = 0; i < N; i++) {
+		for (int i = 0; i < n; i++) {
 			String line2 = br.readLine();
 			String[] split = line2.split(" ");
 
 			int sum = 0;
-			for (String n : split) {
-				sum += Integer.parseInt(n);
+			for (String r : split) {
+				sum += Integer.parseInt(r);
 			}
 			System.out.println(sum);
 		}
 		br.close();
-
 	}
 
 }

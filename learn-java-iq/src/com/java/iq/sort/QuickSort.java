@@ -13,7 +13,7 @@ package com.java.iq.sort;
  while all elements with values greater than the pivot come after it (equal values can go either way). 
  After this partitioning, the pivot is in its final position. This is called the partition operation.
 
- 3. Recursively apply the above steps to the sub-list of elements with smaller values and separately the sub-list
+ 3. Recursively apply the above steps to the sub-list of elements with smaller values and separate the sub-list
  of elements with greater values.
 
  Performance:
@@ -63,10 +63,11 @@ public class QuickSort {
 	}
 
 	/**
-	 * Divides array from pivot, left side contains elements less than pivot,
-	 * while right side contains elements greater than pivot.
-	 * @param array array to partitioned
-	 * @param left lower bound of the array
+	 * Divides array from pivot, left side contains elements less than pivot, while
+	 * right side contains elements greater than pivot.
+	 * 
+	 * @param array array to be partitioned
+	 * @param left  lower bound of the array
 	 * @param right upper bound of the array
 	 * @return the partition index
 	 */

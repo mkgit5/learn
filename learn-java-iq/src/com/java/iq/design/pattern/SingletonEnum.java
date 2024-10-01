@@ -1,6 +1,7 @@
 package com.java.iq.design.pattern;
 
 public enum SingletonEnum {
+
 	INSTANCE;
 
 	int value;

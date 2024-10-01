@@ -27,7 +27,7 @@
 		<property name="basenames">
 			<list>
 				<value>
-	com.test.spring.resources.mymessages</value>
+	com.java.spring.resources.mymessages</value>
 			</list>
 		</property>
 	</bean>

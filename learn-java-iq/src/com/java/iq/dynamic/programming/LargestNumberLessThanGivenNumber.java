@@ -6,7 +6,7 @@ package com.java.iq.dynamic.programming;
  * Decrement the number & check whether it contains digit
  */
 public class LargestNumberLessThanGivenNumber {
-	static int getLLessThanN(int number, int digit) {
+	static int getLessThanN(int number, int digit) {
 		// Converting digit to char
 		char c = Integer.toString(digit).charAt(0);
 
@@ -21,10 +21,10 @@ public class LargestNumberLessThanGivenNumber {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(getLLessThanN(123, 2));
-		System.out.println(getLLessThanN(4582, 5));
-		System.out.println(getLLessThanN(98512, 5));
-		System.out.println(getLLessThanN(548624, 8));
+		System.out.println(getLessThanN(123, 2));
+		System.out.println(getLessThanN(4582, 5));
+		System.out.println(getLessThanN(98512, 5));
+		System.out.println(getLessThanN(548624, 8));
 	}
 
 }

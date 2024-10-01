@@ -11,6 +11,132 @@ Java:
 http://howtodoinjava.com (Have all framework related stuff also with good interview questions)
 http://www.javamadesoeasy.com (Lots of interview questions with answers)
 
+
+Time and Space Complexity
+-----------------------------------------------------------------------------------------------------------------------------
+https://www.hackerearth.com/practice/basic-programming/complexity-analysis/time-and-space-complexity/tutorial/
+https://www.tutorialspoint.com/time-and-space-complexity-in-data-structure
+
+Space Complexity
+----------------------
+- Space complexity of an algorithm represents the amount of memory space needed by the algorithm in its life cycle.
+- Space needed by an algorithm is equal to the sum of the following two components
+	- A fixed part that is a space required to store certain data and variables (i.e. simple variables and constants, program size etc.),
+	  that are not dependent of the size of the problem.
+	- A variable part is a space required by variables, whose size is totally dependent on the size of the problem. 
+		For example, recursion stack space, dynamic memory allocation etc.
+
+Space complexity f(n) of any algorithm n is f(n) = A + fn(I), Where 
+A is treated as the fixed part 
+fn(I) is treated as the variable part of the algorithm which depends on instance characteristic I. 
+
+EG1:
+----------------------
+public int sum(int a, int b) {
+    return a + b;
+}
+In this particular method, three variables are used and allocated in memory:
+
+the first int argument, a
+the second int argument, b
+and the returned sum result which is also an int like a and b
+In Java, a single integer variable occupies four bytes of memory. 
+In this example, we have three integer variables. 
+Therefore, this algorithm always takes 12 bytes of memory to complete (3*4 bytes).
+
+We can clearly see that the space complexity is constant, so, it can be expressed in big-O notation as O(1).
+
+EG2:
+----------------------
+public int sumArray(int[] array) {
+    int size = 0;
+    int sum = 0;
+
+    for (int iterator = 0; iterator < size; iterator++) {
+        sum += array[iterator];
+    }
+
+    return sum;
+}
+Again, let’s list all variables present in the above code:
+
+array – the function’s only argument – the space taken by the array is equal 4*n bytes where n is the length of the array
+size – a 4-byte integer
+sum – a 4-byte integer
+iterator – a 4-byte integer
+The total space needed for this algorithm to complete is 4n + 4 + 4 + 4 (bytes). 
+The highest order of n in this equation is just n. 
+Thus, the space complexity of that operation is O(n).
+
+EG3:
+----------------------
+SUM(P, Q)
+Step 1 - START
+Step 2 - R = P + Q + 10
+Step 3 - Stop
+
+Here we have three variables P, Q and R and one constant. 
+Hence O(n) = 1+3.
+Now space is dependent on data types of given constant types and variables and it will be multiplied accordingly.
+
+
+Time Complexity
+----------------------
+- Time Complexity of an algorithm is the amount of time required by the algorithm to execute to completion. 
+- Time requirements can be denoted or defined as a numerical function f(n), 
+	where f(n) can be measured as the number of steps, provided each step takes constant time.
+
+For example, in case of addition of two n-bit integers, n steps are taken. 
+Consequently, the total computational time is f(n) = c*n, 
+where c is the time consumed for addition of two bits. 
+Here, we observe that f(n) grows linearly as input size increases.
+
+
+EG1:
+----------------------
+list_Sum(A,n) {				// A->array and n->number of elements in the array
+	total =0           		// cost=1  no of times=1
+	for i=0 to n-1     		// cost=2  no of times=n+1 (+1 for the end false condition)
+		sum = sum + A[i]   	// cost=2  no of times=n 
+	return sum;         	// cost=1  no of times=1
+}         
+Tsum=1 + (2 * (n+1)) + (2 * n) + 1 = 4n + 4 = Constant1 * n + Constant2 = O(n)
+
+EG 2:
+----------------------
+int count = 0;					// cost=1 no of times=1
+for (int i = 0; i < N; i++) 	// cost=2 no of times=n+1
+    for (int j = 0; j < i; j++) // cost=2 no of times=
+        count++;
+Lets see how many times count++ will run.
+
+When i = 0, it will run 0 times.
+When i = 1, it will run 1 times.
+When i = 2, it will run 2 times and so on.
+
+Total number of times count++ will run is 0 + 1 + 2 + ... + (N-1) = (N*(N-1))/2. 
+So the time complexity will be O(N^2)
+
+EG 3:
+----------------------
+int count = 0;
+for (int i = N; i > 0; i /= 2) 
+    for (int j = 0; j < i; j++) 
+        count++;
+        
+This is a tricky case. In the first look, it seems like the complexity is O(N*Log N).  
+N for the j's loop and log N for i's loop. 
+But its wrong. Lets see why.
+Think about how many times count++ will run.
+
+When i = N, it will run N times.
+When i = N/2, it will run N/2 times.
+When i = N/4, it will run N/4 times and so on.
+
+Total number of times count++ will run is N + N/2 + N/4 + ... + 1 = 2*N. 
+So the time complexity will be O(2N) = O(N).
+
+
 Search algorithms:
 -----------------------------------------------------------------------------------------------------------------------------
 1. Binary Search
@@ -70,18 +196,17 @@ Search algorithms:
 
 Sorting Algorithms:
 -----------------------------------------------------------------------------------------------------------------------------
-1. Selection sort
-2. Insertion sort
-3. Bubble sort
-4. Quick sort
-5. Merge sort
-6. Heap sort
-7. Bucket sort
+1. Selection sort 	- O(n^2)
+2. Insertion sort 	- Best: O(n) 		Worst: O(n^2)
+3. Bubble sort		- Best: O(n) 		Worst: O(n^2) 
+4. Quick sort		- Best: O(n log n) 	Worst: O(n^2)	Avg: O(n log n) 
+5. Merge sort		- 
+6. Bucket sort		- 
 
 Recursions & Iterations:
 -----------------------------------------------------------------------------------------------------------------------------
 1. Recursive algorithms have two cases: recursive cases and base cases.
-	n! (pronounced “n factorial”) is the product of all integers between n and 1. 
+	n! (pronounced "n factorial") is the product of all integers between n and 1. 
 	For example, 4! = 4 × 3 × 2 × 1 = 24. n! can be more formally defined as follows:
 	n! = n (n – 1)! 
 	0! = 1! = 1
@@ -107,12 +232,12 @@ Recursions & Iterations:
 
 	
 -----------------------------------------------------------------------------------------------------------------------------
-1. Find the first nonrepeated character
+1. Find the first non-repeated character
 2. Remove specified characters
 3. Reverse words
 	Write a function that reverses the order of the words in a string. 
 	For example, your function should transform the string "Do or do not, there is no try." to "try. no is there not, do or Do". 
 	Assume that all words are space delimited and treat punctuation the same as letters.
-4. integer/string conversions
+4. Integer/String conversions
 5. Permutations of a string (abcd)
-6. combinations of a string (abcd)
+6. Combinations of a string (abcd)

@@ -4,7 +4,13 @@ import java.util.Arrays;
 
 /*
  * Bucket sort (bin sort) is a stable sorting algorithm 
- * It is based on partitioning the input array into several parts – so called buckets. 
+ * It is based on partitioning the input array into several parts – so called buckets.
+ * 
+ * Output:
+ * ----------------------------
+ * Before: [5, 3, 0, 2, 4, 1, 0, 5, 2, 3, 1, 4, 11]
+ * After:  [0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 11]
+ * 
  */
 public class BucketSort {
 
