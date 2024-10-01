@@ -16,10 +16,10 @@ Index
 Spring
 ------------------------------------------------------------------------------------------
 What is your experience in Spring?
-	- 3 Years
+	- 10 Years
 
 What is Spring?
-	- Spring is an open source development framework for enterprise Java.
+	- Spring is an open development framework for enterprise Java.
 
 What are benefits of using spring?
 	1. Lightweight: 
@@ -43,7 +43,7 @@ What are benefits of using spring?
 		(thrown by JDBC, Hibernate, or JDO, for example) into consistent, unchecked exceptions.
 
 What are the different modules in Spring framework?
-    - Following are the modules of the Spring framework:
+    - Following are the modules of the Spring framework
         1. Core module
         2. Spring Context
         3. Spring AOP
@@ -306,7 +306,7 @@ What are the different points where weaving can be applied?
 		 * This is the point cut for all adapter classes which will be used for logging method entry and exit.
 		 */
 		@Pointcut("execution(* *..service.adapter..*(..))")
-		public void adatperLoggingPointcut() {}
+		public void adapterLoggingPointcut() {}
 	
 		/**
 		 * All public methods
@@ -364,10 +364,10 @@ What are the different points where weaving can be applied?
 		 */
 		private Object log(final ProceedingJoinPoint proceedingJoinPoint, Level logLevel) throws Throwable {
 			final StopWatch stopWatch = new StopWatch();
-			Object aReturnValue = null;
 			stopWatch.start();
 			final String aClassName = proceedingJoinPoint.getSignature().getDeclaringType().getSimpleName();
 			final String aMethodName = proceedingJoinPoint.getSignature().getName();
+			Object aReturnValue = null;
 			if (null != logLevel) {
 				LOGGER.log(logLevel, LogFormatUtil.infoFormat("ENTERED_METHOD", aClassName + "." + aMethodName + "()"));
 				try {
@@ -387,12 +387,45 @@ What are the different points where weaving can be applied?
 		}
 	}
 
+AOP Expressions (Spring PCD - Spring Pointcut Designators)
+------------------------------------------------------------------------------------------
+	1. "execution(public String com.mk.myblog.service.UserService.fetchAll())"
+	   "execution(* * com.mk.myblog.service..*(..))"
+	
+	2. "within(com.mk.myblog.service.UserService)"
+	   "within(com.mk..*)" -> Within the package or sub-packages
+	
+	3. "@within()"
+			- This PCD limits matching to join points within types that have the given annotation:
+			- @Pointcut("@within(org.springframework.stereotype.Repository)")
+			- @Pointcut("within(@org.springframework.stereotype.Repository *)")
+	
+	4. this and target
+		- Eg:
+			public class FooDao implements BarDao {
+		 	   ...
+			}
+		- 'this' limits matching to join points where the bean reference is an instance of the given type.
+			- @Pointcut("this(com.baeldung.pointcutadvice.dao.FooDao)")
+		- 'target' limits matching to join points where the target object is an instance of the given type.
+			- @Pointcut("target(com.baeldung.pointcutadvice.dao.BarDao)")
+			
+	5. "@target()"
+			- @target PCD limits matching to join points where the class of the executing object has an annotation of the given type
+			- Pointcut("@target(org.springframework.stereotype.Repository)")
+			
+	6. "@args"
+			- @Pointcut("execution(* *..find*(Long))")
+			- @Pointcut("execution(* *..find*(Long,..))")
+	
+
 ------------------------------------------------------------------------------------------
 Spring MVC
 ------------------------------------------------------------------------------------------
 What is a DispatcherServlet?
-	- The Spring Web MVC framework is designed around a DispatcherServlet 
 	- It handles all the HTTP requests and responses.
+	- It is a Front controller.
+	- The Spring Web MVC framework is designed around a DispatcherServlet.
 
 What is Controller in Spring MVC framework?
 	- Controllers interpret user input and transform it into a model that is represented to the user by the view. 
@@ -413,14 +446,14 @@ How a method in controller is getting invoked when user hit on submit button?
 	1. Handler level mapping
 		Following are the different mapping types supported.
 			a. By path
-				@RequestMapping(“path”)
+				@RequestMapping("path")
 			b. By HTTP method
-				@RequestMapping(“path”, method=RequestMethod.GET)
-				Other Http methods such as POST, PUT, DELETE, OPTIONS, and TRACE are are also supported.
+				@RequestMapping("path", method=RequestMethod.GET)
+				Other Http methods such as POST, PUT, DELETE, OPTIONS, and TRACE are also supported.
 			c. By query parameter
-				@RequestMapping(“path”, method=RequestMethod.GET, params=”param1”)
+				@RequestMapping("path", method=RequestMethod.GET, params="param1")
 			d. By presence of request header
-				@RequestMapping(“path”, header=”content-type=text/*”)
+				@RequestMapping("path", header="content-type=text/*")
 				
 	2. Mapping at Controller class level
 		@RequestMapping("/employee/*")
@@ -470,7 +503,7 @@ http://www.baeldung.com/circular-dependencies-in-spring
         @Component
         public class ClassA {
          
-             @Autowired
+            @Autowired
             private ClassB classB;
          
         }
@@ -561,7 +594,7 @@ http://www.baeldung.com/circular-dependencies-in-spring
         If you use constructor-injection and don't want to switch to setter-injection 
           then Spring's 'lookup-method-injection' will let one bean lazily lookup the other and hence workaround the cyclic dependency.
 
-          <?xml version="1.0" encoding="UTF-8"?>
+         <?xml version="1.0" encoding="UTF-8"?>
          <beans xmlns="http://www.springframework.org/schema/beans"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
@@ -713,7 +746,7 @@ Spring Transaction
 https://docs.spring.io/spring/docs/current/spring-framework-reference/html/transaction.html
 
 1. Global vs Local transactions?
-    - Global transaction works with multiple transactional resources (typically relational databases and message queues)
+    - Global transaction works with multiple resources (typically relational databases and message queues)
         The application server manages global transactions through the JTA
         Need to use JNDI in order to use JTA
         Would limit the reuse of application code

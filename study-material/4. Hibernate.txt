@@ -94,6 +94,7 @@ What are different types of caches available in Hibernate?
     - First level cache
         - Maintained at Session level
         - Enabled by default and there is no way to disable it
+        - Caches all entities that were used within the current session.
         - Any object cached in a session will not be visible to other sessions
         - When the session is closed, all the cached objects will also be lost
         - Hibernate provides methods through which we can delete selected objects from the cache or clear the cache completely
@@ -104,20 +105,23 @@ What are different types of caches available in Hibernate?
         - By default, the second-level cache is enabled
             - However, enabling the second level cache is not sufficient because, by default, the NoCachingRegionFactory is used, 
                 hence the second-level calls are simply discarded
-            - For this reason, you need to configure a proper third-party RegionFactory, like Ehcache or Infinispan:
+            - For this reason, you need to configure a proper third-party RegionFactory, like Ehcache/OSCache/SwarmCache/JBossCache/Infinispan:
                 <property name="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory"/>
-    
+    	- Caching of specific entities can be activated by adding the javax.persistence.Cacheable 
+    		or the org.hibernate.annotations.Cache annotation to the entity.
+        
     - Query level 
         - QueryCache actually stores the result of SQL query for future calls
         - Query cache can be used along with second level cache for improved performance
         - This is only useful for queries that are run frequently with the same parameters
-        - Hibernate support various open source caching solution to implement Query cache e.g. EhCache
+        - Hibernate supports various open source caching solution to implement Query cache e.g. EhCache
             - Configure below property in hibernate configuration file
                 <property name="hibernate.cache.use_query_cache">true</property>
              - In code, use setCacheable(true) method of Query
                 Query query = session.createQuery("from Employee");
                 query.setCacheable(true);
                 query.setCacheRegion("ALL_EMP");
+        - Does not cache/store entities. It caches query results and contains only entity references and scalar values.
 
 How to configure Hibernate Second Level Cache using EHCache?
     - Add hibernate-ehcache dependency in your maven project, if it’s not maven then add corresponding jars
@@ -236,7 +240,7 @@ What is HQL and what are it’s benefits?
         So SeLeCT is the same as sELEct is the same as SELECT, 
         but com.journaldev.model.Employee is not same as com.journaldev.model.EMPLOYEE
     - HQL queries are cached but we should avoid it as much as possible, otherwise we will have to take care of associations
-     	Query query = session.createSQLQuery("from UserDetail where id = :userId");
+     	Query query = session.createHQLQuery("from UserDetail where id = :userId");
     	query.setParameter("userId", userID);
       	query.uniqueResult();	
 
@@ -271,7 +275,18 @@ What is Hibernate Criteria API?
     	Criteria criteria = session.createCriteria(UserDetail.class);
 		criteria.add(Restrictions.eq("id", Long.parseLong(userID.toString())));
 		UserDetail userDetail = (UserDetail) criteria.uniqueResult();
-
+	- ** CriteriaUpdate and CriteriaDelete operations were added in JPA 2.1
+		CriteriaBuilder cb = this.em.getCriteriaBuilder();
+		// create update
+		CriteriaUpdate<Order> update = cb.createCriteriaUpdate(Order.class);
+		// set the root class
+		Root e = update.from(Order.class);
+		// set update and where clause
+		update.set("amount", newAmount);
+		update.where(cb.greaterThanOrEqualTo(e.get("amount"), oldAmount));
+		// perform update
+		this.em.createQuery(update).executeUpdate();
+	
 What is the benefit of Hibernate Criteria API?
     - Criteria API provides Projection (that we can use for aggregate functions such as sum(), min(), max() etc)
     - Criteria API can be used with ProjectionList (to fetch selected columns only)
@@ -382,7 +397,7 @@ What are best practices to follow with Hibernate framework?
     - For collections, try to use Lists, maps and sets. Avoid array because you don’t get benefit of lazy loading
 
 What is Hibernate Validator Framework?
-
+	- https://www.journaldev.com/3626/hibernate-validator-jsr303-example-tutorial
         //Getting Validator instance with Annotations
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         Validator validator = validatorFactory.getValidator();
@@ -393,6 +408,8 @@ What is Hibernate Validator Framework?
                 System.out.println(error.getMessageTemplate() + " : " + error.getPropertyPath() + " : " + error.getMessage());
             }
         }
+	- Hibernate Validator Custom Error Messages
+		- We can define our custom error messages too, all we need is to have ValidationMessages.properties file in the classpath.
 
 Which design patterns are used in Hibernate framework?
     1. Proxy Pattern (for lazy loading)
@@ -409,7 +426,262 @@ What is N+1 SELECT problem in Hibernate?
     - So in order to find the highest bid for each item your application end up firing N+1 queries.
 
 What are some strategies to solve the N+1 SELECT problem in Hibernate?
-    1) Pre-fetching in batches, this will reduce N+1 problem to N/K + 1 problem where K is size of batch
-    2) Subselect fetching strategy
-    3) Disabling lazy loading
+    1. Pre-fetching in batches, this will reduce N+1 problem to N/K + 1 problem where K is size of batch
+    2. Subselect fetching strategy
+    3. Disabling lazy loading
+    4. Using JOIN FETCH in the FROM clause
+    5. Use of @NamedEntityGraph
 
+Sample Issue:
+List<Author> authors = em.createQuery("SELECT a FROM Author a", Author.class).getResultList();
+for (Author a : authors) {
+    log.info(a.getFirstName() + " " + a.getLastName() + " wrote "
+            + a.getBooks().size() + " books.");
+}
+
+Solution 1: (https://thorben-janssen.com/common-hibernate-mistakes-cripple-performance/)
+-----------------------------------------
+Author a = em.createQuery(
+                "SELECT a FROM Author a JOIN FETCH a.books WHERE a.id = 1",
+                Author.class).getSingleResult();
+
+
+Solution 2: Using @NamedEntityGraph (https://www.baeldung.com/spring-data-jpa-named-entity-graphs)
+-----------------------------------------
+@Entity
+@NamedEntityGraph(name = "Item.characteristics", attributeNodes = @NamedAttributeNode("characteristics"))
+public class Item {
+	@Id
+    private Long id;
+    private String name;
+    
+    @OneToMany(mappedBy = "item")
+    private List<Characteristic> characteristics = new ArrayList<>();
+    
+    //Getters and Setters
+}
+
+@Entity
+public class Characteristic {
+
+    @Id
+    private Long id;
+    private String type;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private Item item;
+
+    //Getters and Setters
+}
+
+- Attach the @EntityGraph annotation to one of our repository method
+
+public interface ItemRepository extends JpaRepository<Item, Long> {
+
+    @EntityGraph(value = "Item.characteristics")
+    Item findByName(String name);
+    
+}
+
+
+- SQL generated by Hibernate with @EntityGraph
+select 
+    item0_.id as id1_10_0_,
+    characteri1_.id as id1_4_1_,
+    item0_.name as name2_10_0_,
+    characteri1_.item_id as item_id3_4_1_,
+    characteri1_.type as type2_4_1_,
+    characteri1_.item_id as item_id3_4_0__,
+    characteri1_.id as id1_4_0__
+from 
+    item item0_ 
+left outer join 
+    characteristic characteri1_ 
+on 
+    item0_.id=characteri1_.item_id 
+where 
+    item0_.name=?
+
+
+- SQL generated by Hibernate without @EntityGraph
+For comparison, let's remove the @EntityGraph annotation from the repository and inspect the query:
+
+select 
+    item0_.id as id1_10_,
+    item0_.name as name2_10_ 
+from 
+    item item0_ 
+where 
+    item0_.name=?
+
+-----------------------------------------
+What is optimistic locking and pessimistic locking in hibernate?
+	- In pessimistic locking, the object is locked when it is initially accessed for the first time in a given transaction.
+	- In optimistic locking, the object is not locked when it is accessed for the first time in the transaction. 
+		Instead, its state (generally the version number) is saved.
+
+What is the difference between pessimistic locking and optimistic locking?
+	- Optimistic locking is when you check if the record was updated by someone else before you commit the transaction. 
+	- Pessimistic locking is when you take an exclusive lock so that no one else can start modifying the record. 
+	- You cannot combine optimistic locking with the automatic retry.
+
+Optimistic Locking
+	- In order to use optimistic locking, we need to have an entity including a property with @Version annotation. 
+	- While using it, each transaction that reads data holds the value of the version property.
+	- Before the transaction wants to make an update, it checks the version property again.
+	- If the value has changed in the meantime an OptimisticLockException is thrown. 
+	- Otherwise, the transaction commits the update and increments a value version property.
+	- We can retrieve a value of the version attribute via entity, but we mustn't update or increment it.
+	- Version attributes are properties with @Version annotation. They are necessary for enabling optimistic locking.
+		@Entity
+		public class Student {
+		    @Id
+		    private Long id;
+	
+		    private String name;
+	
+		    @Version
+		    private Integer version;
+		
+		    // getters and setters
+		}
+
+Optimistic Lock Modes?
+	JPA provides us with two different optimistic lock modes (and two aliases):
+		- OPTIMISTIC 
+			– it obtains an optimistic read lock for all entities containing a version attribute
+			- Whenever we request the OPTIMISTIC lock mode, a persistence provider will prevent our data from dirty reads as well as non-repeatable reads.
+    	- OPTIMISTIC_FORCE_INCREMENT – it obtains an optimistic lock the same as OPTIMISTIC and additionally increments the version attribute value
+    	- READ – it's a synonym for OPTIMISTIC
+    	- WRITE – it's a synonym for OPTIMISTIC_FORCE_INCREMENT
+
+Optimistic Lock Usage?
+	- Find
+		entityManager.find(Student.class, studentId, LockModeType.OPTIMISTIC);
+	- Query
+		Query query = entityManager.createQuery("from Student where id = :id");
+		query.setParameter("id", studentId);
+		query.setLockMode(LockModeType.OPTIMISTIC_INCREMENT);
+		query.getResultList()
+	- Explicit Locking
+		Student student = entityManager.find(Student.class, id);
+		entityManager.lock(student, LockModeType.OPTIMISTIC);
+	- Refresh
+		Student student = entityManager.find(Student.class, id);
+		entityManager.refresh(student, LockModeType.READ);
+	- NamedQuery
+		@NamedQuery(name="optimisticLock",
+		query="SELECT s FROM Student s WHERE s.id LIKE :id", lockMode = WRITE)
+		
+		
+Pessimistic Lock Modes?
+	- JPA specification defines three pessimistic lock modes which we're going to discuss:
+		- PESSIMISTIC_READ – allows us to obtain a shared lock and prevent the data from being updated or deleted
+    	- PESSIMISTIC_WRITE – allows us to obtain an exclusive lock and prevent the data from being read, updated or deleted
+    	- PESSIMISTIC_FORCE_INCREMENT – works like PESSIMISTIC_WRITE and it additionally increments a version attribute of a versioned entity
+
+Pessimistic Lock Usage?
+		- Find
+			entityManager.find(Student.class, studentId, LockModeType.PESSIMISTIC_READ);
+		- Query
+			Query query = entityManager.createQuery("from Student where studentId = :studentId");
+			query.setParameter("studentId", studentId);
+			query.setLockMode(LockModeType.PESSIMISTIC_WRITE);
+			query.getResultList()
+		- Explicit Locking
+			It's also possible to lock manually the results retrieved by the find method:
+				Student resultStudent = entityManager.find(Student.class, studentId);
+				entityManager.lock(resultStudent, LockModeType.PESSIMISTIC_WRITE);
+		- Refresh
+			If we want to overwrite the state of the entity by the refresh method, we can also set a lock:
+				Student resultStudent = entityManager.find(Student.class, studentId);
+				entityManager.refresh(resultStudent, LockModeType.PESSIMISTIC_FORCE_INCREMENT);
+		- NamedQuery
+			@NamedQuery annotation allows us to set a lock mode as well:
+				@NamedQuery(name="lockStudent",
+				  query="SELECT s FROM Student s WHERE s.id LIKE :studentId",
+				  lockMode = PESSIMISTIC_READ)
+
+Pessimistic Lock Scope
+	- NORMAL
+		- PessimisticLockScope.NORMAL is the default scope
+		- Locks the entity itself. When used with joined inheritance it also locks the ancestors.
+	- EXTENDED
+		- EXTENDED scope covers the same functionality as NORMAL. In addition, it's able to block related entities in a join table
+			Map<String, Object> properties = new HashMap<>();
+			map.put("javax.persistence.lock.scope", PessimisticLockScope.EXTENDED);
+			entityManager.find(
+			  Student.class, 1L, LockModeType.PESSIMISTIC_WRITE, properties);
+  
+What is Dirty Checking in Hibernate?
+	- Hibernate incorporates Dirty Checking feature that permits developers and users to avoid time-consuming write actions. 
+	- This Dirty Checking feature changes or updates fields that need to be changed or updated,
+		while keeping the remaining fields untouched and unchanged.
+
+What is meant by Hibernate tuning?
+	- Optimizing the performance of Hibernate applications is known as Hibernate tuning.
+	- The performance tuning strategies for Hibernate are:
+		- SQL Optimization
+		- Session Management
+		- Data Caching
+
+What are the best practices that Hibernate recommends for persistent classes?
+	- All Java classes that will be persisted need a default constructor.
+   	- All classes should contain an ID in order to allow easy identification of your objects within Hibernate and the database. 
+   		This property maps to the primary key column of a database table.
+   	- All attributes that will be persisted should be declared private and have getXXX and setXXX methods defined in the JavaBean style.
+   	- A central feature of Hibernate, proxies, depends upon the persistent class being either non-final, or the implementation of an interface that declares all public methods.
+   	- All classes that do not extend or implement some specialized classes and interfaces required by the EJB framework.
+------------------------------------------------------------------------------------------
+Common Mistakes using Hibernate
+------------------------------------------------------------------------------------------
+1. Using Eager Fetching
+	- Use fetch type lazy
+	
+2. Ignoring the Default FetchType of Many-To-One Associations
+	- Explicitly set fetch type to lazy
+
+	@Entity
+	public class Review {
+	 
+	    @ManyToOne(fetch = FetchType.LAZY)
+	    @JoinColumn(name = "fk_book")
+	    private Book book;
+	     
+	    ... 
+	}
+
+3. Not Initializing Required Associations
+	- When you use FetchType.LAZY for all of your associations to avoid mistake 1 and 2, you will find several n+1 select issues in your code.
+	- You can easily avoid that, when you tell Hibernate to initialize the required association. 
+	- There are several different ways to do that. 
+	- The easiest one is to add a JOIN FETCH statement to your FROM clause.
+	Author a = em.createQuery(
+                "SELECT a FROM Author a JOIN FETCH a.books WHERE a.id = 1",
+                Author.class).getSingleResult();
+                
+4. Selecting More Records Than You Need
+
+5. Not using Bind Parameters
+
+6. Performing all Logic in Your Business Code
+
+7. Calling the flush Method Without a Reason
+
+8. Using Hibernate for Everything
+	- All of the below situations are not a good fit for JPA’s and Hibernate’s query capabilities.
+		- Writing very complex queries or
+		- Implementing analysis or reporting use cases or 
+		- Performing write operations on a huge number of records
+	- Take a look at other frameworks, like jOOQ or Querydsl, which are closer to SQL and avoid any object relational mappings
+
+------------------------------------------------------------------------------------------
+Hibernate Tips 
+------------------------------------------------------------------------------------------
+https://thorben-janssen.com/wp-content/uploads/member-access/Preview-Hibernate-Tips-More-than-70-solutions-to-common-Hibernate-problems.pdf
+
+------------------------------------------------------------------------------------------
+Hibernate Performance Tuning
+------------------------------------------------------------------------------------------
+https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjotLnv7JTvAhWDwTgGHXAdAcoQFjABegQIBBAD&url=https%3A%2F%2Fthorben-janssen.com%2Ftips-to-boost-your-hibernate-performance%2F&usg=AOvVaw3heI4myKCqTDD_tezkt84w

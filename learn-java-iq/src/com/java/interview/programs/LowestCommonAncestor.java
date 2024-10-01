@@ -4,8 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Find Lowest Common Ancestor**LCA of nodes 4 and 7 is 1*LCA of nodes 2 and 5
- * is 2*LCA of nodes 2 and 7 is 1**Binary Tree:*1*2 3*4 5 6 7
+ * Find Lowest Common Ancestor
+ * LCA of nodes 4 and 7 is 1
+ * LCA of nodes 2 and 5 is 2
+ * LCA of nodes 2 and 7 is 1
+ * 
+ * Binary Tree:
+ * 		1
+ * 	   2 3
+ * 	 4 5 6 7
  **/
 
 public class LowestCommonAncestor {

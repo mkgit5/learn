@@ -16,6 +16,14 @@ package com.java.iq.sort;
  Performance:
  Best  : O(n)
  Worst : O(n^2)
+ 
+ Sequence of sorting:
+ ----------------------------
+ Sorted list 	Unsorted list
+ 4 				3 2 1
+ 3 4			2 1
+ 2 3 4			1
+ 1 2 3 4
 
  */
 public class InsertionSort {
@@ -40,22 +48,19 @@ public class InsertionSort {
 
 	public void insertionSort(int[] a) {
 		int temp;
-		for (int i = 1; i < a.length; i++) {
-			for (int j = i; j > 0; j--) {
+		for (int i = 1; i < a.length; i++) {	// 1, 2, 3, ... n
+			for (int j = i; j > 0; j--) {		// n, n-1,n-2...1
 				if (a[j] < a[j - 1]) {
-					temp = a[j];
-					a[j] = a[j - 1];
-					a[j - 1] = temp;
+					swapValues(a, j, j - 1);	// 1 + 2 + 3 + ... + n-1 = (n*(n-1))/2 = O(n^2)
 				}
 			}
 		}
 	}
 
-	@SuppressWarnings("unused")
-	private void swapValues(int[] arr, int startIndex, int smallerValueIndex) {
-		int smallerValue = arr[smallerValueIndex];
-		arr[smallerValueIndex] = arr[startIndex];
-		arr[startIndex] = smallerValue;
+	private void swapValues(int[] a, int i, int j) {
+		int temp = a[j];
+		a[j] = a[i];
+		a[i] = temp;
 	}
 
 	private void printData(int[] arr) {

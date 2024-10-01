@@ -44,8 +44,8 @@ What are HTTP methods supported by REST?
     - OPTIONS
     - HEAD
 
-What is the difference between PUT and POST?
-	- PUT is idempotent, while POST is not. It means if use PUT an object twice, it has no effect.
+What is the difference between PUT (Idempotent) and POST (Non-Idempotent)?
+	- PUT is idempotent, while POST is not. It means if we PUT an object twice, it has no effect.
 
 What is WADL?
 	- WADL (Web Application Description Language) is a XML description of a deployed RESTful web application. 

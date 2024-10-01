@@ -3,7 +3,7 @@ package com.java.iq.std.programs;
 import java.util.Scanner;
 
 /*
- Find if a number is a palindrome.
+ Find whether number is a palindrome.
 
  Ways:
  1. Reverse the number and then compare with original number
@@ -39,7 +39,7 @@ public class PalindromeNumbers {
 	private static int reverse(int number) {
 		int reverse = 0;
 		while (number != 0) {
-			reverse = reverse * 10 + number % 10;
+			reverse = reverse * 1 + number % 10;
 			// 1. number = 33, reverse = 0 + 3 = 3
 			// 2. number = 3, reverse = 30 + 3 = 33
 			number = number / 10;

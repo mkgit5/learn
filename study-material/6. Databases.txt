@@ -48,7 +48,7 @@ http://www.dba-oracle.com/art_sql_tune.htm
 9. Use decode and case
 10. Use SQL analytic functions
 11. Don't fear full-table scans
-12. Use those aliases - Always use table aliases when referencing columns.
+12. Use those aliases - Always use table aliases when referencing columns
 
 -----------------------------------------------------------------------------------------------------------------------------
 Performance Tuning
@@ -94,11 +94,15 @@ Performance Tuning
 2. Hints for Parallel Execution (EG: PARALLEL)
 ------------------------------------------------------------------------------------------
 
-	UPDATE /*+ PARALLEL(8) */ AUDIENCE_TEMP
-	SET (TITLE) = (SELECT /*+ PARALLEL(8) */ STRING_VALUE
-					  FROM ASWCONTENT_P_MUNGO
-					  WHERE AUDIENCE_ID = AUDIENCE_TEMP.AUDIENCE_ASW_ID
-					  AND UPPER(ATTR_NAME) LIKE UPPER('%AudienceProfileName%')
+	UPDATE 
+	/*+ PARALLEL(8) */ 
+	AUDIENCE_TEMP
+	SET (TITLE) = (SELECT 
+					/*+ PARALLEL(8) */ 
+					STRING_VALUE
+					FROM ASWCONTENT_P_MUNGO
+					WHERE AUDIENCE_ID = AUDIENCE_TEMP.AUDIENCE_ASW_ID
+					AND UPPER(ATTR_NAME) LIKE UPPER('%AudienceProfileName%')
 				  )
 	WHERE AUDIENCE_ASW_ID IN (SELECT AUDIENCE_ID FROM ASWCONTENT_P_MUNGO);
 

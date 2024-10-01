@@ -8,8 +8,7 @@ import java.util.Scanner;
 public class SmallestLargestOfN {
 
 	public static void main(String[] args) {
-		System.out.println("Welcome to Java Program to find "
-				+ "largest and smallest number without using array");
+		System.out.println("Welcome to Java Program to find largest and smallest number without using array");
 
 		System.out.println("Please enter value of N: ");
 

@@ -49,7 +49,7 @@ public class AbstractFactoryPattern {
 			if (factoryType == "Shape") {
 				return new ShapeFactory();
 			} else if (factoryType == "Color") {
-				return new ColorFacotry();
+				return new ColorFactory();
 			}
 			return null;
 		}
@@ -80,7 +80,7 @@ public class AbstractFactoryPattern {
 	/**
 	 * ColorFacotry extending AbstractFactory
 	 */
-	class ColorFacotry extends AbstractFactory {
+	class ColorFactory extends AbstractFactory {
 
 		@Override
 		Shape getShape(String shapeType) {

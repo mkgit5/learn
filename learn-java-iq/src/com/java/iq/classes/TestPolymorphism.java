@@ -8,6 +8,7 @@ public class TestPolymorphism {
 	public static void main(String[] args) {
 		A a = new B();
 		System.out.println(a.fetchMember());
+		// System.out.println(a.fetchMemberOfClassB()); // compile time error
 
 		B b = new B();
 		System.out.println(b.fetchMember());

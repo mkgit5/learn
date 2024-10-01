@@ -5,6 +5,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/*
+ 	FileWriter
+ 	BufferedWriter
+ 	PrintWriter
+ */
 public class FileWriterExample {
 
 	public static void main(String[] args) {

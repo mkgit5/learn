@@ -9,9 +9,6 @@ public class StackUsingCustomLinkedList {
 			top = n;
 		} else {
 			Node temp = top;
-			while (temp.next != null) {
-				temp = temp.next;
-			}
 			n.next = temp;
 			top = n;
 		}
@@ -19,9 +16,10 @@ public class StackUsingCustomLinkedList {
 
 	public int pop() {
 		if (top != null) {
-			int data = top.data;
-			top = null;
-			top = top.next;
+			Node temp = top;
+			int data = temp.data;
+			top = temp.next;
+			temp = null;
 			return data;
 		}
 		return -1;
@@ -55,8 +53,10 @@ public class StackUsingCustomLinkedList {
 		stackUsingCustomLinkedList.push(1);
 		stackUsingCustomLinkedList.push(2);
 		stackUsingCustomLinkedList.push(3);
+		System.out.print("Stack values: ");
 		stackUsingCustomLinkedList.display();
-		System.out.println(stackUsingCustomLinkedList.pop());
+		System.out.println("Stack pop: " + stackUsingCustomLinkedList.pop());
+		System.out.print("Stack values: ");
 		stackUsingCustomLinkedList.display();
 	}
 }

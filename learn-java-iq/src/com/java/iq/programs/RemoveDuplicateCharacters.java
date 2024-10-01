@@ -2,16 +2,20 @@ package com.java.iq.programs;
 
 import java.util.Scanner;
 
+/*
+ * Input: Hello
+ * Output: Helo		
+ */
 public class RemoveDuplicateCharacters {
 
 	public static void main(String[] args) {
-		Scanner scanner = new Scanner(System.in);
-		String str = scanner.nextLine();
+		System.out.print("Enter the string: ");
+		final Scanner scanner = new Scanner(System.in);
+		final String str = scanner.nextLine();
 		scanner.close();
-		// Hello
+
 		System.out.println(removeDuplicates(str));
 		System.out.println(removeDuplicates2(str));
-		// removeDuplicatesFromString(str);
 	}
 
 	public static String removeDuplicates(String str) {
@@ -31,12 +35,12 @@ public class RemoveDuplicateCharacters {
 	}
 
 	public static String removeDuplicates2(String str) {
-		boolean[] ASCII = new boolean[256];
+		boolean[] ascii = new boolean[256];
 		char[] charArray = str.toCharArray();
 
 		for (int i = 0; i < charArray.length; i++) {
-			if (!ASCII[charArray[i]]) {
-				ASCII[charArray[i]] = true;
+			if (!ascii[charArray[i]]) {
+				ascii[charArray[i]] = true;
 			} else {
 				charArray[i] = 0;
 			}

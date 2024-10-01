@@ -120,9 +120,9 @@ public boolean isValid(String s) {
       Stack stack = new Stack();
       for(char c: s.toCharArray()) {
            if(c == '{' || c == '(' || c == '[') {
-                  stack.push(c);
+                stack.push(c);
            } else if(stack.isEmpty() || stack.pop() != getMatchingParenthesis(c)) {
-                  return false;
+                return false;
            }
       }
        return stack.isEmpty() ? true: false;

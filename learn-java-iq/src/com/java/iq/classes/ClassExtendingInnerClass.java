@@ -12,8 +12,7 @@ public class ClassExtendingInnerClass extends Outer.Inner {
 	/**
 	 * Constructor with an argument of type Outer class.
 	 * 
-	 * @param outer
-	 *            Outer
+	 * @param outer Outer
 	 */
 	public ClassExtendingInnerClass(Outer outer) {
 		outer.super();
@@ -25,8 +24,9 @@ public class ClassExtendingInnerClass extends Outer.Inner {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		ClassExtendingInnerClass testNestedClasses = new ClassExtendingInnerClass(new Outer());
+		final ClassExtendingInnerClass testNestedClasses = new ClassExtendingInnerClass(new Outer());
 		System.out.println(testNestedClasses.fetchMemberB());
+		// System.out.println(testNestedClasses.fetchMemberA()); // compile time error
 	}
 
 }

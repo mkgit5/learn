@@ -9,7 +9,13 @@ import java.util.Scanner;
  1. Iterative method
  2. Recursion method
 
- Example: 1, 1, 2, 3, 5, 8, 13, 21
+ Example: 0, 1, 1, 2, 3, 5, 8, 13, 21
+ 
+ Output:
+ Enter a number to find the fibonacci series: 5
+ Fibonacci numbers (by iteration) are: 1 1 2 3 5 
+ Fibonacci numbers (by recursion) are: 1 1 2 3 5 
+ 
  */
 public class Fibonacci {
 

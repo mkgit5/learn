@@ -38,12 +38,16 @@ public class StackUsingLinkedList {
 		stackUsingLinkedList.push(1);
 		stackUsingLinkedList.push(2);
 		stackUsingLinkedList.push(3);
+		System.out.print("Stack values: ");
 		stackUsingLinkedList.display();
-		System.out.println(stackUsingLinkedList.pop());
+		System.out.println("Stack pop: " + stackUsingLinkedList.pop());
+		System.out.print("Stack values: ");
 		stackUsingLinkedList.display();
-		System.out.println(stackUsingLinkedList.pop());
+		System.out.println("Stack pop: " + stackUsingLinkedList.pop());
+		System.out.print("Stack values: ");
 		stackUsingLinkedList.display();
-		System.out.println(stackUsingLinkedList.pop());
+		System.out.println("Stack pop: " + stackUsingLinkedList.pop());
+		System.out.print("Stack values: ");
 		stackUsingLinkedList.display();
 	}
 

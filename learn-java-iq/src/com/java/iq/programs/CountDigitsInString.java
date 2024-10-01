@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /*
+ 
  Print number of occurrences of digits (0 - 9) in a string.
 
  Input:
@@ -27,6 +28,7 @@ public class CountDigitsInString {
 
 	public static void main(String[] args) throws IOException {
 		int[] count = new int[10];
+		System.out.println("Enter the numbers: ");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		String line = reader.readLine();
 		for (int i = 0; i < line.length(); i++) {

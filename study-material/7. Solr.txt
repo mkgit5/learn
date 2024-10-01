@@ -276,7 +276,7 @@ solrconfig.xml
 	        class 			- the SolrCache implementation LRUCache or FastLRUCache
 	        size 			- the maximum number of entries in the cache
 	        initialSize		- the initial capacity (number of entries) of the cache.  (seel java.util.HashMap)
-	        autowarmCount 	- the number of entries to prepopulate from and old cache.
+	        autowarmCount 	- the number of entries to prepopulate from an old cache.
 	    -->
 	    
 	    <filterCache class="solr.FastLRUCache" size="512" initialSize="512" autowarmCount="0"/>
@@ -300,7 +300,7 @@ solrconfig.xml
 	    <documentCache class="solr.LRUCache" size="512" initialSize="512" autowarmCount="0"/>
 	    
 	3. Request handlers
-		- Request handlers are responsble for accepting HTTP requests, performing searches, then returning the results.
+		- Request handlers are responsible for accepting HTTP requests, performing searches, then returning the results.
 		- The default request handler that comes configured with the example webapp, also known as the standard request handler, looks like this:
 		 	<requestHandler name="standard" class="solr.SearchHandler" default="true">
 			   <lst name="defaults">

@@ -17,7 +17,14 @@ package com.java.iq.search;
  * 
  * Performance:
  * Best : O(1)
- * Worst: O(log n)
+ * Worst: O(log n) = n, n/2, n/4
+ * 
+ * What is O(log n)?
+ * Basically means time goes up linearly while the n goes up exponentially. 
+ * So if it takes 1 second to compute 10 elements, 
+ * it takes 2 seconds to compute 100 elements, 
+ * 3 seconds to compute 1000 elements, and so on. ​
+ * It is O(log n) when we do divide and conquer type of algorithms e.g binary search.
  * 
  */
 public class BinarySearch {
@@ -41,7 +48,7 @@ public class BinarySearch {
 			int mid = (start + end) / 2;
 			if (arr[mid] == searchKey) {
 				return mid;
-			} else if (searchKey <= arr[mid]) {
+			} else if (arr[mid] > searchKey) {
 				end = mid - 1;
 			} else {
 				start = mid + 1;
@@ -54,7 +61,7 @@ public class BinarySearch {
 		int mid = (start + end) / 2;
 		if (arr[mid] == key) {
 			return mid;
-		} else if (key < arr[mid]) {
+		} else if (arr[mid] > key) {
 			return recursiveBinarySearch(arr, start, mid - 1, key);
 		} else {
 			return recursiveBinarySearch(arr, mid + 1, end, key);

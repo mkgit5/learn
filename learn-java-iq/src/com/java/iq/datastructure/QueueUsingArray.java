@@ -31,16 +31,20 @@ public class QueueUsingArray {
 	}
 
 	public static void main(String[] args) {
-		QueueUsingArray usingArray = new QueueUsingArray();
+		final QueueUsingArray usingArray = new QueueUsingArray();
 		usingArray.add(1);
 		usingArray.add(2);
 		usingArray.add(3);
+		System.out.print("Queue values: ");
 		usingArray.display();
-		System.out.println(usingArray.poll());
+		System.out.println("Queue poll: " + usingArray.poll());
+		System.out.print("Queue values: ");
 		usingArray.display();
-		System.out.println(usingArray.poll());
+		System.out.println("Queue poll: " + usingArray.poll());
+		System.out.print("Queue values: ");
 		usingArray.display();
-		System.out.println(usingArray.poll());
+		System.out.println("Queue poll: " + usingArray.poll());
+		System.out.print("Queue values: ");
 		usingArray.display();
 
 	}

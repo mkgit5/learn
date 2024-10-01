@@ -165,7 +165,7 @@ public class UserDetail {
 
 	@OneToOne(mappedBy = "userDetail", cascade = CascadeType.ALL)
 	// @OneToOne
-	@JoinColumn(name = "USER_ID")
+//	@JoinColumn(name = "USER_ID")
 	public AddressDetail getAddressDetail() {
 		return addressDetail;
 	}

@@ -563,7 +563,7 @@ public class LearnHibernate {
 		session.getTransaction().commit();
 		session.close();
 
-		// fetch by HQL and set query cache, this time it from query cache
+		// fetch by HQL and set query cache, this time it fetches from query cache
 		session = SESSION_FACTORY.openSession();
 		session.beginTransaction();
 		Query query2 = session.createQuery("from UserDetail ud where ud.id = ?");

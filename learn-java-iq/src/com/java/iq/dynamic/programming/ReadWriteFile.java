@@ -19,7 +19,6 @@ public class ReadWriteFile {
 	private static void writeToPropertiesFile() {
 		OutputStream output = null;
 		try {
-			output = new FileOutputStream("config.properties", true);
 			final Properties prop = new Properties();
 			// set the properties value
 			prop.setProperty("database", "localhost");
@@ -27,6 +26,7 @@ public class ReadWriteFile {
 			prop.setProperty("dbpassword", "password");
 
 			// save properties to project root folder
+			output = new FileOutputStream("config.properties", true);
 			prop.store(output, null);
 
 		} catch (IOException io) {
