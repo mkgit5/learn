@@ -1,0 +1,302 @@
+----------------------------------------------------------------------------------------
+Docker
+----------------------------------------------------------------------------------------
+	- Gives consistent deployment approach for microservices developed with different programming languages and frameworks.
+	- It is Programming Language and environment independent
+
+	- Traditional Deployment
+	--------------------------------------------------------------------------------------
+		- Steps
+			- Setup Hardware
+			- Setup OS
+			- Install Java
+			- Setup Application Dependencies
+			- Install Application
+		- Disadvantages
+			- Lot of manual work
+			- High chance of making mistake
+	
+	- Docker commands
+	--------------------------------------------------------------------------------------
+		docker --version
+		docker container ls
+		docker container stop <container-id>
+		docker image ls // Lists all the docker images
+		docker container run -d -p 5000:5000 <path-to-repository-name-or-docker-image:tag-version>
+		docker container run -d -p 5000:5000 my-trading/currency-exchange:0.0.1.SNAPSHOT
+
+	- Docker Deployment Process
+	--------------------------------------------------------------------------------------
+		- Once docker image is created, irrespective of what docker image contains, we can run it the same way anywhere!
+		- Simplified Deployment
+			- Hardware doesn't matter
+			- OS doesn't matter
+			- Programming language doesn't matter
+		- Developer created Docker image
+		- DevOps/Release team runs the docker image using a very simple command
+	
+	- Why Docker is popular
+	--------------------------------------------------------------------------------------
+		- Standardized Application Packaging
+			- Same packaging for all types of applications
+		- Multi Platform Support
+			- Local machine
+			- Data center
+			- Cloud (AWS, GCP, Azure etc)
+		- Isolation
+			- Each container is isolated from the other
+	
+	- Whats happening in the background? Under the hood?
+	--------------------------------------------------------------------------------------
+	- docker container run -d -p 5000:5000 my-trading/currency-exchange:0.0.1-SNAPSHOT
+		- Docker image is downloaded from the Docker Registry (Default: Docker Hub)
+		- https://hub.docker.com/r/my-trading/currency-exchange
+		- Image is a set of bytes
+		- Container is a running version of the image
+		- -d Detached Mode
+			- Don't tie up the terminal
+		- -p hostPort:containerPort 
+			- Maps internal docker port (container port) to a host port on the host (host port)
+			- contanerPort can only be changed by developers
+			- DevOps can change hostPort
+			- By default, Docker uses its own 'internal network' called 'bridge network'
+			- By mapping to a hostPort, users can access the application
+		- Using the above command one can run multiple containers of the image by giving new hostPort
+			- docker container run -d -p 5001:5000 my-trading/currency-exchange:0.0.1-SNAPSHOT
+			- docker container run -d -p 5002:5000 my-trading/currency-exchange:0.0.1-SNAPSHOT
+	
+	- Docker Terminology
+	--------------------------------------------------------------------------------------
+	- Docker Image 		- A package representing specific version of the application or software
+	- Docker Registry 	- A place store Docker Images
+	- Docker Hub 		- A registry to host Docker Images
+	- Docker Repository	- Docker Images for a specific app (tags are used to differentiate images)
+	- Docker Container	- A runtime instance of a Docker Image
+	- Dockerfile		- A file with instructions to create Docker Image
+
+
+	- Dockerfile
+	--------------------------------------------------------------------------------------
+	FROM openjdk:18.0-slim 						// FROM 		- sets a base image
+	COPY ${JAR_FILE} app.jar					// COPY 		- copies new files or directories into image
+	EXPOSE 8080									// EXPOSE 		- Informs Docker about the port that the container listens
+	ENTRYPOINT ["java", "-jar", "/app.jar"]		// ENTRYPOINT 	- Configure a command that will be run at container launch
+	
+	- Dockerfile v1 - How to create Docker Image?
+	--------------------------------------------------------------------------------------
+	- Add Dockerfile
+		FROM openjdk:18.0-slim 						
+		COPY ${JAR_FILE} app.jar					
+		EXPOSE 8080									
+		ENTRYPOINT ["java", "-jar", "/app.jar"]		
+	- CD to the folder having Dockerfile
+	- Run following commands
+		docker --version
+		docker build -t my-trading/currency-exchange:v1 . 						// -t is for creating a tag version i.e., v1
+		docker images list
+		docker container list
+		docker container run -d -p 5000:5000 my-trading/currency-exchange:v1
+		docker run -d -p 5000:5000 my-trading/currency-exchange:v1
+	
+	- Dockerfile v2 - How to create Docker Image with Multi Stage?
+	--------------------------------------------------------------------------------------
+	- Lets build the jar as part of creation of Docker Image
+	- This build will NOT make use of anything built on your local machine
+	- Disadvantage - This build takes long time to create the image due to dependencies with maven and openjdk
+	
+		FROM maven:3.8.6-openjdk-18-slim AS build			// Sets a base image and give this stage a name as 'build'
+		WORKDIR /home/app									// Set the working directory to /home/app
+		COPY . /home/app									// Copy the java project to /home/app
+		RUN mvn -f /home/app/pom.xml clean package			// Run the maven command to build the jar
+		
+		FROM openjdk:18.0-slim								// Set a base image
+		EXPOSE 8080											// Set the container port
+		COPY --from=build /home/app/target/*.jar app.jar	// Copy files from 'build' stage from /home/app/targer/*.jar to app.jar 
+		ENTRYPOINT ["sh", "-c", "java -jar /app.jar"]		
+	- CD to the folder having Dockerfile
+	- Run following commands
+		docker --version
+		docker build -t my-trading/currency-exchange:v2 . 						// -t is for creating a tag version i.e., v2
+		docker images list
+		docker container list
+		docker container run -d -p 5000:5000 my-trading/currency-exchange:v2
+		docker run -d -p 5000:5000 my-trading/currency-exchange:v2
+	
+	
+	- Dockerfile v3 - Layer Caching (How to improve the build time?)
+	--------------------------------------------------------------------------------------
+	- Docker caches every layer and tries to re-use it
+	- Let's make use of this feature to make our build efficient
+	- In the below case, when there are no changes to pom.xml and CurrencyExchangeApplication.java, 
+		then the subsequent builds are much faster, as all the dependencies are CACHED from the previous build.
+	- If there are changes to pom.xml and CurrencyExchangeApplication.java, 
+		then docker downloads all the dependencies and it will take much longer time.
+		FROM maven:3.8.6-openjdk-18-slim AS build			// Sets a base image and give this stage a name as 'build'
+		WORKDIR /home/app									// Set the working directory to /home/app
+		
+		COPY ./pom.xml /home/app/pom.xml
+		COPY ./src/main/com/mytrading/currency-exchange/CurrencyExchangeApplication.java
+			/home/app/src/main/com/mytrading/currency-exchange/CurrencyExchangeApplication.java
+		
+		RUN mvn -f /home/app/pom.xml clean package
+		
+		COPY . /home/app									// Copy the java project to /home/app
+		RUN mvn -f /home/app/pom.xml clean package			// Run the maven command to build the jar
+		
+		FROM openjdk:18.0-slim								// Set a base image
+		EXPOSE 8080											// Set the container port
+		COPY --from=build /home/app/target/*.jar app.jar	// Copy files from 'build' stage from /home/app/targer/*.jar to app.jar 
+		ENTRYPOINT ["sh", "-c", "java -jar /app.jar"]		// 
+	- CD to the folder having Dockerfile
+	- Run following commands
+		docker --version
+		docker build -t my-trading/currency-exchange:v2 . 						// -t is for creating a tag version i.e., v2
+		docker images list
+		docker container list
+		docker container run -d -p 5000:5000 my-trading/currency-exchange:v3
+		docker run -d -p 5000:5000 my-trading/currency-exchange:v3
+	
+	- Spring Boot Maven Plugin - Create Docker Image
+	--------------------------------------------------------------------------------------
+	- Why use mvn spring-boot:build-image?
+		- Don't need a Dockerfile when using "mvn spring-boot:build-image"", hence delete Dockerfile from the project and run the command
+		- It builds OCI (Open Container Initiative) compatible image, this image can be run on anywhere compatible with OCI
+		- Docker is compatible with OCI image format
+		- This command creates very efficient image compared to Docker images and the image size is also much lesser
+		- This command's build process is also very efficient, first build takes longer and subsequent builds will be much faster
+		- Uses Java 17 and above
+		- Use latest version of Eclipse IDE
+	- How to create the image?
+		- Run the command from Eclipse to build the OCI compatible image - mvn spring-boot:build-image 
+		- Open the terminal and 'cd' to the folder having pom.xml
+		- Run the docker command to start the container
+			- docker container run -d -p 5000:5000 my-trading/currency-exchange:0.0.1-SNAPSHOT
+	- Maven Lifecycle
+		- Validate
+		- Compile
+		- Test
+		- Package
+		- Integration Test
+		- Verify
+		- Install
+		- Deploy
+	- Commands
+		- mvn spring-boot:repackage (create jar or war)
+		- mvn spring-boot:run 			Run the application
+		- mvn spring-boot:start			Non-blocking, use it to run integration tests
+		- mvn spring-boot:stop			Stop application started with start command
+		- mvn spring-boot:build-image	Build a container image
+	
+----------------------------------------------------------------------------------------
+Docker Compose
+----------------------------------------------------------------------------------------
+- Docker Compose is tool for defining and running multi-container Docker applications.
+- With compose, use yaml file to configure application services.
+- Then with a single command, create and start all services from configuration file. 
+- Compose works on all environments(production, staging, development, testing as well as CI workflows)
+
+	- Install Docker Compose
+	--------------------------------------------------------------------------------------
+		- If Docker Desktop is installed then Docker Compose would also be installed
+	
+	- Maven configuration
+	--------------------------------------------------------------------------------------
+	<build>
+		<plugins>
+			<plugin>
+				<groupId></groupId>
+				<artifactId></artifactId>
+				<configuration>
+					<image>
+						<name>my-trading/${project.artifactId}:${project.version}</name>
+					</image>
+					<!-- Only if base images are not present locally, then only fetch from Docker Registry -->
+					<pullPolicy>IF_NOT_PRESENT</pullPolicy>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
+	- Run maven command to build docker images
+	--------------------------------------------------------------------------------------
+		mvn spring-boot:build-image -DskipTests
+	
+	- How to launch containers using docker-compose?
+	--------------------------------------------------------------------------------------
+	- docker-compose --version
+	- CD to the folder having all microservices
+	- Create docker-compose.yaml file (use two SPACES to format. DO NOT use TABS.)
+		version: '3.7' 	-> docker compose version, use any latest version
+		
+		services:		-> In docker compose, each container launched is treated as a service. Hence using 'services' here.
+		  currency-exchange:
+		    image: my-trading/currency-exchange-service:0.0.1-SNAPSHOT
+		    mem_limit: 700m
+		    ports: 
+		    	- "8000:8000"
+		    networks:
+		      - currency-network
+		    depends_on:
+		      - naming-server
+		 	#Either update the naming-server URL in the application.properties file or override it in the docker-compose yaml as below
+	    	#eureka.client.serviceUrl.defaultZone: http://localhost:8761/eureka
+		    environment:
+		    	EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+		    	SPRING.ZIPKIN.BASEURL=http://zipkin-server:9411/
+
+		 currency-conversion:
+		    image: my-trading/currency-conversion-service:0.0.1-SNAPSHOT
+		    mem_limit: 700m
+		    ports: 
+		    	- "8100:8100"
+		    networks:
+		      - currency-network
+		    depends_on:
+		      - naming-server
+		 	#Either update the naming-server URL in the application.properties file or override it in the docker-compose yaml as below
+	    	#eureka.client.serviceUrl.defaultZone: http://localhost:8761/eureka
+		    environment:
+		    	EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+		    	SPRING.ZIPKIN.BASEURL=http://zipkin-server:9411/
+		  
+		  api-gateway:
+		    image: my-trading/api-gateway:0.0.1-SNAPSHOT
+		    mem_limit: 700m
+		    ports: 
+		    	- "8765:8765"
+		    networks:
+		      - currency-network
+		    depends_on:
+		      - naming-server
+		 	#Either update the naming-server URL in the application.properties file or override it in the docker-compose yaml as below
+	    	#eureka.client.serviceUrl.defaultZone: http://localhost:8761/eureka
+		    environment:
+		    	EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+		    	SPRING.ZIPKIN.BASEURL=http://zipkin-server:9411/
+		    	
+		  naming-server:
+		    image: my-trading/naming-server:0.0.1-SNAPSHOT
+		    mem_limit: 700m
+		    ports: 
+		    	- "8761:8761"
+		    networks:
+		      - currency-network
+		  
+		  zipkin-server:
+		    image: openzipkin/zipking:2.23
+		    mem_limit: 300m
+		    ports: 
+		    	- "9411:9411"
+		    networks:
+		      - currency-network
+		# Its a good practice to create a network as well
+		networks:
+		  currency-network
+		
+	- Run 'docker-compose up' to start all the above services
+	- Testing
+		- http://localhost:8765/currency-exchange/currency-exchange/from/USD/to/INR
+		- http://localhost:8765/currency-conversion/currency-conversion/from/USD/to/INR/quantity/10
+		- http://localhost:8765/currency-conversion/currency-conversion-feign/from/USD/to/INR/quantity/10
+		- http://localhost:9411/zipkin
+	
