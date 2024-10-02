@@ -300,3 +300,7 @@ Docker Compose
 		- http://localhost:8765/currency-conversion/currency-conversion-feign/from/USD/to/INR/quantity/10
 		- http://localhost:9411/zipkin
 	
+	- How to stop docker containers which are launched up by docker-compose up?
+	--------------------------------------------------------------------------------------
+		- Press Ctrl+c keys on the docker-compose terminal, to close all the containers
+	
