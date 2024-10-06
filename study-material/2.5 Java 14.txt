@@ -1,0 +1,90 @@
+------------------------------------------------------------------------------------------
+Java 14
+------------------------------------------------------------------------------------------
+- Switch Expressions
+
+	a. Switch Expressions
+	--------------------------------------------------------------------------------------
+	Switch expressions allowed us to omit break calls inside every case block. It helps with the readability of the code and better understanding.
+
+	In this section, we will see several ways of how to use switch expressions.
+	
+		- Old Way of Switch Statements
+		-------------------
+		We have a method where a client provides the desired month, and we return the number of days inside that month.
+		
+		The first thing that comes to our mind is to build it with switch-case statements:
+		
+		public class SwitchExpression {
+		
+		    public static void main(String[] args) {
+		        int days = 0;
+		        Month month = Month.APRIL;
+		
+		        switch (month) {
+		            case JANUARY, MARCH, MAY, JULY, AUGUST, OCTOBER, DECEMBER :
+		                days = 31;
+		                break;
+		            case FEBRUARY :
+		                days = 28;
+		                break;
+		            case APRIL, JUNE, SEPTEMBER, NOVEMBER :
+		                days = 30;
+		                break;
+		            default:
+		                throw new IllegalStateException();
+		        }
+		    }
+		}
+		We need to make sure that we put a break statement inside our case code block. Failing it will result in checking on other conditions after we match the first one.
+		
+		- Using Switch Expressions
+		-------------------
+		We will look into the same method as before. The user wants to send the month and get the number of days in that month:
+		
+		public class SwitchExpression {
+		
+		    public static void main(String[] args) {
+		        int days = 0;
+		        Month month = Month.APRIL;
+		
+		        days = switch (month) {
+		            case JANUARY, MARCH, MAY, JULY, AUGUST, OCTOBER, DECEMBER -> 31;
+		            case FEBRUARY -> 28;
+		            case APRIL, JUNE, SEPTEMBER, NOVEMBER -> 30;
+		            default -> throw new IllegalStateException();
+		        };
+		    }
+		}
+		We are using a bit different notation in the case block. We are using -> instead of the colon. Even though we are not invoking the break statement, we will still jump out of the switch statement on the first valid condition.
+		
+		This will do the same thing as the code shown in the previous example.
+		
+		- The yield Keyword
+		-------------------
+		The logic inside the case block can be a bit more complicated than just returning a value. For example, we want to log which month the user sent us:
+		
+		public class SwitchExpression {
+		
+		    public static void main(String[] args) {
+		        int days = 0;
+		        Month month = Month.APRIL;
+		
+		        days = switch (month) {
+		            case JANUARY, MARCH, MAY, JULY, AUGUST, OCTOBER, DECEMBER -> {
+		                System.out.println(month);
+		                yield 31;
+		            }
+		            case FEBRUARY -> {
+		                System.out.println(month);
+		                yield 28;
+		            }
+		            case APRIL, JUNE, SEPTEMBER, NOVEMBER -> {
+		                System.out.println(month);
+		                yield 30;
+		            }
+		            default -> throw new IllegalStateException();
+		        };
+		    }
+		}
+		In a multi-line code block, we have to use the yield keyword to return a value from a case block.

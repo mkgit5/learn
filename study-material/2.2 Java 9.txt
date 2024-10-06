@@ -1,0 +1,211 @@
+------------------------------------------------------------------------------------------
+Java 9
+------------------------------------------------------------------------------------------
+Java 9 introduced these main features:
+- Java Module System
+- Try-with-resources (First introduced in Java 7)
+	- In Java 7, the try-with-resources syntax requires a fresh variable to be declared for each resource being managed by the statement.
+	- In Java 9 there is an additional refinement: if the resource is referenced by a final or effectively final variable, 
+		a try-with-resources statement can manage a resource without a new variable being declared:
+- Diamond Syntax with Inner Anonymous Classes
+- Private Interface Methods
+
+	a. Java Module System
+	--------------------------------------------------------------------------------------
+	A module is a group of packages, their dependencies, and resources. It provides a broader set of functionalities than packages.
+	
+	When creating the new module, we need to provide several attributes:
+		- Name
+		- Dependencies
+		- Public Packages - by default, all packages are module private
+		- Services Offered
+		- Services Consumed
+		- Reflection Permissions
+	
+	Without going into many details, let us create our first module. Inside our example, we will show several options and keywords that one can use when creating a module.
+	
+		- Creating Modules Inside IntelliJ
+		-------------------
+		First, we will go with a simple example. 
+		We will build a Hello World application where we print “Hello” from one module, and we call the second module to print “World!”.
+		
+		Since I am working in the IntelliJ IDEA there is something that we need to understand first. 
+		IntelliJ IDEA has the concept of modules. For it to work, each Java module has to correspond to one IntelliJ module.
+		
+			- Package structure
+			-------------------
+			We have two modules: hello.module and world.module. They correspond to hello and world IntelliJ modules, respectively. Inside each of them, we have created the module-info.java file. This file defines our Java module. Inside, we declare which packages we need to export and on which modules we are dependent.
+			
+			- Defining our First Module
+			-------------------
+			We are using the hello module to print the word: “Hello”. Inside, we call the method inside the world module, which will print “World !”. The first thing that we need to do is to declare export of the package containing our World.class inside module-info.java:
+			
+			module world.module {
+			    exports com.reflectoring.io.app.world;
+			}
+			We use the keyword module with the module name to reference the module.
+			
+			The next keyword that we use is 'exports'.
+			It tells the module system that we are making our com.reflectoring.io.app.world package visible outside of our module.
+			
+			There are several other keywords can be used:
+				- requires
+				- requires transitive
+				- exports to
+				- uses
+				- provides with
+				- open
+				- opens
+				- opens to
+			Out of these we will show only requires declaration. Others can be found in the docs.
+		
+			- Defining our Second Module
+			-------------------
+			After we created and exported the world module, we can proceed with creating the hello module:
+			
+			module hello.module {
+			    requires world.module;
+			}
+			We define dependencies using requires keyword. We are referencing our newly created, hello.module. 
+			Packages that are not exported are, by default, module private and cannot be seen from outside of the module.
+			
+	
+	b. Try-with-resources
+	--------------------------------------------------------------------------------------
+	Try-with-resources is a feature that enables us to declare new autoclosable resources on a try-catch block. 
+	Declaring them inside a try-catch block tells the JVM to release them after the code has run. 
+	The only condition is that the declared resource implements an Autoclosable interface.
+
+		- Closing a Resource Manually
+		-------------------
+		We want to read text using BufferedReader. BufferedReader is a closable resource, 
+		so we need to make sure that it is properly closed after use. Before Java 8 we would do it like this:
+		
+		public class TryWithResources {
+		    public static void main(String[] args) {
+		        BufferedReader br = new BufferedReader(
+		                new StringReader("Hello world example!"));
+		        try {
+		            System.out.println(br.readLine());
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        } finally {
+		            try {
+		                br.close();
+		            } catch (IOException e) {
+		                e.printStackTrace();
+		            }
+		        }
+		    }
+		}
+		In finally block, we would call close(). The finally block ensures that the reader is always properly closed.
+		
+		- Closing a Resource with try-with-resources
+		-------------------
+		Java 8 introduced the try-with-resource feature that enables us to declare our resource inside try definition. 
+		This will ensure that our closable is closed without using finally. 
+		Let us take a look at some example of using the BufferedReader to read string:
+		
+		public class TryWithResources {
+		    public static void main(String[] args) {
+		        
+		        final BufferedReader br3 = new BufferedReader(
+		                new StringReader("Hello world example3!"));
+		        try (BufferedReader reader = br3) {
+		            System.out.println(reader.readLine());
+		        } catch (IOException e) {
+		            System.out.println("Error happened!");
+		        }
+		        
+		    }
+		}
+		Inside the try definition, we are assigning our previously created reader to the new variable. 
+		Now we know that our reader will get closed every time.
+		
+
+	c. Diamond Syntax with Inner Anonymous Classes
+	--------------------------------------------------------------------------------------
+	Before Java 9 we couldn’t use a diamond operator inside the inner anonymous class.
+	
+		For our example, we will create the abstract class, StringAppender. 
+		The class has only one method that appends two strings with - between them. 
+		We will use the anonymous class for providing the implementation for the append() method:
+		
+		public class DiamondOperator {
+		
+		    StringAppender<String> appending = new StringAppender<>() {
+		        @Override
+		        public String append(String a, String b) {
+		            return new StringBuilder(a).append("-").append(b).toString();
+		        }
+		    };
+		    
+		    public abstract static class StringAppender<T> {
+		        public abstract T append(String a, String b);
+		    }
+		}
+		We use the diamond operator to omit type on the constructor call new StringAppender<>(). 
+		Since we are using Java 8, in this example we will get a compiler error:
+		
+		java: cannot infer type arguments for 
+		com.reflectoring.io.java9.DiamondOperator.StringAppender<T>
+		
+		reason: '<>' with anonymous inner classes is not supported in -source 8
+		    (use -source 9 or higher to enable '<>' with anonymous inner classes)
+		In Java 9, this compiler error is no longer happening.
+
+	d. Private Interface Methods
+	--------------------------------------------------------------------------------------
+	We already mentioned how we use default methods in interfaces.
+	
+	How do we split the implementation into several methods? 
+	When working with classes, we can achieve it using private methods. 
+	Could that be the solution in our case?
+	
+	As of Java 9, yes. We can create private methods inside our interfaces.
+	
+		- Usage of Private Interface Methods
+		-------------------
+		For our example, we want to print out a set of names.
+		
+		Interface containing this functionality had default method defined. 
+		We decided that we should if the client doesn’t provide the implementation, 
+		provide a set of predefined names that we read from the resource folder:
+		
+		public class PrivateInterfaceMethods {
+		
+		    public static void main(String[] args) {
+		        TestingNames names = new TestingNames();
+		        System.out.println(names.fetchInitialData());
+		    }
+		
+		    public static class TestingNames implements NamesInterface {
+		        public TestingNames() {
+		        }
+		    }
+		
+		    public interface NamesInterface {
+		        default List<String> fetchInitialData() {
+		            try (BufferedReader br = new BufferedReader(ew InputStreamReader(this.getClass().getResourceAsStream("/names.txt")))) {
+		                return readNames(br);
+		            } catch (IOException e) {
+		                e.printStackTrace();
+		                return null;
+		            }
+		        }
+		
+		        private List<String> readNames(BufferedReader br) throws IOException {
+		            ArrayList<String> names = new ArrayList<>();
+		            String name;
+		            while ((name = br.readLine()) != null) {
+		                names.add(name);
+		            }
+		            return names;
+		        }
+		    }
+		}
+		We are using BufferedReader to read the file containing default names that we share with the client. 
+		To encapsulate our code and, possibly, make it reusable in other methods, 
+		we decided to move code for reading and saving names into a List to the separate method. 
+		This method is private and, now, we can use it anywhere inside our interface.
+		As mentioned, the main benefit of this feature inside Java 9 is better encapsulation and reusability of the code.
