@@ -1,0 +1,111 @@
+------------------------------------------------------------------------------------------
+Java 16
+------------------------------------------------------------------------------------------
+- Pattern Matching of instanceof
+- Records
+
+	a. Pattern Matching of instanceof
+	--------------------------------------------------------------------------------------
+	Pattern matching on the instanceof allows us to cast our variable inline and use it inside the desired if-else block without explicitly casting it.
+	
+		- Example Without Pattern Matching
+		-------------------
+		We have a base class called Vehicle and two classes that extends it: Car and Bicycle. We omitted the code for this, and you can look it up in the GitHub repo.
+		
+		Our algorithm for calculating prices is depending on the instance of the vehicle that is sent to it:
+		
+		public class PatternMatching {
+		    public static double priceOld(Vehicle v) {
+		        if (v instanceof Car) {
+		            Car c = (Car) v;
+		            return 10000 - c.kilomenters * 0.01 -
+		                    (Calendar.getInstance().get(Calendar.YEAR) -
+		                            c.year) * 100;
+		        } else if (v instanceof Bicycle) {
+		            Bicycle b = (Bicycle) v;
+		            return 1000 + b.wheelSize * 10;
+		        } else throw new IllegalArgumentException();
+		    }
+		}
+		Since we are not using pattern matching, we need to cast the vehicle into the correct type inside each if-else block. As we can see, it is a typical example of boilerplate code for which Java is famous.
+		
+		- Using Pattern Matching
+		-------------------
+		Let’s see how can we can discard the boilerplate part from the example above:
+		
+		public class PatternMatching {
+		    public static double price(Vehicle v) {
+		        if (v instanceof Car c) {
+		            return 10000 - c.kilomenters * 0.01 -
+		                    (Calendar.getInstance().get(Calendar.YEAR) -
+		                            c.year) * 100;
+		        } else if (v instanceof Bicycle b) {
+		            return 1000 + b.wheelSize * 10;
+		        } else throw new IllegalArgumentException();
+		    }
+		}
+		One thing to note is the scope of the casted variable. It’s visible only within the if statement.
+		
+		For more information about pattern matching in instanceof method please refer to the docs.
+		
+	b. Records
+	--------------------------------------------------------------------------------------
+	How many POJOs (Plain Old Java Objects) have you written?
+	Well, I can answer for myself: “Too many!”.
+	
+	Java has had a bad reputation for boilerplate code. 
+	Lombok allowed us to stop worrying about getters, setters, etc. 
+	Java 16 finally introduced records to remove a lot of boilerplate code.
+	
+	A record class is nothing more than regular POJO, for which most of the code is generated from the definition.
+	
+		- Plain Old Java Object definition
+		-------------------
+		Let us look into the example of the POJO class before Java 16 introduced records:
+		
+		public class Vehicle {
+		    String code;
+		    String engineType;
+		
+		    public String getCode() {
+		        return code;
+		    }
+		
+		    public void setCode(String code) {
+		        this.code = code;
+		    }
+		
+		    public String getEngineType() {
+		        return engineType;
+		    }
+		
+		    public void setEngineType(String engineType) {
+		        this.engineType = engineType;
+		    }
+		
+		    public Vehicle(String code, String engineType) {
+		        this.code = code;
+		        this.engineType = engineType;
+		    }
+		
+		    @Override
+		    public boolean equals(Object o) ...
+		
+		    @Override
+		    public int hashCode() ...
+		
+		    @Override
+		    public String toString() ...
+		}
+		There are almost 50 lines of code for object that contains only two properties. 
+		The IDE generated this code, but still, it is there and has to be maintained.
+		
+		- Record Definition
+		-------------------
+		Definition of a vehicle record, with the same two properties, can be done in just one line:
+		
+		public record VehicleRecord(String code, String engineType) {}
+		
+		This one line has all the same getters, setters, constructors, etc. as from the example above. 
+		One thing to note is that the record class is, by default, final, and we need to comply with that. 
+		That means we cannot extend a record class, but most other things are available for us.

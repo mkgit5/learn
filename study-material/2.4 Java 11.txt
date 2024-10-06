@@ -1,0 +1,34 @@
+------------------------------------------------------------------------------------------
+Java 11
+------------------------------------------------------------------------------------------
+- Local Variable Type in Lambda Expressions
+
+	a. Local Variable Type in Lambda Expressions
+	--------------------------------------------------------------------------------------
+	Java 11 introduced an improvement to the previously mentioned local type inference. 
+	This allows us to use var inside lambda expressions.
+	
+	We will, again, create several persons, collect them into the list and filter out entries that don’t have an ‘a’ inside their name:
+	
+	public class LocalTypeVarLambda {
+	
+	    public void explicitTypes() {
+	        var Roland = new Person("Roland", "Deschain");
+	        var Susan = new Person("Susan", "Delgado");
+	        var Eddie = new Person("Eddie", "Dean");
+	        var Detta = new Person("Detta", "Walker");
+	        var Jake = new Person("Jake", "Chambers");
+	
+	        var filteredPersons =
+	                List.of(Roland, Susan, Eddie, Detta, Jake)
+	                        .stream()
+	                        .filter((var x) -> x.name.contains("a"))
+	                        .collect(Collectors.toList());
+	        System.out.println(filteredPersons);
+	    }
+	}
+	Inside the filter() method we are using var to infer the type instead of explicitly mentioning the type.
+	
+	Please note that it doesn’t make a difference if we use var or type inference without it. 
+	It will work the same for both.
+	

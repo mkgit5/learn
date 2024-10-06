@@ -1,0 +1,66 @@
+------------------------------------------------------------------------------------------
+Java 15
+------------------------------------------------------------------------------------------
+- Text Blocks
+
+	a. Text Blocks
+	--------------------------------------------------------------------------------------
+	Text block is an improvement on formatting String variables. 
+	From Java 15, we can write a String that spans through several lines as regular text.
+	
+		- Example Without Using Text Blocks
+		-------------------
+		We want to send an HTML document via email. We are storing the email template into a variable:
+		
+		public class TextBlocks {
+		
+		    public static void main(String[] args) {
+		        System.out.println(
+		        "<!DOCTYPE html>\n" +
+		                "<html>\n" +
+		                "     <head>\n" +
+		                "        <title>Example</title>\n" +
+		                "    </head>\n" +
+		                "    <body>\n" +
+		                "        <p>This is an example of a simple HTML " +
+		                "page with one paragraph.</p>\n" +
+		                "    </body>\n" +
+		                "</html>\n");
+		    }
+		}
+		We are formatting our string like in the example above. 
+		We need to take care of new lines and append all the lines to a single string.
+		
+		- Example of Using Text Blocks
+		-------------------
+		Let us look into the same example of an HTML template for email. 
+		We want to send an example email with some straightforward HTML formatting. 
+		This time we will use a text block:
+		
+		public class TextBlocks {
+		    
+		    public static void main(String[] args) {
+		        System.out.println(
+		        """
+		                <!DOCTYPE html>
+		                <html>
+		                    <head>
+		                        <title>Example</title>
+		                    </head>
+		                    <body>
+		                        <p>This is an example of a simple HTML 
+		                        page with one paragraph.</p>
+		                    </body>
+		                </html>      
+		                """
+		        );
+		    }
+		}
+		We used special syntax for opening and closing quotes: """. 
+		This allows us to treat our string as if we are writing it in a .txt file.
+		
+		There are some rules that we need to abide by when using a text block. 
+		We need to make sure that we put a new line after our opening quotes, or our compiler will throw an error:
+		
+		Illegal text block start: missing new line after opening quotes.
+		If we want to end our string with \n we can do it by putting new line before closing """ like in the example above.

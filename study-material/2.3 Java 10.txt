@@ -1,0 +1,66 @@
+------------------------------------------------------------------------------------------
+Java 10
+------------------------------------------------------------------------------------------
+- Local Variable Type Inference
+
+	a. Local Variable Type Inference
+	--------------------------------------------------------------------------------------
+	Java always needed explicit types on local variables.
+	
+	When writing and reading code, we always know which type we expect. 
+	On the other hand, a lot of the code is just types with no usability.
+	
+	The var type allows us to omit type from the left-hand side of our statements.
+	
+		- Old Way
+		-------------------
+		Let us look into the example here. 
+		We want to create small a set of people, 
+		put everything in one list and then go through that list in the for loop to print out their name and last name:
+		
+		public class LocalTypeVar {
+		
+		    public void explicitTypes() {
+		        Person Roland = new Person("Roland", "Deschain");
+		        Person Susan = new Person("Susan", "Delgado");
+		        Person Eddie = new Person("Eddie", "Dean");
+		        Person Detta = new Person("Detta", "Walker");
+		        Person Jake = new Person("Jake", "Chambers");
+		
+		        List<Person> persons =
+		                List.of(Roland, Susan, Eddie, Detta, Jake);
+		
+		        for (Person person : persons) {
+		            System.out.println(person.name + " - " + person.lastname);
+		        }
+		    }
+		}
+		This is the type of code that we can see in most cases in Java. 
+		We use explicit types to make sure that we know what the method expects.
+	
+		- Implicit Typing with var
+		-------------------
+		Now, we will look into the same example, but using the var keyword that Java 10 introduced. 
+		We still want to create several person objects and put them in a list. 
+		After that, we will go through that list and print out the name of each person:
+		
+		public class LocalTypeVar {
+		
+		    public void varTypes() {
+		        var Roland = new Person("Roland", "Deschain");
+		        var Susan = new Person("Susan", "Delgado");
+		        var Eddie = new Person("Eddie", "Dean");
+		        var Detta = new Person("Detta", "Walker");
+		        var Jake = new Person("Jake", "Chambers");
+		
+		        var persons = List.of(Roland, Susan, Eddie, Detta, Jake);
+		
+		        for (var person : persons) {
+		            System.out.println(person.name + " - " + person.lastname);
+		        }
+		    }
+		}
+		We can see some of the most typical examples of using var type on local variables. 
+		First, we use them for defining local variables. 
+		It can be a standalone object or even a list with the diamond operator.
+		

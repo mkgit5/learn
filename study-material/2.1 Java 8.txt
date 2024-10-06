@@ -1,0 +1,248 @@
+------------------------------------------------------------------------------------------
+Java 8
+------------------------------------------------------------------------------------------
+Java 8 introduced these new features
+- Functional Interfaces
+- Static Methods 
+- Optional 
+- Lambda Expression
+- Stream API
+- Method References
+- Default Methods
+- Type Annotations
+- Repeating Annotations
+	
+	a. Lambda Expression and Stream API
+	--------------------------------------------------------------------------------------
+		- Without Lambda
+		-------------------
+		The World Before Lambda Expressions
+		We own a car dealership business. 
+		To discard all the paperwork, we want to create a piece of software that finds all currently available cars 
+		that have run less than 50,000 km.
+		Let us take a look at how we would implement a function for something like this in a naive way:
+		
+		public class LambdaExpressions {
+		    public static List<Car> findCarsOldWay(List<Car> cars) {
+		        List<Car> selectedCars = new ArrayList<>();
+		        for (Car car : cars) {
+		            if (car.kilometers < 50000) {
+		                selectedCars.add(car);
+		            }
+		        }
+		        return selectedCars;
+		    }
+		}
+		
+		To implement this, we are creating a static function that accepts a List of cars. 
+		It should return a filtered list according to a specified condition.
+		
+		- With Lambda
+		-------------------
+		Using a Stream and a Lambda Expression
+		We have the same problem as in the previous example.
+		Our client wants to find all cars with the same criteria.
+		Let us see a solution where we used the stream API and lambda expression:
+		
+		public class LambdaExpressions {
+		    public static List<Car> findCarsUsingLambda(List<Car> cars) {
+		        return cars.stream().filter(car -> car.kilometers < 50000)
+		                .collect(Collectors.toList());
+		    }
+		}
+		We need to transfer the list of cars into a stream by calling the stream() method. 
+		Inside the filter() method we are setting our condition. We are evaluating every entry against the desired condition.
+		We are keeping only those entries that have less than 50,000 kilometers. 
+		The last thing that we need to do is to wrap it up into a list.
+	
+
+
+	b. Method Reference
+	--------------------------------------------------------------------------------------
+		- Without Method Reference
+		-------------------
+		We still own a car dealership shop, and we want to print out all the cars in the shop. For that, we will use a method reference.
+		A method reference allows us to call functions in classes using a special kind of syntax ::. 
+		There are four kinds of method references:
+			- Reference to a static method
+			- Reference to an instance method on a object
+			- Reference to an instance method on a type
+			- Reference to a constructor
+		Let us see how to do it using the standard method call:
+		
+		public class MethodReference {
+		    List<String> withoutMethodReference = cars.stream().map(car -> car.toString()).collect(Collectors.toList());
+		}
+		We are using a lambda expression to call the toString() method on each car.
+		
+		- Using a Method Reference
+		-------------------
+		Now, let us see how to use a method reference in the same situation:
+		
+		public class MethodReference {
+		    List<String> methodReference = cars.stream().map(Car::toString).collect(Collectors.toList());
+		}
+		
+		We are, again, using a lambda expression, but now we call the toString() method by method reference. 
+		We can see how it is more concise and easier to read.
+
+
+	c. Default Methods
+	--------------------------------------------------------------------------------------
+	Let us imagine that we have a simple method log(String message) that prints log messages on invocation. 
+	We realized that we want to provide timestamps to messages so that logs are easily searchable.
+	We don’t want our clients to break after we introduce this change. 
+	We will do this using a default method implementation on an interface.
+	
+	Default method implementation is the feature that allows us to create a fallback implementation of an interface method.
+	
+	Use Case: Let us see how our contract looks:
+		- Without Using Default Methods
+		-------------------
+		public class DefaultMethods {
+		
+		    public interface Logging {
+		        void log(String message);
+		    }
+		
+		    public class LoggingImplementation implements Logging {
+		        @Override
+		        public void log(String message) {
+		            System.out.println(message);
+		        }
+		    }
+		}
+		We are creating a simple interface with just one method and implementing it in LoggingImplementation class.
+		
+		- Adding New Method
+		-------------------
+		We will add new method inside the interface. The method accepts the second argument called date that represents timestamp.
+		
+		public class DefaultMethods {
+		
+		    public interface Logging {
+		        void log(String message);
+		        
+		        void log(String message, Date date);
+		    }
+		}
+		We are adding a new method but not implementing it inside all client classes. The compiler will fail with exception:
+		
+		Class 'LoggingImplementation' must either be declared abstract or implement abstract method 'log(String, Date)' in 'Logging'`.
+
+		- Using Default Methods
+		-------------------
+		After adding a new method inside the interface, our compiler threw exceptions. 
+		We are going to solve this using default method implementation for the new method.
+		
+		Let us look at how to create a default method implementation:
+		
+		public class DefaultMethods {
+		
+		    public interface Logging {
+		        void log(String message);
+		
+		        default void log(String message, Date date) {
+		            System.out.println(date.toString() + ": " + message);
+		        }
+		    }
+		}
+		Putting the default keyword allows us to add the implementation of the method inside the interface. Now, our LoggingImplementation class does not fail with a compiler error even though we didn’t implement this new method inside of it.
+
+	d. Type Annotations
+	--------------------------------------------------------------------------------------
+	Type annotations are one more feature introduced in Java 8. 
+	Even though we had annotations available before, now we can use them wherever we use a type. 
+	This means that we can use them on:
+		- a local variable definition
+		- constructor calls
+		- type casting
+		- generics
+		- throw clauses and more
+	Tools like IDEs can then read these annotations and show warnings or errors based on the annotations.
+
+		- Local Variable Definition
+		-------------------
+		Let us see how to ensure that our local variable doesn’t end up as a null value:
+		
+		public class TypeAnnotations {
+		
+		    public static void main(String[] args) {
+		        @NotNull String userName = args[0];
+		    }
+		}
+		We are using annotation on the local variable definition here. A compile-time annotation processor could now read the @NotNull annotation and throw an error when the string is null.
+			
+		- Constructor Call
+		-------------------
+		We want to make sure that we cannot create an empty ArrayList:
+		
+		public class TypeAnnotations {
+		
+		    public static void main(String[] args) {
+		        List<String> request =
+		                new @NotEmpty ArrayList<>(Arrays.stream(args).collect(
+		                        Collectors.toList()));
+		    }
+		}
+		This is the perfect example of how to use type annotations on a constructor. Again, an annotation processor can evaluate the annotation and check if the array list is not empty.
+			
+		- Generic Type
+		-------------------
+		One of our requirements is that each email has to be in a format <name>@<company>.com. If we use type annotations, we can do it easily:
+		
+		public class TypeAnnotations {
+		
+		    public static void main(String[] args) {
+		        List<@Email String> emails;
+		    }
+		}
+		This is a definition of a list of email addresses. We use @Email annotation that ensures that every record inside this list is in the desired format.
+		
+		A tool could use reflection to evaluate the annotation and check that each of the elements in the list is a valid email address.
+
+	d. Repeating Annotations
+	--------------------------------------------------------------------------------------
+		Let us imagine we have an application with fully implemented security. 
+		It has different levels of authorization. 
+		Even though we implemented everything carefully, we want to make sure that we log every unauthorized action. 
+		On each unauthorized action, we are sending an email to the owner of the company and our security admin group email. 
+		Repeating annotations are our way to go on this example.
+		
+		Repeating annotations allows us to place multiple annotations on the same class.
+		
+		- Creating a Repeating Annotation
+		-------------------
+		For the example, we are going to create a repeating annotation called @Notify:
+		
+		public class RepeatingAnnotations {
+		    
+		    @Repeatable(Notifications.class)
+		    public @interface Notify {
+		        String email();
+		    }
+		
+		    public @interface Notifications {
+		        Notify[] value();
+		    }
+		}
+		We create @Notify as a regular annotation, but we add the @Repeatable (meta-)annotation to it. Additionally, we have to create a “container” annotation Notifications that contains an array of Notify objects. An annotation processor can now get access to all repeating Notify annotations through the container annotation Noifications.
+		
+		Please note that this is a mock annotation just for demonstration purposes. This annotation will not send emails without an annotation processor that reads it and then sends emails.
+		
+		- Using Repeating Annotations
+		-------------------
+		We can add a repeating annotation multiple times to the same construct:
+		
+		@Notify(email = "admin@company.com")
+		@Notify(email = "owner@company.com")
+		public class UserNotAllowedForThisActionException
+		        extends RuntimeException {
+		    final String user;
+		
+		    public UserNotAllowedForThisActionException(String user) {
+		        this.user = user;
+		
+		    }
+		}
+		We have our custom exception class that we will throw whenever a user tries to do something that the user is not allowed. Our annotations to this class say that we want to notify two emails when code throws this exception.

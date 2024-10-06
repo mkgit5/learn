@@ -1780,12 +1780,16 @@ and mentioned classes are not found in the classpath.
 NoClassDefFoundError is an error that occurs when a particular class is present at compile time, but was missing at run time
 
 
-
-
-
 Callable vs Runnable
 
     For implementing Runnable, the run() method needs to be implemented which does not return anything.
     While for a Callable, the call() method needs to be implemented which returns a result on completion. 
     Note that a thread can’t be created with a Callable, it can only be created with a Runnable.
-    Another difference is that the call() method can throw an exception whereas run() cannot.
+    Another difference is that the call() method can throw an exception whereas run() cannot
+
+
+------------------------------------------------------------------------------------------
+Java 7
+------------------------------------------------------------------------------------------
+- String in switch statement
+- Caching Multiple Exceptions by single catch
