@@ -1,0 +1,89 @@
+------------------------------------------------------------------------------------------
+Mockito
+------------------------------------------------------------------------------------------
+
+Stubs vs Mocks
+------------------------------
+- Stubs are difficult to maintain, update test classes every time there is a change to the class.
+- Mocks are simpler to write unit tests and easier to maintain
+	- One just need to add new test method and test.
+		public class SomeBusinessImplMockTest { 
+			private SomeBusinessImpl businessImpl;
+	
+			@Test
+			void findGreatestOfAll(){
+				DataService dataServiceMock = mock(DataService.class);
+				when(dataServiceMock.retreiveGreatest().thenReturn(new int[] {25, 15,5});
+				SomeBusinessImpl businessImpl = new SomeBusinessImpl(dataServiceMock);
+				assertEquals(25, businessImpl.retreiveGreatest());
+			}
+		}
+		
+	- @Mock, @InjectMocks, @ExtendWith and Mockito.any...
+		
+		import org.junit.jupiter.api.extension.ExtendWith;
+		import org.mockito.Mock;
+		import org.mockito.InjectMocks;
+		import org.mockito.junit.jupiter.MockitoExtension;
+		
+		// Extension that initializes the mocks and handles strict stubbings.
+		// This extension is equivalent of Junit 4 MockitoJUnitRunner.
+		@ExtendWith(MockitoExtension.class)
+		public class SomeBusinessImplMockTest {
+		
+			// Create a mock class using @Mock
+			@Mock
+			private DataService dataServiceMock;
+			
+			// Inject the mock to SomeBusinessImpl class
+			@InjectMocks
+			private SomeBusinessImpl businessImpl;
+	
+			@Test
+			void findGreatestOfAll(){
+				when(dataServiceMock.retreiveGreatest().thenReturn(new int[] {25, 15,5});
+				assertEquals(25, businessImpl.retreiveGreatest());
+			}
+			
+			@Test
+			void simpleList(){
+				List mockList = mock(List.class);
+				when(mockList.size()).thenReturn(3);
+				assertEquals(3, mockList.size());
+			}
+			
+			@Test
+			void multipleReturns(){
+				List mockList = mock(List.class);
+				when(mockList.size()).thenReturn(1).thenReturn(2);
+				assertEquals(1, mockList.size());
+				assertEquals(2, mockList.size());
+				assertEquals(2, mockList.size());
+				assertEquals(2, mockList.size());
+			}
+			
+			@Test
+			void parameters(){
+				List mockList = mock(List.class);
+				when(mockList.get(0)).thenReturn("SomeString");
+				assertEquals("SomeString", mockList.get(0));
+				assertEquals(null, mockList.get(1));
+			}
+			
+			@Test
+			void genericParameters(){
+				List mockList = mock(List.class);
+				when(mockList.get(Mockito.anyInt())).thenReturn("SomeOtherString");
+				assertEquals("SomeOtherString", mockList.get(0));
+				assertEquals(null, mockList.get(1));
+			}
+			
+		}
+		
+pom.xml
+------------------------------
+<dependency>
+	<groupId>com.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-test</artifactId>
+	<scope>test</scope>
+</dependency>

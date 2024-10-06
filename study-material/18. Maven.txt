@@ -1,0 +1,141 @@
+------------------------------------------------------------------------------------------
+Maven
+------------------------------------------------------------------------------------------
+Maven is a software project management and comprehensive tool.
+Based on Project Object Model (POM), maven can manage build, reporting and documentation.
+	- <dependencies> - Define dependencies used by the project 
+		- Inherit <dependencyManagement> from parent pom
+		- Inherit Properties java.version, plugins and configurations from parent pom
+		- By Default, jars are downloaded from - https://mvnrepository.com/repos/central
+	- <dependencyManagement> - Specifies all the jar versions managed or supported
+	- <repositories> - To download jars not found in maven central repos (https://mvnrepository.com/repos/central)
+	- <pluginRepositories> - To download plugins 
+	- To find all the dependencies execute 
+		- mvn help:effective-pom
+		- mvn dependency:tree - to view command line dependency tree
+		- Open Eclipse's Effective POM tab
+
+	- pom.xml
+	------------------------------
+	a. Parent pom - spring-boot-starter-parent
+		- Dependency management: spring-boot-dependencies
+		<parent>
+			<groupId>com.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-parent</artifactId>
+			<version>3.0.3</version>
+			<relativePath/>
+		</dependency>
+	b. Name of the project (groupId + artifactId)
+		- groupId 		- similar to package name
+		- artifactId	- similar to a class name
+		- Why is it important?
+			- Other projects can use our project using groupId and artifactId
+	c. Maven dependencies
+		- Maven dependencies - Frameworks and libraries used in a project
+		- eg: spring-boot-starter-web, spring-boot-starte-test
+		// <dependencies> is the section, where the dependent jars are actually downloaded for the project
+		<dependencies>
+			<dependency>
+				<groupId>com.springframework.boot</groupId>
+				<artifactId>spring-boot-starter</artifactId>
+			</dependency>
+			<!-- For build web application or REST APIs -->
+			<dependency>
+				<groupId>com.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-web</artifactId>
+			</dependency>
+			<!-- For JUnits -->
+			<dependency>
+				<groupId>com.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-test</artifactId>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+
+		// dependencyManagement is the place where the version of the dependencies are managed
+		<dependencyManagement>
+			<dependencies>
+				<dependency>
+					<groupId>org.hibernate.core</groupId>
+					<artifactId>hibernate-core</artifactId>
+					<version>6.1.0.Final</version
+				</dependency>
+			<dependencies>
+		</dependencyManagement>
+		
+	- Maven lifecycles
+	------------------------------		
+	Maven build lifecycle is a sequence of following steps
+		- Validate
+		- Compile
+		- Test
+		- Package
+		- Integration Test
+		- Verify
+		- Install
+		- Deploy
+
+	- How does Maven work?
+	------------------------------		
+	- Maven works on Convention over Configuration
+		- Predefined folder structure
+		- Almost all Java projects follow Maven structure 
+	- Maven Central Repository
+		- Stores all the versions of dependencies
+		- Contains jars and indexed by groupId and artifactId
+		- By Default, jars are downloaded from - https://mvnrepository.com/repos/central
+		- To download jars not found in maven central repos, then configure the same in <repositories>
+		- To download plugins configure <pluginRepositories>
+
+		<!-- Those jars not found in maven central repos will be downloaded from repositories configured here -->
+		<repositories>
+			<repository>
+				<id>spring-milestones</id>
+				<name>Spring Milestones</name>
+				<url>https://repo.spring.io/milestones</groupId>
+				<snapshots>
+					<enabled>false</enabled>
+				</snapshots>
+			</repository>
+		</repositories>
+		
+		<!-- All the plugins will be downloaded from pluginRepositories -->
+		<pluginRepositories>
+			<pluginRepository>
+				<id>spring-milestones</id>
+				<name>Spring Milestones</name>
+				<url>https://repo.spring.io/milestones</groupId>
+				<snapshots>
+					<enabled>false</enabled>
+				</snapshots>
+			</pluginRepository>
+		</pluginRepositories>
+	- Maven Local Repository
+		- Local Repository is a temp folder on your machine where maven stores jar and 
+			dependency files that are downloaded from Maven Central Repository
+	
+	- Maven commands
+	------------------------------
+		mvn --version
+		mvn compile 		- Compiles source files
+		mvn test-compile  	- Compiles source and test files
+		mvn clean			- Delete targe folder
+		mvn test			- Run unit tests
+		mvn package			- Create a jar
+		mvn help:effective-pom
+		mvn dependency:tree
+		mvn install
+	
+	- How are Spring Releases Versioned?
+	------------------------------
+	- Version scheme - MAJOR.MINOR.PATCH[-MODIFIER]
+		MAJOR 	 - If there is a significant amount of work to upgrade (4.0.0 to 5.0.0)
+		MINOR 	 - If there is little to no work to upgrade (4.0.0 to 4.1.0)
+		PATCH 	 - No work to upgrade (4.0.0 to 4.0.1)
+		MODIFIER - Optional (eg: RELEASE, RC1 - Release Candidates or M1 - Milestones)
+	- Sequence
+		10.0.0-SNAPSHOT -> 10.0.0-M1, 10.0.0-M2 -> 10.0.0-RC1, 10.0.0-RC2 -> 10.0.0
+	- Recommendations
+		- Avoid SNAPSHOT
+		- Use ONLY release versions in Production
+
