@@ -43,15 +43,21 @@ Advantages:
 
 Key Microservices Solutions
 ------------------------------------
-1. Spring Boot
+1. Spring Boot 3.3.3
 	- Allows rapid development of REST API
 
 2. Spring Cloud
 	- Umbrella project that provides essential microservices needs
+		a. Centralized configuration 			(Spring Cloud Config Server)
+		b. Load Balancing 						(Spring Cloud Load Balancing 	- earlier Ribbon)
+		c. Service Discovery or Naming Server 	(Netflix Eureka Server)
+		d. API Gateway/Edge server 				(Spring Cloud Gateway 			- earlier Zuul)
+		e. Fault Tolerance 						(Resilience4j 					- earlier Netflix Hystrix)
+		f. Distributed Tracing 					(Zipkin Distributed Tracing)
 	
 	a. Centralized configuration (Spring Cloud Config Server) 
 	--------------------------------------------------------------------------------------
-		- Mange configuration of each microservices like databases etc in central GIT repository
+		- Manage configuration of each microservices like databases etc in central GIT repository
 		- Lot of configuration like
 			- External services
 			- Database
@@ -82,13 +88,13 @@ Key Microservices Solutions
 				- spring.cloud.config.server.git.uri=file:///<Path to the limits-service.properties in the git repo>
 					In Windows, replace '\' with '/'. For eg: C:/Users/manju/limits-service.properties
 			- Create git local repo (git init)
-				- Create limits-service.properties and add following properties and commit it			
-				- Create limits-service-dev.properties and add following properties and commit it			
-				- Create limits-service-uat.properties and add following properties and commit it			
-				- Create limits-service-prod.properties and add following properties and commit it			
+				- Create limits-service.properties, add following properties and commit it			
+				- Create limits-service-dev.properties, add following properties and commit it			
+				- Create limits-service-uat.properties, add following properties and commit it			
+				- Create limits-service-prod.properties, add following properties and commit it			
 				- limits-service.minimum=4
 				- limits-service.maximum=996
-			- Add @EnableConfigServer to the application start up class
+			- Add @EnableConfigServer annotation in the application start up class
 			- Testing - http://localhost:8888/limits-service/default
 		
 		- Example - Limits-Service
@@ -136,7 +142,7 @@ Key Microservices Solutions
 						<groupId>com.h2database</groupId>
 						<artifactId>h2</artifactId>
 					</dependency>
-				- Netflix Eureka Client (Add this dependency to register the services in the naming-server and configure the url in properties file)
+				- Netflix Eureka Client (Add this dependency to register the services in the naming-server and configure the naming-sever url in properties file)
 					<dependency>
 						<groupId>com.springframework.cloud</groupId>
 						<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
@@ -181,7 +187,7 @@ Key Microservices Solutions
 					spring.jpa.defer-datasource-intialization=true
 			
 			- Testing
-				- Access h2 console - http://localhot:8000/h2-console
+				- Access h2 console - http://localhost:8000/h2-console
 				- Invoke currency-exchange - http://localhost:8000/currency-exchange/from/USD/to/INR
 		
 		- Currency Conversion Microservice
@@ -231,10 +237,7 @@ Key Microservices Solutions
 							<groupId>org.springframework.cloud</groupId>
 							<artifactId>spring-cloud-starter-openfeign</artifactId>
 						</dependency>
-						<dependency>
-							<groupId>com.springframework.cloud</groupId>
-							<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-						</dependency>
+					
 					b. Add @EnableFeignClients annotation to the application start up class 
 					
 					c. Create CurrencyExchangeProxy class
@@ -301,7 +304,7 @@ Key Microservices Solutions
 		  	- Maven dependencies
 				- Spring Boot Dev Tools (Helps in fast app restart and Live Reload)
 				- Spring Boot Actuator (Helps in monitoring and managing of app such as health, metrics etc)
-				- Eureka Server (Spring Cloud Netflix Eureka Server -> Naming Server or Service Registry)
+				- Netflix Eureka Server (Spring Cloud Netflix Eureka Server -> Naming Server or Service Registry)
 					<dependency>
 						<groupId>org.springframework.cloud</groupId>
 						<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
@@ -309,7 +312,7 @@ Key Microservices Solutions
 			- application.properties
 				- spring.application.name=naming-server
 				- server.port=8761
-				- eureka.client.register-with-eureka=false // Disabling registering itself to the naming-server
+				- eureka.client.register-with-eureka=false // This disables naming-server registering itself in the Service Registry
 				- eureka.client.fetch-registry=false
 				
 			- Add @EnableEurekaServer annotation to the application start up class
@@ -317,11 +320,7 @@ Key Microservices Solutions
 				- Browser URL - http://localhost:8761
 
 	
-	d. Distributed Tracing (eg - Zipkin Distributed Tracing)
-	--------------------------------------------------------------------------------------
-		- Helps trace request across microservices 
-
-	e. API Gateway/Edge server (Spring Cloud Gateway)
+	d. API Gateway/Edge server (Spring Cloud Gateway)
 	--------------------------------------------------------------------------------------
 		- Single entry point - Implement common features like authentication
 		- API Gateway (Earlier Zuul was used but now Spring Cloud Gateway)
@@ -337,6 +336,7 @@ Key Microservices Solutions
 			- Spring Boot Dev Tools (Helps in fast app restart and Live Reload)
 			- Spring Boot Actuator (Helps in monitoring and managing of app such as health, metrics etc)
 			- Eureka Discovery Client (A REST based service for locating services for the purpose of load balancing and failover of middle-tier servers)
+			- Add netflix-eureka-client to register API Gateway in the naming-server
 				<dependency>
 					<groupId>com.springframework.cloud</groupId>
 					<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
@@ -367,6 +367,10 @@ Key Microservices Solutions
 				- http://localhost:8765/CURRENCY-EXCHANGE/currency-exchange/from/USD/to/INR
 				- http://localhost:8765/CURRENCY-CONVERSION/currency-conversion/from/USD/to/INR/quantity/10
 				- http://localhost:8765/CURRENCY-CONVERSION/currency-conversion-feign/from/USD/to/INR/quantity/10
+				- http://localhost:8765/currency-exchange/currency-exchange/from/USD/to/INR
+				- http://localhost:8765/currency-conversion/currency-conversion/from/USD/to/INR/quantity/10
+				- http://localhost:8765/currency-conversion/currency-conversion-feign/from/USD/to/INR/quantity/10
+
 		
 		- Custom Routes
 			@Configuration
@@ -407,21 +411,20 @@ Key Microservices Solutions
 				}
 			}
 
-	f. Fault Tolerance (Resilience4j)
+	e. Fault Tolerance (Resilience4j)
 	--------------------------------------------------------------------------------------
 		- Ensures that failure of one microservice doesn't cascade and make other microservices to fail
 		- Resilience4j is lightweight, easy-to-use fault tolerance library inspired by Netflix Hystrix
-		
-		- Circuit Breaker Framework  
-		----------------------------------------------------------------------------------
-		- Address following questions
+		- Addresses the following questions
 			- What if one of the services go down or is slow?
 			- Can we return fallback response if a service is down?
-			- Can we implement Circuit Breaker pattern to reduce load?
 			- Can we retry requests in case of temporary failures?
+			- Can we implement Circuit Breaker pattern to reduce load?
 			- Can we implement rate limiting?
+			- Can we limit concurrent requests?
 		- Solution
 			- Circuit Breaker Framework - Resilience4j
+			
 		- Plugin Resilience4j in currency-exchange service
 		------------------------------------------------------------------------------
 			- Maven dependencies
@@ -462,6 +465,7 @@ Key Microservices Solutions
 				- spring.datasource.url-=jdbc:h2:mem:testdb
 				- spring.h2.console.enabled=true
 				- eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka (naming-server URL to be used by this service to register itself)
+
 			- @Retry
 			--------------------------------------------------------------------------
 				@RestController
@@ -470,16 +474,16 @@ Key Microservices Solutions
 					private Logger logger = LoggerFactory.getLogger(CircuitBreakerController.class);
 					
 					@GetMapping("/sample")
+					@Retry(name="default") // It retries 3 times
 					public String sample() {
 						return "sample";
 					}
 					
 					@GetMapping("/sample-retry")
-					@Retry(name="default")
 					// Add below property in the application.properties, to customize the retry logic
 					// resilience4j.retry.instances.sample-retry.maxRetryAttempts=5 			// retry for 5 times
 					// resilience4j.retry.instances.sample-retry.waitDuration=1s 				// wait for 1 second before each retry
-					// resilience4j.retry.instances.sample-retry.enableExponentialBackoff=true 	// wait for 1 second before each retry
+					// resilience4j.retry.instances.sample-retry.enableExponentialBackoff=true 	// wait for pre-configured seconds before each retry
 					@Retry(name="/sample-retry", fallbackMethod="hardCodedResponse")
 					public String sampleRetry() {
 						logger.info("Sample retry call received");
@@ -492,9 +496,9 @@ Key Microservices Solutions
 					}
 				}
 				
-			- @CircuitBreaker - What if underlying service is down, will it bring down all services?
+			- @CircuitBreaker - How to handle when underlying service is down?
 			--------------------------------------------------------------------------
-				- States
+				-Different states of a Circuit
 					- CLOSED 	- Invokes the underlying service all the time
 					- OPEN		- Doesn't invoke the underlying service at all
 					- HALF_OPEN	- Invokes underlying service based on specified percentage of requests
@@ -521,7 +525,7 @@ Key Microservices Solutions
 			
 			- @RateLimiter - How many requests are allowed for a time duration?
 			--------------------------------------------------------------------------
-				- RateLimiting means allows specific number of requests per specified duration
+				- RateLimiting means allows specific number of requests for the given duration
 				- For Eg: Allow 1000 requests per 10 seconds
 				- When more than allowed requests are fired, then it throws error
 				
@@ -548,9 +552,8 @@ Key Microservices Solutions
 				
 			- @BulkHead - How many concurrent requests are allowed?
 			--------------------------------------------------------------------------
-				- RateLimiting means allows specific number of requests per specified duration
-				- For Eg: Allow 1000 requests per 10 seconds
-				- When more than allowed requests are fired, then it throws error
+				- BulkHead means allows only specified number of concurrent requests
+				- For Eg: Allow only 10 concurrent requests
 				
 				@RestController
 				public class CircuitBreakerController {
@@ -572,11 +575,131 @@ Key Microservices Solutions
 					}
 				}
 
+
+	f. Distributed Tracing (eg - Zipkin Distributed Tracing)
+	--------------------------------------------------------------------------------------
+	- Why Distributed Tracing?
+		- Complex call chain
+		- How do you debug problems?
+		- How do you trace requests across microservices?
+	- It helps trace request across microservices 
+	
+	API Gateway		Currency-Conversion		Currency-Exchange
+		|					|						|
+		---------------------------------------------
+							|
+				Distributed Tracing Server (Zipkin)
+							|
+						 Database
+		
+	- How to launch Zipkin container using Docker?
+		docker container run -d -p 9411:9411 openzipkin/zipkin:2.23
+	- Testing
+		http://localhost:9411/zipkin
+	- Maven dependencies
+		- Spring Boot 2.X - Sleuth (Tracing Configuration) -> Brave (Tracer Library) -> Zipkin
+			- Sleuth can handle only traces
+			<dependency>
+				<groupId>com.springframework.cloud</groupId>
+				<artifactId>spring-cloud-starter-sleuth</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>com.springframework.cloud</groupId>
+				<artifactId>spring-cloud-sleuth-brave</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>com.springframework.cloud</groupId>
+				<artifactId>spring-cloud-sleuth-zipkin</artifactId>
+			</dependency>
+		- Spring Boot 3.x - Micrometer (metrics, logs and traces) -> OpenTelemetry (metrics, logs and traces) -> Zipkin
+			- Micrometer can handle metrics, logs and traces
+			- Micrometer is vendor neutral, Application Observability Facade
+			- It can instrument your JVM-based application code without vendor lock-in
+			- Instead of Brave, SB3 uses OpenTelemetry (It is a open standard for metrics, logs and traces)
+			<dependency>
+				<groupId>io.micrometer</groupId>
+				<artifactId>micrometer-observation</artifactId>
+			</dependency>
+			<!-- For SB3 only, enables tracing of REST API calls made using Feign -->
+			<!-- Integrate Micrometer for Feign requests  -->
+			<!-- 
+				If you are using RestTemplate to invoke a service, then integrate RestTemplate with Micrometer
+				Create RestTemplate using RestTemplateBuilder
+				public RestTemplate restTemplate(RestTemplateBuilder builder) {
+					return builder.build();
+				}
+			 -->
+			<dependency>
+				<groupId>io.github.openfeign</groupId>
+				<artifactId>feign-micrometer</artifactId>
+			</dependency>
+			<!-- OPTION 1 - OpenTelemetry as a BRIDGE - RECOMMENDED>
+			<dependency>
+				<groupId>io.micrometer</groupId>
+				<artifactId>micrometer-tracing-bridge-otel</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>io.opentelemetry</groupId>
+				<artifactId>opentelemetry-exporter-zipkin</artifactId>
+			</dependency>
+			
+			<!-- OPTION 2 - Brave as a BRIDGE - This will support only traces but not metrics and logs>
+			<dependency>
+				<groupId>io.micrometer</groupId>
+				<artifactId>micrometer-tracing-bridge-brave</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>io.zipkin.reporter2</groupId>
+				<artifactId>zipkin-reporter-brave</artifactId>
+			</dependency>
+		
+		- application.properties
+			- spring.application.name=currency-exchange
+			- server.port=8000
+			- spring.profiles.active=dev (You can set the profiles via program args as -Dspring.profiles.active=dev)
+			- spring.jpa.show_sql=true
+			- spring.jpa.defer-datasource-intialization=true
+			- spring.datasource.url-=jdbc:h2:mem:testdb
+			- spring.h2.console.enabled=true
+			- eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka (naming-server URL to be used by this service to register itself)
+			- #spring.sleuth.sampler.probability=1.0 #SB2
+			- #1.0 -means trace every request
+			- #0.05 - means trace only 5% of request
+			- management.tracing.sampling.probability=1.0 #SB3
+			- logging.pattern.level=%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}] #SB3
+		- Testing
+			- Launch zipkin server via docker container run -d -p 9411:9411 openzipkin/zipkin:2.23
+			- Launch currency-exchange and naming-sever
+			- Invoke http://localhost:8000/currency-exchange/from/USD/to/INR
+			- Can see in the currency-exchange application logs "[currency-exchange,<traceId>,<spanId>] <log statement>"
+			- Open URL in browser - http://localhost:9411/zipkin
+				- Click on Run Query button
+				- Should see a trace of the currency-exchange
+				- Can see traceId and spanId details for the trace
+				
+
+	
 3. Docker
 	- Gives consistent deployment approach for microservices developed with different programming languages and frameworks.
 	- It is Programming Language and environment independent
-	
+		
 4. Kubernetes
 	- Orchestrates thousands of microservices with advanced features like Service Discovery, Load Balancing, Release management etc.
 
+----------------------------------------------------------------------------------------
+Observability and OpenTelemetry
+----------------------------------------------------------------------------------------
+	- Monitoring vs Observability
+		- Monitoring is reactive, it is a subset of Observability
+		- Observability is proactive
+	- Observability
+		- How well do you understand what is happening in a system?
+		- Step1: Gather data, metrics, logs or traces
+		- Step2: Get Intelligence: AI/Ops and anomaly detection
+	- OpenTelemetry
+		- Collection of tools, APIs and SDKs to instrument, generate, collect and export telemetry data (metrics, logs and traces)
+		= All applications have metrics, logs and traces.
+			- Why do we need to have a separate standard for each of these?
+		- OpenTelemetry: How about one standard for metrics, logs and traces?
+		- Almost all cloud platforms provide support for OpenTelemetry!
 

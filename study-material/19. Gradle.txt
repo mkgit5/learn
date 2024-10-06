@@ -1,0 +1,110 @@
+------------------------------------------------------------------------------------------
+Gradle
+------------------------------------------------------------------------------------------
+1. Goal - build, automate and deliver better software, faster
+	a. Build anything 
+		- Gradle is Cross-Platform Tool, can build Java, C, C++ etc 
+		- Where as maven is platform specific, it depends on Java
+	b. Automate Everything
+		- Gradle is Completely programmable. Maven is based on pom.xml.
+		- Provides complete flexibility
+		- Uses a DSL (Domain Specific Language)
+			- Supports Groovy and Kotlin
+	c. Deliver Faster - Blazing-fast builds
+		- Compile avoidance to advanced caching
+		- Can speed up maven builds by upto 90%
+			- Incrementality 
+				- Gradle runs only what is necessary
+				- Eg: Compile only changed files
+			- Build Cache
+				- Reuses the build outputs of other Gradle builds with the same inputs
+2. Same project layout as Maven
+3. Disadvantage - IDE support still evolving
+
+Gradle Files
+---------------------------------------------
+1. settings.gradle 
+--------------------
+	- Project name and plugin management is configured
+	
+	pluginManagement {
+		repositories {
+			maven {url 'http://repo.spring.io/milestone'}
+			gradlePluginPortal()
+		}
+	}
+	
+	rootProject.name = 'learn-gradle'	--> artifactId
+	
+2. build.gradle
+--------------------
+	- Define all the dependencies in this file
+
+	plugins {
+		id 'org.springframework.boot' version '3.3.3'
+		id 'io.spring.dependency-management' version '1.1.0'
+		id 'java'
+	}
+	
+	group = 'com.mk.trading' 	--> groupId
+	version = '0.0.1-SNAPSHOT' 	--> version
+	sourceCompatibility = '17' 	--> Java 17 
+	
+	repositories {
+		mavenCentral()
+		maven { url 'https://repo.spring.io/milestones'}
+	}
+
+	dependencies {
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'	
+	}
+	
+	tasks.named('test') {
+		useJUnitPlatform()
+	}
+	
+Gradle Plugins
+---------------------------------------------
+Top 3 Java Plugins for Gradle 
+	1. Java Plugin: Java compilation + testing + bundling capabilities
+		- Provides Default layout
+		- Key task - build
+	2. Dependency Management - Maven-like dependency management
+		dependencies {
+			implementation 'org.springframework.boot:spring-boot-starter-web'
+			implementation group:'org.springframework', name:'spring-core', version:'10.0.3.RELEASE' // maven-like dependency
+			implementation 'org.springframework:spring-core:10.0.3.RELEASE' 						 // or like this group:name:version
+			testImplementation 'org.springframework.boot:spring-boot-starter-test'	
+		}
+	3. Spring Boot Gradle Plugin - Spring boot support in Gradle
+		- Package executables Spring Boot jar, Container image (bootJar, bootBuildImage)
+		- Use dependency management enabled by spring-boot-dependencies
+			- No need to specify dependency version
+			- Eg: implementation 'org.springframework:spring-core'
+			
+Maven vs Gradle - Which one to use?
+---------------------------------------------
+1. Spring Framework - Using Gradle since 2012 (Spring Framework v3.2.0)
+2. Spring Boot -  Using Gradle since 2020 (Spring Boot v2.3.0)
+3. Spring Cloud - Continue to use maven even today
+	- Spring Cloud has no plans to switch to Gradle
+
+Top Maven Advantages 
+	- Familiar, Simpler and Restrictive
+Top Gradle Advantages 
+	- Faster build times and less verbose
+	- Can write java code in the Gradle using Groovy, eg below
+		tasks.register('helloWorld') {
+			doLast {
+				System.out.println("Hello World");
+			}
+		}
+		- How to run/test this?
+			- Right click on the project -> Run Configuration -> Add new configuration -> Add task and name it as 'helloWorld'
+				-> Add workspace and choose the project -> Click Apply and Run	
+		
+How to decide between Gradle vs Maven?
+	- Choose whatever tool best meets your project needs
+	- If your builds are taking really long, go with Gradle
+	- If your builds are simple, stick with Maven
